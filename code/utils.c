@@ -1,48 +1,58 @@
-﻿////
-////  utils.h
-////  tinyEngine
-////
-////  Created by penghuailiang on 2019/4/4.
-////  Copyright © 2017年 sdlwlxf. All rights reserved.
-////
-//#include "utils.h"
-//#include "png.h"
-//#include "tinyobj_loader_c.h"
+﻿//
+//  utils.h
+//  lgEngine
 //
-//#include <math.h>
+//  Created by penghuailiang on 2019/4/4.
 //
-//#define FLT_MIN 1.175494351e-38F
-//#define FLT_MAX 3.402823466e+38F
-//#define O_RDONLY         00
-//#define O_WRONLY         01
-//#define O_RDWR           02
-//
-//void CalcNormal(float N[3], float v0[3], float v1[3], float v2[3]) {
-//    float v10[3];
-//    float v20[3];
-//    float len2;
-//    
-//    v10[0] = v1[0] - v0[0];
-//    v10[1] = v1[1] - v0[1];
-//    v10[2] = v1[2] - v0[2];
-//    
-//    v20[0] = v2[0] - v0[0];
-//    v20[1] = v2[1] - v0[1];
-//    v20[2] = v2[2] - v0[2];
-//    
-//    N[0] = v20[1] * v10[2] - v20[2] * v10[1];
-//    N[1] = v20[2] * v10[0] - v20[0] * v10[2];
-//    N[2] = v20[0] * v10[1] - v20[1] * v10[0];
-//    
-//    len2 = N[0] * N[0] + N[1] * N[1] + N[2] * N[2];
-//    if (len2 > 0.0f) {
-//        float len = (float)sqrt((double)len2);
-//        
-//        N[0] /= len;
-//        N[1] /= len;
-//    }
-//}
-//
+#include "utils.h"
+#include "png.h"
+#include "tinyobj_loader_c.h"
+#include <math.h>
+
+#define FLT_MIN 1.175494351e-38F
+#define FLT_MAX 3.402823466e+38F
+#define O_RDONLY         00
+#define O_WRONLY         01
+#define O_RDWR           02
+
+
+const char* getFilePath(const char* name, const char* type) 
+{
+	static char path[100];
+	if (strcmp(type, "png") == 0)
+		sprintf(path, "../../../resources/image/%s.%s", name, type);
+	else if (strcmp(type, "obj") == 0)
+		sprintf(path, "../../../resources/obj/%s.%s", name, type);
+	return path;
+}
+
+
+void CalcNormal(float N[3], float v0[3], float v1[3], float v2[3]) {
+    float v10[3];
+    float v20[3];
+    float len2;
+    
+    v10[0] = v1[0] - v0[0];
+    v10[1] = v1[1] - v0[1];
+    v10[2] = v1[2] - v0[2];
+    
+    v20[0] = v2[0] - v0[0];
+    v20[1] = v2[1] - v0[1];
+    v20[2] = v2[2] - v0[2];
+    
+    N[0] = v20[1] * v10[2] - v20[2] * v10[1];
+    N[1] = v20[2] * v10[0] - v20[0] * v10[2];
+    N[2] = v20[0] * v10[1] - v20[1] * v10[0];
+    
+    len2 = N[0] * N[0] + N[1] * N[1] + N[2] * N[2];
+    if (len2 > 0.0f) {
+        float len = (float)sqrt((double)len2);
+        
+        N[0] /= len;
+        N[1] /= len;
+    }
+}
+
 //int make_mesh_and_material_by_obj(vertex_t **mesh, unsigned long *mesh_num, int **material_ids, unsigned long *material_ids_num, const char *name) {
 //    tinyobj_attrib_t attrib;
 //    tinyobj_shape_t* shapes = NULL;
@@ -315,187 +325,184 @@
 //    free (buffer);
 //    return 0;
 //}
-//
-//int generate_mipmaps(texture_t *texture, float gamma) {
-//    IUINT32 **mipmaps = NULL;
-//    int num_mip_levels = logbase2ofx(texture->width) + 1;
-//    texture->datas_len = num_mip_levels;
-//    mipmaps = (IUINT32**)malloc(num_mip_levels * sizeof(IUINT32*));
-//    mipmaps[0] = texture->datas[0];
-//    int mip_width = texture->width;
-//    int mip_height = texture->height;
-//    for(int mip_level = 1; mip_level < num_mip_levels; mip_level++) {
-//        mip_width = mip_width >> 1;
-//        mip_height = mip_height >> 1;
-//        mipmaps[mip_level] = (IUINT32*)malloc(mip_width * mip_height * sizeof(IUINT32));
-//        IUINT32 *src_buffer = mipmaps[mip_level-1];
-//        IUINT32 *dest_buffer = mipmaps[mip_level];
-//        for(int x = 0; x < mip_width; x++)
-//        {
-//            for(int y = 0; y < mip_height; y++)
-//            {
-//                float r0, g0, b0, a0,
-//                r1, g1, b1, a1,
-//                r2, g2, b2, a2,
-//                r3, g3, b3, a3;
-//                int r_avg, g_avg, b_avg, a_avg;
-//                
-//                IUINT32 c = src_buffer[(x*2+0) + (y*2+0)*mip_width*2];
-//                b0 = c & 0xff;
-//                g0 = (c >> 8) & 0xff;
-//                r0 = (c >> 16) & 0xff;
-//                a0 = (c >> 24) & 0xff;
-//                
-//                c = src_buffer[(x*2+1) + (y*2+0)*mip_width*2];
-//                b1 = c & 0xff;
-//                g1 = (c >> 8) & 0xff;
-//                r1 = (c >> 16) & 0xff;
-//                a1 = (c >> 24) & 0xff;
-//                
-//                c = src_buffer[(x*2+0) + (y*2+1)*mip_width*2];
-//                b2 = c & 0xff;
-//                g2 = (c >> 8) & 0xff;
-//                r2 = (c >> 16) & 0xff;
-//                a2 = (c >> 24) & 0xff;
-//                
-//                c = src_buffer[(x*2+1) + (y*2+1)*mip_width*2];
-//                b3 = c & 0xff;
-//                g3 = (c >> 8) & 0xff;
-//                r3 = (c >> 16) & 0xff;
-//                a3 = (c >> 24) & 0xff;
-//                
-//                r_avg = (IUINT32)(0.5f + gamma*(r0+r1+r2+r3)/4);
-//                g_avg = (IUINT32)(0.5f + gamma*(g0+g1+g2+g3)/4);
-//                b_avg = (IUINT32)(0.5f + gamma*(b0+b1+b2+b3)/4);
-//                a_avg = (IUINT32)(0.5f + gamma*(b0+b1+b2+b3)/4);
-//                
-//                int R = CMID(r_avg, 0, 255);
-//                int G = CMID(g_avg, 0, 255);
-//                int B = CMID(b_avg, 0, 255);
-//                int A = CMID(a_avg, 0, 255);
-//                
-//                dest_buffer[x+y*mip_width] = (A << 24) | (R << 16) | (G << 8) | B;
-//            }
-//        }
-//    }
-//    free(texture->datas);
-//    texture->datas = mipmaps;
-//    return num_mip_levels;
-//}
-//
-//#define PNG_BYTES_TO_CHECK 4
-//int load_png_image( const char *name, unsigned int **bits, unsigned int *width, unsigned int *height)
-//{
-//    FILE *fp;
-//    png_structp png_ptr;
-//    png_infop info_ptr;
-//    png_bytep* row_pointers;
-//    char buf[PNG_BYTES_TO_CHECK];
-//    int w, h, x, y, temp, color_type;
-//    
-//    fp = fopen(getFilePath(name, "png"), "rb");
-//    if( fp == NULL ) {
-//        return 1; /* 返回值 */
-//    }
-//    
-//    png_ptr = png_create_read_struct( PNG_LIBPNG_VER_STRING, 0, 0, 0 );
-//    info_ptr = png_create_info_struct( png_ptr );
-//    
-//    setjmp( png_jmpbuf(png_ptr) );
-//    /* 读取PNG_BYTES_TO_CHECK个字节的数据 */
-//    temp = (int)fread( buf, 1, PNG_BYTES_TO_CHECK, fp );
-//    /* 若读到的数据并没有PNG_BYTES_TO_CHECK个字节 */
-//    if( temp < PNG_BYTES_TO_CHECK ) {
-//        fclose(fp);
-//        png_destroy_read_struct( &png_ptr, &info_ptr, 0);
-//        return 2;/* 返回值 */
-//    }
-//    /* 检测数据是否为PNG的签名 */
-//    temp = png_sig_cmp( (png_bytep)buf, (png_size_t)0, PNG_BYTES_TO_CHECK );
-//    /* 如果不是PNG的签名，则说明该文件不是PNG文件 */
-//    if( temp != 0 ) {
-//        fclose(fp);
-//        png_destroy_read_struct( &png_ptr, &info_ptr, 0);
-//        return 3;/* 返回值 */
-//    }
-//    
-//    /* 复位文件指针 */
-//    rewind( fp );
-//    /* 开始读文件 */
-//    png_init_io( png_ptr, fp );
-//    /* 读取PNG图片信息 */
-//    png_read_png( png_ptr, info_ptr, PNG_TRANSFORM_EXPAND, 0 );
-//    /* 获取图像的色彩类型 */
-//    color_type = png_get_color_type( png_ptr, info_ptr );
-//    /* 获取图像的宽高 */
-//    w = png_get_image_width( png_ptr, info_ptr );
-//    h = png_get_image_height( png_ptr, info_ptr );
-//    
-//    *bits = (unsigned int*)malloc(sizeof(unsigned int) * w * h);
-//    
-//    /* 获取图像的所有行像素数据，row_pointers里边就是rgba数据 */
-//    row_pointers = png_get_rows( png_ptr, info_ptr );
-//    /* 根据不同的色彩类型进行相应处理 */
-//    switch( color_type ) {
-//        case PNG_COLOR_TYPE_RGB_ALPHA:
-//            for( y=0; y<h; ++y ) {
-//                for( x=0; x < w; ++x ) {
-//                    (*bits)[y*w+x] = 0;
-//                    /* 以下是RGBA数据，需要自己补充代码，保存RGBA数据 */
-//                    (*bits)[y*w+x] |= row_pointers[y][4*x+0] << 16; // red
-//                    (*bits)[y*w+x] |= row_pointers[y][4*x+1] << 8; // green
-//                    (*bits)[y*w+x] |= row_pointers[y][4*x+2]; // blue
-//                    (*bits)[y*w+x] |= row_pointers[y][4*x+3] << 24; // alpha
-//                }
-//            }
-//            break;
-//            
-//        case PNG_COLOR_TYPE_RGB:
-//            for( y=0; y<h; ++y ) {
-//                for( x=0; x<w; ++x ) {
-//                    (*bits)[y*w+x] = 0xff000000;
-//                    (*bits)[y*w+x] |= row_pointers[y][3*x+0] << 16; // red
-//                    (*bits)[y*w+x] |= row_pointers[y][3*x+1] << 8; // green
-//                    (*bits)[y*w+x] |= row_pointers[y][3*x+2]; // blue
-//                }
-//            }
-//            break;
-//            /* 其它色彩类型的图像就不读了 */
-//        default:
-//            fclose(fp);
-//            png_destroy_read_struct( &png_ptr, &info_ptr, 0);
-//            return 4/* 返回值 */;
-//    }
-//    png_destroy_read_struct( &png_ptr, &info_ptr, 0);
-//    
-//    *width = w;
-//    *height = h;
-//    
-//    return 0;
-//}
-//
-//// 返回-1读取失败，返回id号对应texture编号
-//int make_texture_by_png(const char *name, bool mipmap) {
-//    IUINT32 *data = NULL;
-//    texture_t *texture = &textures[texture_count];
-//    char trueName[100];
-//    char *findPos = NULL;
-//    if((findPos = strrchr(name, '.')) != NULL) {
-//        long len = findPos-name;
-//        strncpy(trueName, name, len);
-//        trueName[len] = '\0';
-//    }
-//    int res = load_png_image(findPos == NULL ? name : trueName, &data, &texture->width, &texture->height);
-//    if(res == 0) {
-//        texture->datas = (IUINT32**)malloc(1 * sizeof(IUINT32*));
-//        texture->datas[0] = data;
-//        if(mipmap) {
-//            texture->use_mipmap = true;
-//            generate_mipmaps(texture, 1.01);
-//        }
-//        texture_count++;
-//        return texture_count-1;
-//    }
-//    return -1;
-//}
-//
+
+int generate_mipmaps(texture_t *texture, float gamma) {
+    uint **mipmaps = NULL;
+    int num_mip_levels = logbase2ofx(texture->width) + 1;
+    texture->datas_len = num_mip_levels;
+    mipmaps = (uint**)malloc(num_mip_levels * sizeof(uint*));
+    mipmaps[0] = texture->datas[0];
+    int mip_width = texture->width;
+    int mip_height = texture->height;
+    for(int mip_level = 1; mip_level < num_mip_levels; mip_level++) {
+        mip_width = mip_width >> 1;
+        mip_height = mip_height >> 1;
+        mipmaps[mip_level] = (uint*)malloc(mip_width * mip_height * sizeof(uint));
+		uint *src_buffer = mipmaps[mip_level-1];
+		uint *dest_buffer = mipmaps[mip_level];
+        for(int x = 0; x < mip_width; x++)
+        {
+            for(int y = 0; y < mip_height; y++)
+            {
+                float r0, g0, b0, a0,
+                r1, g1, b1, a1,
+                r2, g2, b2, a2,
+                r3, g3, b3, a3;
+                int r_avg, g_avg, b_avg, a_avg;
+                
+				uint c = src_buffer[(x*2+0) + (y*2+0)*mip_width*2];
+                b0 = c & 0xff;
+                g0 = (c >> 8) & 0xff;
+                r0 = (c >> 16) & 0xff;
+                a0 = (c >> 24) & 0xff;
+                
+                c = src_buffer[(x*2+1) + (y*2+0)*mip_width*2];
+                b1 = c & 0xff;
+                g1 = (c >> 8) & 0xff;
+                r1 = (c >> 16) & 0xff;
+                a1 = (c >> 24) & 0xff;
+                
+                c = src_buffer[(x*2+0) + (y*2+1)*mip_width*2];
+                b2 = c & 0xff;
+                g2 = (c >> 8) & 0xff;
+                r2 = (c >> 16) & 0xff;
+                a2 = (c >> 24) & 0xff;
+                
+                c = src_buffer[(x*2+1) + (y*2+1)*mip_width*2];
+                b3 = c & 0xff;
+                g3 = (c >> 8) & 0xff;
+                r3 = (c >> 16) & 0xff;
+                a3 = (c >> 24) & 0xff;
+                
+                r_avg = (uint)(0.5f + gamma*(r0+r1+r2+r3)/4);
+                g_avg = (uint)(0.5f + gamma*(g0+g1+g2+g3)/4);
+                b_avg = (uint)(0.5f + gamma*(b0+b1+b2+b3)/4);
+                a_avg = (uint)(0.5f + gamma*(b0+b1+b2+b3)/4);
+                
+                int R = CMID(r_avg, 0, 255);
+                int G = CMID(g_avg, 0, 255);
+                int B = CMID(b_avg, 0, 255);
+                int A = CMID(a_avg, 0, 255);
+                dest_buffer[x+y*mip_width] = (A << 24) | (R << 16) | (G << 8) | B;
+            }
+        }
+    }
+    free(texture->datas);
+    texture->datas = mipmaps;
+    return num_mip_levels;
+}
+
+#define PNG_BYTES_TO_CHECK 4
+int load_png_image( const char *name, unsigned int **bits, unsigned int *width, unsigned int *height)
+{
+    FILE *fp;
+    png_structp png_ptr;
+    png_infop info_ptr;
+    png_bytep* row_pointers;
+    char buf[PNG_BYTES_TO_CHECK];
+    int w, h, x, y, temp, color_type;
+
+    fp = fopen(getFilePath(name, "png"), "rb");
+	if (fp == NULL) return 1;
+    png_ptr = png_create_read_struct( PNG_LIBPNG_VER_STRING, 0, 0, 0 );
+    info_ptr = png_create_info_struct( png_ptr );
+    
+    setjmp( png_jmpbuf(png_ptr) );
+    /* 读取PNG_BYTES_TO_CHECK个字节的数据 */
+    temp = (int)fread( buf, 1, PNG_BYTES_TO_CHECK, fp );
+    /* 若读到的数据并没有PNG_BYTES_TO_CHECK个字节 */
+    if( temp < PNG_BYTES_TO_CHECK ) {
+        fclose(fp);
+        png_destroy_read_struct( &png_ptr, &info_ptr, 0);
+        return 2;/* 返回值 */
+    }
+    /* 检测数据是否为PNG的签名 */
+    temp = png_sig_cmp( (png_bytep)buf, (png_size_t)0, PNG_BYTES_TO_CHECK );
+    /* 如果不是PNG的签名，则说明该文件不是PNG文件 */
+    if( temp != 0 ) {
+        fclose(fp);
+        png_destroy_read_struct( &png_ptr, &info_ptr, 0);
+        return 3;/* 返回值 */
+    }
+    
+    /* 复位文件指针 */
+    rewind( fp );
+    /* 开始读文件 */
+    png_init_io( png_ptr, fp );
+    /* 读取PNG图片信息 */
+    png_read_png( png_ptr, info_ptr, PNG_TRANSFORM_EXPAND, 0 );
+    /* 获取图像的色彩类型 */
+    color_type = png_get_color_type( png_ptr, info_ptr );
+    /* 获取图像的宽高 */
+    w = png_get_image_width( png_ptr, info_ptr );
+    h = png_get_image_height( png_ptr, info_ptr );
+    
+    *bits = (unsigned int*)malloc(sizeof(unsigned int) * w * h);
+    
+    /* 获取图像的所有行像素数据，row_pointers里边就是rgba数据 */
+    row_pointers = png_get_rows( png_ptr, info_ptr );
+    /* 根据不同的色彩类型进行相应处理 */
+    switch( color_type ) {
+        case PNG_COLOR_TYPE_RGB_ALPHA:
+            for( y=0; y<h; ++y ) {
+                for( x=0; x < w; ++x ) {
+                    (*bits)[y*w+x] = 0;
+                    /* 以下是RGBA数据，需要自己补充代码，保存RGBA数据 */
+                    (*bits)[y*w+x] |= row_pointers[y][4*x+0] << 16; // red
+                    (*bits)[y*w+x] |= row_pointers[y][4*x+1] << 8; // green
+                    (*bits)[y*w+x] |= row_pointers[y][4*x+2]; // blue
+                    (*bits)[y*w+x] |= row_pointers[y][4*x+3] << 24; // alpha
+                }
+            }
+            break;
+            
+        case PNG_COLOR_TYPE_RGB:
+            for( y=0; y<h; ++y ) {
+                for( x=0; x<w; ++x ) {
+                    (*bits)[y*w+x] = 0xff000000;
+                    (*bits)[y*w+x] |= row_pointers[y][3*x+0] << 16; // red
+                    (*bits)[y*w+x] |= row_pointers[y][3*x+1] << 8; // green
+                    (*bits)[y*w+x] |= row_pointers[y][3*x+2]; // blue
+                }
+            }
+            break;
+            /* 其它色彩类型的图像就不读了 */
+        default:
+            fclose(fp);
+            png_destroy_read_struct( &png_ptr, &info_ptr, 0);
+            return 4/* 返回值 */;
+    }
+    png_destroy_read_struct( &png_ptr, &info_ptr, 0);
+    
+    *width = w;
+    *height = h;
+    
+    return 0;
+}
+
+
+ //if return -1 stands for faied，else return texture id 
+int make_texture_by_png(const char *name, bool mipmap) {
+    uint *data = NULL;
+    texture_t *texture = &textures[texture_count];
+    char trueName[100];
+    char *findPos = NULL;
+    if((findPos = strrchr(name, '.')) != NULL) {
+        long len = findPos-name;
+        strncpy(trueName, name, len);
+        trueName[len] = '\0';
+    }
+    int res = load_png_image(findPos == NULL ? name : trueName, &data, &texture->width, &texture->height);
+    if(res == 0) {
+        texture->datas = (uint**)malloc(1 * sizeof(uint*));
+        texture->datas[0] = data;
+        if(mipmap) {
+            texture->use_mipmap = true;
+            generate_mipmaps(texture, 1.01);
+        }
+        texture_count++;
+        return texture_count-1;
+    }
+    return -1;
+}
+

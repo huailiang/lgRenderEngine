@@ -15,16 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\code\main.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\code\tiny3D.c">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\..\code\utils.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\code\utils_other.c">
+    <ClCompile Include="..\..\code\main.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

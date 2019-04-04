@@ -3,6 +3,7 @@
 
 #include "tiny3D.h"
 
+
 //
 vertex_t ground_mesh[6] = {
 	// Positions                  // Texture Coords  //color           //rhw // Normals
@@ -59,6 +60,46 @@ vertex_t box_mesh[36] = {
 	{{0.5f,  0.5f, -0.5f, 1.0f},  {1.0f,  1.0f},{ 0.2f, 1.0f, 1.0f, 1.0f }, { 0.0f,1.0f,  0.0f,0.0f}},
 	{{-0.5f,  0.5f, -0.5f, 1.0f},  {0.0f,  1.0f},{ 0.2f, 1.0f, 1.0f, 1.0f },{ 0.0f, 1.0f,  0.0f,0.0f}}
 };
+
+void init_texture()
+{
+	int width = 256, height = 256;
+	texture_t* texture = &textures[texture_count++];
+	uint* bits = (uint*)malloc(sizeof(uint)* width * height);
+	int i, j;
+	for (j = 0; j < height; j++)
+	{
+		for (int i = 0; i < width; i++)
+		{
+			int x = i / 32, y = j / 32;
+			bits[j*width + i] = ((x + y) & 1) ? 0xffffffff : 0xff3fbcef;
+		}
+	}
+	texture->datas_len = 1;
+	texture->datas = (uint**)malloc(1 * sizeof(uint*));
+	texture->datas[0] = bits;
+	texture->width = width;
+	texture->height = height;
+	texture->use_mipmap = true;
+	//generate_mipmaps(texture, 1.01f);
+	//make_texture_by_png("mabu", true);
+	//make_texture_by_png("dimian", true);
+}
+
+void free_textures()
+{
+	for (int i = 0; i < texture_count; i++)
+	{
+		texture_t *texture = &textures[i];
+		for (uint j = 0; j < texture->datas_len; j++)
+		{
+			uint *data = texture->datas[j];
+			free(data);
+		}
+		free(texture->datas);
+		texture->datas = NULL;
+	}
+}
 
 //
 #endif /* scene_h */

@@ -4,6 +4,7 @@
 
 #include "SDL.h"
 #include "tiny3D.h"
+#include "scene.h"
 
 const int SCREEN_WIDTH = 600;
 const int SCREEN_HEIGHT = 600;
@@ -59,37 +60,12 @@ void sdl_close()
 	SDL_Quit();
 }
 
-void init_texture()
-{
-	int width = 256, height = 256;
-	texture_t* texture = &textures[texture_count++];
-	uint* bits = (uint*)malloc(sizeof(uint)* width * height);
-	int i, j;
-	for (j = 0; j < height; j++)
-	{
-		for (int i = 0; i < width; i++)
-		{
-			int x = i / 32, y = j / 32;
-			bits[j*width + i] = ((x + y) & 1) ? 0xffffffff : 0xff3fbcef;
-		}
-	}
-	texture->datas_len = 1;
-	texture->datas = (uint**)malloc(1 * sizeof(uint*));
-	texture->datas[0] = bits;
-	texture->width = width;
-	texture->height = height;
-	texture->use_mipmap = true;
-	/*generate_mipmaps(texture, 1.01f);
 
-	make_texture_by_png("mabu", true);
-	make_texture_by_png("dimian", true);*/
-}
 
 int main(int argc, char *argv[])
 {
 	printf("start engine");
 	sdl_init();
-	SDL_Delay(3000);
 	sdl_close();
 	return 1;
 }
