@@ -1,9 +1,3 @@
-﻿//
-//  utils.h
-//  lgEngine
-//
-//  Created by penghuailiang on 2019/4/4.
-//
 #include "utils.h"
 #include "png.h"
 #include "tinyobj_loader_c.h"
@@ -387,7 +381,7 @@ int generate_mipmaps(texture_t *texture, float gamma) {
             }
         }
     }
-    free(texture->datas);
+//    free(texture->datas);
     texture->datas = mipmaps;
     return num_mip_levels;
 }

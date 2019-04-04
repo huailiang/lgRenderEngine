@@ -1,4 +1,4 @@
-﻿#include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -6,13 +6,9 @@
 #include<Windows.h>
 #endif // _MSC_VER
 
-
-
 #include "SDL.h"
 #include "tiny3D.h"
 #include "scene.h"
-
-
 
 const int SCREEN_WIDTH = 600;
 const int SCREEN_HEIGHT = 600;
@@ -75,7 +71,7 @@ void sdl_close()
 
 int main(int argc, char *argv[])
 {
-	printf("start engine %d ", sizeof(SDL_Event));
+	printf("start engine %u ", sizeof(SDL_Event));
 	if (sdl_init())
 	{
 		bool quit = false;
@@ -87,19 +83,15 @@ int main(int argc, char *argv[])
 		float c_lastX = SCREEN_WIDTH >> 1, c_lastY = SCREEN_HEIGHT >> 1;
 		device_t device;
 		device_init(&device);
-		int indicator = 0;
-		int kbhit = 0;
-
 		SDL_Event e;
 		while (!quit)
 		{
 			Uint32 current = SDL_GetTicks();
 			deltaTime = (current - lastFrame) * 0.001f;
 			lastFrame = current;
-			printf("fps delta :%f %f\n", deltaTime, 1.0f / deltaTime);
-			
 
 #ifdef _MSC_VER
+            printf("fps delta :%f %f\n", deltaTime, 1.0f / deltaTime);
 			float wait = 1.0f / fps;
 			if (deltaTime < wait)
 			{
