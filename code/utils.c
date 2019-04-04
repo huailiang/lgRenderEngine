@@ -14,9 +14,9 @@ const char* getFilePath(const char* name, const char* type)
 {
 	static char path[100];
 	if (strcmp(type, "png") == 0)
-		sprintf(path, "../../../../../image/%s.%s", name, type);
+		sprintf(path, "../../../../../resources/texture/%s.%s", name, type);
 	else if (strcmp(type, "obj") == 0)
-		sprintf(path, "../../../../../obj/%s.%s", name, type);
+		sprintf(path, "../../../../../resources/obj/%s.%s", name, type);
 	return path;
 }
 
