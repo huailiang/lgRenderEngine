@@ -12,7 +12,6 @@
 *.user
 *.userprefs
 *.pidb
-*.sln
 *.booproj
 *.csproj
 *.DotSettings
