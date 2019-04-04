@@ -66,6 +66,7 @@ int main(int argc, char *argv[])
 {
 	printf("start engine");
 	sdl_init();
+	system("pause");
 	sdl_close();
 	return 1;
 }
