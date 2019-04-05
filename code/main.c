@@ -71,7 +71,7 @@ void sdl_close()
 
 int main(int argc, char *argv[])
 {
-	printf("start engine %u ", sizeof(SDL_Event));
+	printf("start engine %lu ", sizeof(SDL_Event));
 	if (sdl_init())
 	{
 		bool quit = false;
@@ -147,6 +147,7 @@ int main(int argc, char *argv[])
 			}
 			if (screen_keys[SDL_SCANCODE_S])
 			{
+                printf("int size:%lu\n",sizeof(int));
 			}
 			if (screen_keys[SDL_SCANCODE_A])
 			{
