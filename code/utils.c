@@ -1,6 +1,6 @@
 #include "utils.h"
 #include "png.h"
-#include "tinyobj_loader_c.h"
+#include "obj_loader.h"
 #include <math.h>
 
 #define FLT_MIN 1.175494351e-38F
