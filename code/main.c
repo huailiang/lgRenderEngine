@@ -7,7 +7,7 @@
 #endif // _MSC_VER
 
 #include "SDL.h"
-#include "tiny3D.h"
+#include "engine.h"
 #include "scene.h"
 
 const int SCREEN_WIDTH = 600;

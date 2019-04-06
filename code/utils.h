@@ -1,7 +1,7 @@
 #ifndef utils_h
 #define utils_h
 
-#include "tiny3D.h"
+#include "engine.h"
 
 const char* getFilePath(const char* name, const char* type);
 int generate_mipmaps(texture_t *texture, float gamma);
