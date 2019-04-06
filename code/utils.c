@@ -16,10 +16,9 @@ const char* getFilePath(const char* name, const char* type)
 	if (strcmp(type, "png") == 0)
 		sprintf(path, "../../../../resources/texture/%s.%s", name, type);
 	else if (strcmp(type, "obj") == 0)
-		sprintf(path, "../../../../resources/obj/%s.%s", name, type);
+		sprintf(path, "../../../../resources/model/%s.%s", name, type);
 	return path;
 }
-
 
 void CalcNormal(float N[3], float v0[3], float v1[3], float v2[3]) {
     float v10[3];
@@ -47,7 +46,7 @@ void CalcNormal(float N[3], float v0[3], float v1[3], float v2[3]) {
     }
 }
 
-int make_mesh_and_material_by_obj(vertex_t **mesh, unsigned long *mesh_num, int **material_ids, unsigned long *material_ids_num, const char *name) {
+int make_mesh_and_material_by_obj(vertex_t **mesh, ulong *mesh_num, int **material_ids, ulong *material_ids_num, const char *name) {
     tinyobj_attrib_t attrib;
     tinyobj_shape_t* shapes = NULL;
     size_t num_shapes;

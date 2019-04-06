@@ -1,14 +1,9 @@
-#ifndef tiny3D_h
-#define tiny3D_h
+#ifndef __engine__
+#define __engine__
 
 #include <stdbool.h>
+#include "common.h"
 
-typedef unsigned int uint;
-#define PI 3.141592653
-#define angle_to_radian(X) ((X)/180*PI)
-#define radian_to_angle(X) ((X)/PI*180)
-#define CMID(x, min, max) (((x) < (min)) ? (min) : (((x) > (max)) ? (max) : (x)))
-#define interp(a, b, t) ((a) + ((b) - (a)) * (t))
 extern int logbase2ofx(int n);
 
 typedef struct { float x, y, z, w; } vector_t;
@@ -285,4 +280,4 @@ typedef struct
 void vert_shader(device_t *device, a2v *av, v2f *vf);
 void frag_shader(device_t *device, v2f *vf, color_t *color);
 
-#endif /* tiny3D_h */
+#endif /* __engine__ */
