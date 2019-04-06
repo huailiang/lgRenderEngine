@@ -1,10 +1,9 @@
-﻿#ifndef scene_h
+#ifndef scene_h
 #define scene_h
 
 #include "tiny3D.h"
 #include "utils.h"
 
-//
 vertex_t ground_mesh[6] = {
 	// Positions                  // Texture Coords  //color           //rhw // Normals
 	{{-0.5f,  0.0f, -0.5f, 1.0f}, {0.0f,  8.0f},{ 0.2f, 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f,  0.0f,0.0f}},

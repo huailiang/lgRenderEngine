@@ -47,278 +47,278 @@ void CalcNormal(float N[3], float v0[3], float v1[3], float v2[3]) {
     }
 }
 
-//int make_mesh_and_material_by_obj(vertex_t **mesh, unsigned long *mesh_num, int **material_ids, unsigned long *material_ids_num, const char *name) {
-//    tinyobj_attrib_t attrib;
-//    tinyobj_shape_t* shapes = NULL;
-//    size_t num_shapes;
-//    tinyobj_material_t* tmaterials = NULL;
-//    size_t num_materials;
-//    int start_material_cnt = material_cnt;
-//    
-//    FILE * pFile;
-//    long lSize;
-//    size_t data_len;
-//    char * buffer;
-//    size_t result;
-//    const char *path = getFilePath(name, "obj");
-//    pFile = fopen(path, "r");
-//    fseek(pFile, 0, SEEK_END);
-//    lSize = ftell (pFile);
-//    rewind (pFile);
-//    
-//    // allocate memory to contain the whole file:
-//    buffer = (char*) malloc (sizeof(char)*lSize);
-//    if (buffer == NULL) {fputs ("Memory error",stderr); exit (2);}
-//    
-//    // copy the file into the buffer:
-//    result = fread (buffer,1,lSize,pFile);
-//    if (result > lSize) {fputs ("Reading error",stderr); exit (3);}
-//    
-//    
-//    data_len = (size_t)lSize;
-//    if (buffer == NULL) {
-//        exit(-1);
-//        /* return 0; */
-//    }
-//    //printf("filesize: %d\n", (int)data_len);
-//    
-//    {
-////        printf("path %s\n", path);
-//        char prefix_path[1000];
-//        long len = strrchr(path, '/')-path+1;
-//        strncpy(prefix_path, path, len);
-//        prefix_path[len] = '\0';
-////        printf("prefix_path : %s\n", prefix_path);
-//        unsigned int flags = TINYOBJ_FLAG_TRIANGULATE;
-//        int ret = tinyobj_parse_obj(&attrib, &shapes, &num_shapes, &tmaterials,
-//                                    &num_materials, buffer, data_len, flags, prefix_path);
-//        if (ret != TINYOBJ_SUCCESS) {
-//            return 0;
-//        }
-//        
-//        //printf("# of shapes    = %d\n", (int)num_shapes);
-//        //printf("# of materiasl = %d\n", (int)num_materials);
-//    }
-//    
-//    {
-//        size_t i;
-//        for (i = 0; i < num_materials; i++) {
-//            material_t m;
-//            tinyobj_material_t tm = tmaterials[i];
-//            if(tm.name != NULL) {
-//                m.name = (char*)malloc(sizeof(char) * (strlen(tm.name)+1));
-//                strcpy(m.name, tm.name);
-//            }
-//            m.ambient.r = tm.ambient[0];
-//            m.ambient.g = tm.ambient[1];
-//            m.ambient.b = tm.ambient[2];
-//            
-//            m.diffuse.r = tm.diffuse[0];
-//            m.diffuse.g = tm.diffuse[1];
-//            m.diffuse.b = tm.diffuse[2];
-//            
-//            m.specular.r = tm.specular[0];
-//            m.specular.g = tm.specular[1];
-//            m.specular.b = tm.specular[2];
-//            
-//            m.transmittance.r = tm.transmittance[0];
-//            m.transmittance.g = tm.transmittance[1];
-//            m.transmittance.b = tm.transmittance[2];
-//            
-//            m.emission.r = tm.emission[0];
-//            m.emission.g = tm.emission[1];
-//            m.emission.b = tm.emission[2];
-//            
-//            m.shininess = tm.shininess;
-//            m.ior = tm.ior;
-//            m.dissolve = tm.dissolve;
-//            m.illum = tm.illum;
-//            m.pad0 = tm.pad0;
-//            
-//            m.ambient_tex_id = -1;
-//            m.diffuse_tex_id = -1;
-//            m.specular_tex_id = -1;
-//            m.specular_highlight_tex_id = -1;
-//            m.bump_tex_id = -1;
-//            m.displacement_tex_id = -1;
-//            m.alpha_tex_id = -1;
-//            
-//            m.ambient_texname = NULL;
-//            m.diffuse_texname = NULL;
-//            m.specular_texname = NULL;
-//            m.specular_highlight_texname = NULL;
-//            m.bump_texname = NULL;
-//            m.displacement_texname = NULL;
-//            m.alpha_texname = NULL;
-//            
-//            if(tm.ambient_texname != NULL) {
-//                m.ambient_texname = (char*)malloc(sizeof(char) * (strlen(tm.ambient_texname)+1));
-//                strcpy(m.ambient_texname, tm.ambient_texname);
-//                m.ambient_tex_id = make_texture_by_png(m.ambient_texname, true);
-//            }
-//            if(tm.diffuse_texname != NULL) {
-//                m.diffuse_texname = (char*)malloc(sizeof(char) * (strlen(tm.diffuse_texname)+1));
-//                strcpy(m.diffuse_texname, tm.diffuse_texname);
-//                m.diffuse_tex_id = make_texture_by_png(m.diffuse_texname, true);
-//            }
-//            if(tm.specular_texname != NULL) {
-//                m.specular_texname = (char*)malloc(sizeof(char) * (strlen(tm.specular_texname)+1));
-//                strcpy(m.specular_texname, tm.specular_texname);
-//                m.specular_tex_id = make_texture_by_png(m.specular_texname, true);
-//            }
-//            if(tm.specular_highlight_texname != NULL) {
-//                m.specular_highlight_texname = (char*)malloc(sizeof(char) * (strlen(tm.specular_highlight_texname)+1));
-//                strcpy(m.specular_highlight_texname, tm.specular_highlight_texname);
-//                m.specular_highlight_tex_id = make_texture_by_png(m.specular_highlight_texname, true);
-//            }
-//            if(tm.bump_texname != NULL) {
-//                m.bump_texname = (char*)malloc(sizeof(char) * (strlen(tm.bump_texname)+1));
-//                strcpy(m.bump_texname, tm.bump_texname);
-//                m.bump_tex_id = make_texture_by_png(m.bump_texname, true);
-//            }
-//            if(tm.displacement_texname != NULL) {
-//                m.displacement_texname = (char*)malloc(sizeof(char) * (strlen(tm.displacement_texname)+1));
-//                strcpy(m.displacement_texname, tm.displacement_texname);
-//                m.displacement_tex_id = make_texture_by_png(m.displacement_texname, true);
-//            }
-//            if(tm.alpha_texname != NULL) {
-//                m.alpha_texname = (char*)malloc(sizeof(char) * (strlen(tm.alpha_texname)+1));
-//                strcpy(m.alpha_texname, tm.alpha_texname);
-//                m.alpha_tex_id = make_texture_by_png(m.alpha_texname, true);
-//            }
-//            materials[material_cnt++] = m;
-//        }
-//    }
-//    
-//    {
-////        float* vb;
-//        size_t face_offset = 0;
-//        size_t i;
-//        
-//        /* Assume triangulated face. */
-//        size_t num_triangles = attrib.num_face_num_verts;
-////        size_t stride = 9; /* 9 = pos(3float), normal(3float), color(3float) */
-//        *mesh_num = num_triangles * 3;
-//        *mesh = (vertex_t*)malloc(sizeof(vertex_t) * num_triangles * 3);
-//        
-//        *material_ids_num = num_triangles;
-//        *material_ids = (int*)malloc(sizeof(int) * (*material_ids_num));
-//        for (i = 0; i < attrib.num_face_num_verts; i++) {
-//            size_t f;
-//            assert(attrib.face_num_verts[i] % 3 == 0); /* assume all triangle faces. */
-//            (*material_ids)[i] = attrib.material_ids[i];
-//            if((*material_ids)[i] >= 0)
-//                (*material_ids)[i] += start_material_cnt;
-//            
-//            for (f = 0; f < (size_t)attrib.face_num_verts[i] / 3; f++) {
-//                size_t k;
-//                float v[3][3];
-//                float n[3][3];
-//                float c[3];
-//                float t[3][2];
-//                float len2;
-//                
-//                tinyobj_vertex_index_t idx0 = attrib.faces[face_offset + 3 * f + 0];
-//                tinyobj_vertex_index_t idx1 = attrib.faces[face_offset + 3 * f + 1];
-//                tinyobj_vertex_index_t idx2 = attrib.faces[face_offset + 3 * f + 2];
-//                
-//                for (k = 0; k < 3; k++) {
-//                    int f0 = idx0.v_idx;
-//                    int f1 = idx1.v_idx;
-//                    int f2 = idx2.v_idx;
-//                    assert(f0 >= 0);
-//                    assert(f1 >= 0);
-//                    assert(f2 >= 0);
-//                    
-//                    v[0][k] = attrib.vertices[3 * (size_t)f0 + k];
-//                    v[1][k] = attrib.vertices[3 * (size_t)f1 + k];
-//                    v[2][k] = attrib.vertices[3 * (size_t)f2 + k];
-//                }
-//                
-//                if (attrib.num_normals > 0) {
-//                    int f0 = idx0.vn_idx;
-//                    int f1 = idx1.vn_idx;
-//                    int f2 = idx2.vn_idx;
-//                    if (f0 >= 0 && f1 >= 0 && f2 >= 0) {
-//                        assert(f0 < (int)attrib.num_normals);
-//                        assert(f1 < (int)attrib.num_normals);
-//                        assert(f2 < (int)attrib.num_normals);
-//                        for (k = 0; k < 3; k++) {
-//                            n[0][k] = attrib.normals[3 * (size_t)f0 + k];
-//                            n[1][k] = attrib.normals[3 * (size_t)f1 + k];
-//                            n[2][k] = attrib.normals[3 * (size_t)f2 + k];
-//                        }
-//                    } else { /* normal index is not defined for this face */
-//                        /* compute geometric normal */
-//                        CalcNormal(n[0], v[0], v[1], v[2]);
-//                        n[1][0] = n[0][0];
-//                        n[1][1] = n[0][1];
-//                        n[1][2] = n[0][2];
-//                        n[2][0] = n[0][0];
-//                        n[2][1] = n[0][1];
-//                        n[2][2] = n[0][2];
-//                    }
-//                } else {
-//                    /* compute geometric normal */
-//                    CalcNormal(n[0], v[0], v[1], v[2]);
-//                    n[1][0] = n[0][0];
-//                    n[1][1] = n[0][1];
-//                    n[1][2] = n[0][2];
-//                    n[2][0] = n[0][0];
-//                    n[2][1] = n[0][1];
-//                    n[2][2] = n[0][2];
-//                }
-//                
-//                if (attrib.num_texcoords > 0) {
-//                    int t0 = idx0.vt_idx;
-//                    int t1 = idx1.vt_idx;
-//                    int t2 = idx2.vt_idx;
-//                    if (t0 >= 0 && t1 >= 0 && t2 >= 0) {
-//                        assert(t0 < (int)attrib.num_texcoords);
-//                        assert(t1 < (int)attrib.num_texcoords);
-//                        assert(t2 < (int)attrib.num_texcoords);
-//                        for (k = 0; k < 2; k++) {
-//                            t[0][k] = attrib.texcoords[2 * (size_t)t0 + k];
-//                            t[1][k] = attrib.texcoords[2 * (size_t)t1 + k];
-//                            t[2][k] = attrib.texcoords[2 * (size_t)t2 + k];
-//                        }
-//                    } else {
-//                    }
-//                }
-//                
-//                for (k = 0; k < 3; k++) {
-//                    (*mesh)[3 * i + k].pos = (vector_t){v[k][0], v[k][1], v[k][2], 1};
-//                    (*mesh)[3 * i + k].normal = (vector_t){n[k][0], n[k][1], n[k][2], 0};
-//                    
-//                    (*mesh)[3 * i + k].tc = (texcoord_t){t[k][0], t[k][1]};
-//                    /* Use normal as color. */
-//                    c[0] = n[k][0];
-//                    c[1] = n[k][1];
-//                    c[2] = n[k][2];
-//                    len2 = c[0] * c[0] + c[1] * c[1] + c[2] * c[2];
-//                    if (len2 > 0.0f) {
-//                        float len = (float)sqrt((double)len2);
-//                        
-//                        c[0] /= len;
-//                        c[1] /= len;
-//                        c[2] /= len;
-//                    }
-//                    (*mesh)[3 * i + k].color = (color_t){(c[0] * 0.5f + 0.5f), (c[1] * 0.5f + 0.5f), (c[2] * 0.5f + 0.5f), 1.0f};
-//                }
-//            }
-//            face_offset += (size_t)attrib.face_num_verts[i];
-//        }
-//    }
-//    
-//    tinyobj_attrib_free(&attrib);
-//    tinyobj_shapes_free(shapes, num_shapes);
-//    tinyobj_materials_free(tmaterials, num_materials);
-//    
-//    // terminate
-//    fclose (pFile);
-//    free (buffer);
-//    return 0;
-//}
+int make_mesh_and_material_by_obj(vertex_t **mesh, unsigned long *mesh_num, int **material_ids, unsigned long *material_ids_num, const char *name) {
+    tinyobj_attrib_t attrib;
+    tinyobj_shape_t* shapes = NULL;
+    size_t num_shapes;
+    tinyobj_material_t* tmaterials = NULL;
+    size_t num_materials;
+    int start_material_cnt = material_cnt;
+    
+    FILE * pFile;
+    long lSize;
+    size_t data_len;
+    char * buffer;
+    size_t result;
+    const char *path = getFilePath(name, "obj");
+    pFile = fopen(path, "r");
+    fseek(pFile, 0, SEEK_END);
+    lSize = ftell (pFile);
+    rewind (pFile);
+
+    // allocate memory to contain the whole file:
+    buffer = (char*) malloc (sizeof(char)*lSize);
+    if (buffer == NULL) {fputs ("Memory error",stderr); exit (2);}
+    
+    // copy the file into the buffer:
+    result = fread (buffer,1,lSize,pFile);
+    if (result > lSize) {fputs ("Reading error",stderr); exit (3);}
+    
+    
+    data_len = (size_t)lSize;
+    if (buffer == NULL) {
+        exit(-1);
+        /* return 0; */
+    }
+    //printf("filesize: %d\n", (int)data_len);
+    
+    {
+//        printf("path %s\n", path);
+        char prefix_path[1000];
+        long len = strrchr(path, '/')-path+1;
+        strncpy(prefix_path, path, len);
+        prefix_path[len] = '\0';
+//        printf("prefix_path : %s\n", prefix_path);
+        unsigned int flags = TINYOBJ_FLAG_TRIANGULATE;
+        int ret = tinyobj_parse_obj(&attrib, &shapes, &num_shapes, &tmaterials,
+                                    &num_materials, buffer, data_len, flags, prefix_path);
+        if (ret != TINYOBJ_SUCCESS) {
+            return 0;
+        }
+        
+        //printf("# of shapes    = %d\n", (int)num_shapes);
+        //printf("# of materiasl = %d\n", (int)num_materials);
+    }
+    
+    {
+        size_t i;
+        for (i = 0; i < num_materials; i++) {
+            material_t m;
+            tinyobj_material_t tm = tmaterials[i];
+            if(tm.name != NULL) {
+                m.name = (char*)malloc(sizeof(char) * (strlen(tm.name)+1));
+                strcpy(m.name, tm.name);
+            }
+            m.ambient.r = tm.ambient[0];
+            m.ambient.g = tm.ambient[1];
+            m.ambient.b = tm.ambient[2];
+            
+            m.diffuse.r = tm.diffuse[0];
+            m.diffuse.g = tm.diffuse[1];
+            m.diffuse.b = tm.diffuse[2];
+            
+            m.specular.r = tm.specular[0];
+            m.specular.g = tm.specular[1];
+            m.specular.b = tm.specular[2];
+            
+            m.transmittance.r = tm.transmittance[0];
+            m.transmittance.g = tm.transmittance[1];
+            m.transmittance.b = tm.transmittance[2];
+            
+            m.emission.r = tm.emission[0];
+            m.emission.g = tm.emission[1];
+            m.emission.b = tm.emission[2];
+            
+            m.shininess = tm.shininess;
+            m.ior = tm.ior;
+            m.dissolve = tm.dissolve;
+            m.illum = tm.illum;
+            m.pad0 = tm.pad0;
+            
+            m.ambient_tex_id = -1;
+            m.diffuse_tex_id = -1;
+            m.specular_tex_id = -1;
+            m.specular_highlight_tex_id = -1;
+            m.bump_tex_id = -1;
+            m.displacement_tex_id = -1;
+            m.alpha_tex_id = -1;
+            
+            m.ambient_texname = NULL;
+            m.diffuse_texname = NULL;
+            m.specular_texname = NULL;
+            m.specular_highlight_texname = NULL;
+            m.bump_texname = NULL;
+            m.displacement_texname = NULL;
+            m.alpha_texname = NULL;
+            
+            if(tm.ambient_texname != NULL) {
+                m.ambient_texname = (char*)malloc(sizeof(char) * (strlen(tm.ambient_texname)+1));
+                strcpy(m.ambient_texname, tm.ambient_texname);
+                m.ambient_tex_id = make_texture_by_png(m.ambient_texname, true);
+            }
+            if(tm.diffuse_texname != NULL) {
+                m.diffuse_texname = (char*)malloc(sizeof(char) * (strlen(tm.diffuse_texname)+1));
+                strcpy(m.diffuse_texname, tm.diffuse_texname);
+                m.diffuse_tex_id = make_texture_by_png(m.diffuse_texname, true);
+            }
+            if(tm.specular_texname != NULL) {
+                m.specular_texname = (char*)malloc(sizeof(char) * (strlen(tm.specular_texname)+1));
+                strcpy(m.specular_texname, tm.specular_texname);
+                m.specular_tex_id = make_texture_by_png(m.specular_texname, true);
+            }
+            if(tm.specular_highlight_texname != NULL) {
+                m.specular_highlight_texname = (char*)malloc(sizeof(char) * (strlen(tm.specular_highlight_texname)+1));
+                strcpy(m.specular_highlight_texname, tm.specular_highlight_texname);
+                m.specular_highlight_tex_id = make_texture_by_png(m.specular_highlight_texname, true);
+            }
+            if(tm.bump_texname != NULL) {
+                m.bump_texname = (char*)malloc(sizeof(char) * (strlen(tm.bump_texname)+1));
+                strcpy(m.bump_texname, tm.bump_texname);
+                m.bump_tex_id = make_texture_by_png(m.bump_texname, true);
+            }
+            if(tm.displacement_texname != NULL) {
+                m.displacement_texname = (char*)malloc(sizeof(char) * (strlen(tm.displacement_texname)+1));
+                strcpy(m.displacement_texname, tm.displacement_texname);
+                m.displacement_tex_id = make_texture_by_png(m.displacement_texname, true);
+            }
+            if(tm.alpha_texname != NULL) {
+                m.alpha_texname = (char*)malloc(sizeof(char) * (strlen(tm.alpha_texname)+1));
+                strcpy(m.alpha_texname, tm.alpha_texname);
+                m.alpha_tex_id = make_texture_by_png(m.alpha_texname, true);
+            }
+            materials[material_cnt++] = m;
+        }
+    }
+    
+    {
+//        float* vb;
+        size_t face_offset = 0;
+        size_t i;
+        
+        /* Assume triangulated face. */
+        size_t num_triangles = attrib.num_face_num_verts;
+//        size_t stride = 9; /* 9 = pos(3float), normal(3float), color(3float) */
+        *mesh_num = num_triangles * 3;
+        *mesh = (vertex_t*)malloc(sizeof(vertex_t) * num_triangles * 3);
+        
+        *material_ids_num = num_triangles;
+        *material_ids = (int*)malloc(sizeof(int) * (*material_ids_num));
+        for (i = 0; i < attrib.num_face_num_verts; i++) {
+            size_t f;
+            assert(attrib.face_num_verts[i] % 3 == 0); /* assume all triangle faces. */
+            (*material_ids)[i] = attrib.material_ids[i];
+            if((*material_ids)[i] >= 0)
+                (*material_ids)[i] += start_material_cnt;
+            
+            for (f = 0; f < (size_t)attrib.face_num_verts[i] / 3; f++) {
+                size_t k;
+                float v[3][3];
+                float n[3][3];
+                float c[3];
+                float t[3][2];
+                float len2;
+                
+                tinyobj_vertex_index_t idx0 = attrib.faces[face_offset + 3 * f + 0];
+                tinyobj_vertex_index_t idx1 = attrib.faces[face_offset + 3 * f + 1];
+                tinyobj_vertex_index_t idx2 = attrib.faces[face_offset + 3 * f + 2];
+                
+                for (k = 0; k < 3; k++) {
+                    int f0 = idx0.v_idx;
+                    int f1 = idx1.v_idx;
+                    int f2 = idx2.v_idx;
+                    assert(f0 >= 0);
+                    assert(f1 >= 0);
+                    assert(f2 >= 0);
+                    
+                    v[0][k] = attrib.vertices[3 * (size_t)f0 + k];
+                    v[1][k] = attrib.vertices[3 * (size_t)f1 + k];
+                    v[2][k] = attrib.vertices[3 * (size_t)f2 + k];
+                }
+                
+                if (attrib.num_normals > 0) {
+                    int f0 = idx0.vn_idx;
+                    int f1 = idx1.vn_idx;
+                    int f2 = idx2.vn_idx;
+                    if (f0 >= 0 && f1 >= 0 && f2 >= 0) {
+                        assert(f0 < (int)attrib.num_normals);
+                        assert(f1 < (int)attrib.num_normals);
+                        assert(f2 < (int)attrib.num_normals);
+                        for (k = 0; k < 3; k++) {
+                            n[0][k] = attrib.normals[3 * (size_t)f0 + k];
+                            n[1][k] = attrib.normals[3 * (size_t)f1 + k];
+                            n[2][k] = attrib.normals[3 * (size_t)f2 + k];
+                        }
+                    } else { /* normal index is not defined for this face */
+                        /* compute geometric normal */
+                        CalcNormal(n[0], v[0], v[1], v[2]);
+                        n[1][0] = n[0][0];
+                        n[1][1] = n[0][1];
+                        n[1][2] = n[0][2];
+                        n[2][0] = n[0][0];
+                        n[2][1] = n[0][1];
+                        n[2][2] = n[0][2];
+                    }
+                } else {
+                    /* compute geometric normal */
+                    CalcNormal(n[0], v[0], v[1], v[2]);
+                    n[1][0] = n[0][0];
+                    n[1][1] = n[0][1];
+                    n[1][2] = n[0][2];
+                    n[2][0] = n[0][0];
+                    n[2][1] = n[0][1];
+                    n[2][2] = n[0][2];
+                }
+                
+                if (attrib.num_texcoords > 0) {
+                    int t0 = idx0.vt_idx;
+                    int t1 = idx1.vt_idx;
+                    int t2 = idx2.vt_idx;
+                    if (t0 >= 0 && t1 >= 0 && t2 >= 0) {
+                        assert(t0 < (int)attrib.num_texcoords);
+                        assert(t1 < (int)attrib.num_texcoords);
+                        assert(t2 < (int)attrib.num_texcoords);
+                        for (k = 0; k < 2; k++) {
+                            t[0][k] = attrib.texcoords[2 * (size_t)t0 + k];
+                            t[1][k] = attrib.texcoords[2 * (size_t)t1 + k];
+                            t[2][k] = attrib.texcoords[2 * (size_t)t2 + k];
+                        }
+                    } else {
+                    }
+                }
+                
+                for (k = 0; k < 3; k++) {
+                    (*mesh)[3 * i + k].pos = (vector_t){v[k][0], v[k][1], v[k][2], 1};
+                    (*mesh)[3 * i + k].normal = (vector_t){n[k][0], n[k][1], n[k][2], 0};
+                    
+                    (*mesh)[3 * i + k].tc = (texcoord_t){t[k][0], t[k][1]};
+                    /* Use normal as color. */
+                    c[0] = n[k][0];
+                    c[1] = n[k][1];
+                    c[2] = n[k][2];
+                    len2 = c[0] * c[0] + c[1] * c[1] + c[2] * c[2];
+                    if (len2 > 0.0f) {
+                        float len = (float)sqrt((double)len2);
+                        
+                        c[0] /= len;
+                        c[1] /= len;
+                        c[2] /= len;
+                    }
+                    (*mesh)[3 * i + k].color = (color_t){(c[0] * 0.5f + 0.5f), (c[1] * 0.5f + 0.5f), (c[2] * 0.5f + 0.5f), 1.0f};
+                }
+            }
+            face_offset += (size_t)attrib.face_num_verts[i];
+        }
+    }
+    
+    tinyobj_attrib_free(&attrib);
+    tinyobj_shapes_free(shapes, num_shapes);
+    tinyobj_materials_free(tmaterials, num_materials);
+    
+    // terminate
+    fclose (pFile);
+    free (buffer);
+    return 0;
+}
 
 int generate_mipmaps(texture_t *texture, float gamma) {
     uint **mipmaps = NULL;

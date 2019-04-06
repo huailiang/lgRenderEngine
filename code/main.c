@@ -71,14 +71,14 @@ void sdl_close()
 
 int main(int argc, char *argv[])
 {
-	printf("start engine %lu ", sizeof(SDL_Event));
-	if (sdl_init())
+	printf("start engine %lu \n", sizeof(SDL_Event));
+    if (sdl_init())
 	{
 		bool quit = false;
 		bool firstMouse = true;
 		float c_yaw = 0.0f;
 		float c_pitch = 0.0f;
-		float c_movementspeed = 2.0f;
+//        float c_movementspeed = 2.0f;
 		float c_mouse_sensitivity = 0.7f;
 		float c_lastX = SCREEN_WIDTH >> 1, c_lastY = SCREEN_HEIGHT >> 1;
 		device_t device;
