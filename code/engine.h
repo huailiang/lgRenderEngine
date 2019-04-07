@@ -63,15 +63,15 @@ void matrix_set_perspective(matrix_t *m, float fovy, float aspect, float zn, flo
 void matrix_set_ortho(matrix_t *m, float l, float r, float b, float t, float zn, float zf);
 
 typedef struct { matrix_t model, view, view_r, projection, vp, mv, mvp; } transform_t;
-//  1). transform_update (world * view * projection
+// transform_update (world * view * projection
 void transform_update(transform_t *ts);
-//  3). transform_apply
+// transform_apply
 void transform_apply(const transform_t *ts, vector_t *y, const vector_t *x);
-//  4). transform_check_cvv(v)
+// transform_check_cvv(v)
 int transform_check_cvv(const vector_t *v);
-//  5). transform_homogenize(ts, y, x)
+// transform_homogenize(ts, y, x)
 void transform_homogenize(vector_t *y, const vector_t *x, float width, float height);
-//  6). transform_homogenize(ts, y, x)
+// transform_homogenize(ts, y, x)
 void transform_homogenize_reverse(vector_t *y, const vector_t *x, float w, float width, float height);
 
 typedef struct { float r, g, b, a; } color_t;
@@ -91,24 +91,24 @@ typedef struct
 	color_t transmittance;
 	color_t emission;
 	float shininess;
-	float ior;      /* index of refraction */
-	float dissolve;
+	float ior;
+    float dissolve;
 	int illum;
 	int pad0;
-	char *ambient_texname;            /* map_Ka */
+	char *ambient_texname;
 	int ambient_tex_id;
-	char *diffuse_texname;            /* map_Kd */
+	char *diffuse_texname;
 	int diffuse_tex_id;
-	char *specular_texname;           /* map_Ks */
+	char *specular_texname;
 	int specular_tex_id;
-	char *specular_highlight_texname; /* map_Ns */
+	char *specular_highlight_texname;
 	int specular_highlight_tex_id;
-	char *bump_texname;               /* map_bump, bump */
+	char *bump_texname;
 	int bump_tex_id;
-	char *displacement_texname;       /* disp */
-	int displacement_tex_id;
-	char *alpha_texname;              /* map_d */
-	int alpha_tex_id;
+	char *displacement_texname;
+    int displacement_tex_id;
+	char *alpha_texname;
+    int alpha_tex_id;
 } material_t;
 
 #define NUM_MATERIAL 100

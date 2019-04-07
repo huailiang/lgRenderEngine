@@ -21,7 +21,7 @@ void free_textures(void);
 void free_materials(void);
 void draw_object(device_t *device, object_t* objects, int obj_cnt);
 void draw_light(void);
-void init_main_camera(void);
+void init_maincamera(void);
 void draw_groud(void);
 void draw_boxs(void);
 void free_scene(void);

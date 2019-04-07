@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
         memset(screen_keys, 0, sizeof(int) * KEY_CNT);
         
         draw_light();
-        init_main_camera();
+        init_maincamera();
         draw_groud();
         draw_boxs();
 
@@ -130,8 +130,10 @@ int main(int argc, char *argv[])
 
 			while (SDL_PollEvent(&e) != 0)
 			{
+                printf("event type is: %d\n",e.type);
 				if (e.type == SDL_QUIT)
 				{
+                    printf("quit checked");
 					quit = true;
 					break;
 				}
@@ -267,7 +269,6 @@ int main(int argc, char *argv[])
             
             // shadowbuffer在这里设置是为了清空buffer
             device_set_shadowbuffer(&device, shadowbuffer);
-            
             device_clear(&device);
             
             if(main_camera->dirty) camera_init_by_euler(main_camera, c_yaw, c_pitch);
@@ -275,7 +276,7 @@ int main(int argc, char *argv[])
             for(int i = 0; i < camera_count; i++)
             {
                 camera_t *camera = &cameras[i];
-                if(camera->main == true)
+                if(camera->main)
                 {
                     device.cull = 1;
                     device_set_framebuffer(&device, framebuffer);
@@ -289,7 +290,7 @@ int main(int argc, char *argv[])
                     device_set_zbuffer(&device, NULL);
                     device_set_shadowbuffer(&device, shadowbuffer);
                 }
-                if(camera->dirty == true)
+                if(camera->dirty)
                 {
                     camera_update(camera);
                     camera->dirty = false;
@@ -304,11 +305,10 @@ int main(int argc, char *argv[])
                 for(int x = 0; x < SCREEN_WIDTH; x++)
                 {
                     uint color = framebuffer[y * SCREEN_WIDTH + x];
-                    SDL_SetRenderDrawColor(xRenderer, (0xff<<16&color)>>16, (0xff<<8&color)>>8, 0xff&color, (0xff<<24&color)>>24);
+                    SDL_SetRenderDrawColor(xRenderer, (0xff<<16 & color)>>16, (0xff<<8 & color)>>8, 0xff&color, (0xff<<24 & color)>>24);
                     SDL_RenderDrawPoint(xRenderer, x, y);
                 }
             }
-            
             SDL_RenderPresent(xRenderer);
 		}
         free_scene();

@@ -170,7 +170,7 @@ void draw_light()
     pointLights[pointlight_cnt++] = (pointlight_t){{0.0f, 6.0f, 2.0f, 1.0f}, 1.0f, 0.09f, 0.032f, {0.6f, 0.6f, 0.6f, 1.0f}, {0.8f, 0.8f, 0.8f, 1.0f}, {0.6f, 0.6f, 0.6f, 1.0f}, false};
 }
 
-void init_main_camera()
+void init_maincamera()
 {
     main_camera = &cameras[camera_count];
     main_camera->main = true;
