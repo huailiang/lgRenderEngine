@@ -304,7 +304,6 @@ int main(int argc, char *argv[])
                 {
                     uint color = framebuffer[y * SCREEN_WIDTH + x];
                     SDL_SetRenderDrawColor(xRenderer, (0xff<<16 & color)>>16, (0xff<<8 & color)>>8, 0xff&color, (0xff<<24 & color)>>24);
-//                    SDL_SetRenderDrawColor(xRenderer,x%100<=40?255:0,y%100<=70?255:0,0,SDL_ALPHA_OPAQUE);
                     SDL_RenderDrawPoint(xRenderer, x, y);
                 }
             }

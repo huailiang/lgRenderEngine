@@ -313,29 +313,6 @@ void matrix_set_scale(matrix_t *m, float sx, float sy, float sz)
 // x*z*(1-cos0)+y*sin0  y*z*(1-cos0)-x*sin0   z*z*(1-cos0)+cos0
 void matrix_set_rotate(matrix_t *m, const vector_t *v, float theta)
 {
-	//    float s = sin(theta);
-	//    float c = cos(theta);
-	//
-	//    float a = 1.0f - c;
-	//    float ax = a * v->x;
-	//    float ay = a * v->y;
-	//    float az = a * v->z;
-	//
-	//    m->m[0][0] = ax * v->x + c;
-	//    m->m[0][1] = ax * v->y + v->z * s;
-	//    m->m[0][2] = ax * v->z - v->y * s;
-	//
-	//    m->m[1][0] = ay * v->x - v->z * s;
-	//    m->m[1][1] = ay * v->y + c;
-	//    m->m[1][2] = ay * v->z + v->x * s;
-	//
-	//    m->m[2][0] = az * v->x + v->y * s;
-	//    m->m[2][1] = az * v->y - v->x * s;
-	//    m->m[2][2] = az * v->z + c;
-	//
-	//    m->m[3][0] = m->m[3][1] = m->m[3][2] = 0.0f;
-	//    m->m[0][3] = m->m[1][3] = m->m[2][3] = 0.0f;
-	//    m->m[3][3] = 1.0f;
 	float x = v->x, y = v->y, z = v->z;
 	float qsin = (float)sin(theta * 0.5f);
 	float qcos = (float)cos(theta * 0.5f);
@@ -461,7 +438,6 @@ void matrix_set_ortho(matrix_t *m, float l, float r, float b, float t, float zn,
 	m->m[2][0] = m->m[2][1] = m->m[2][3] = 0.0f;
 }
 
-// transform_update (world * view * projection)
 void transform_update(transform_t *ts)
 {
 	matrix_mul(&ts->mv, &ts->model, &ts->view);
@@ -814,7 +790,7 @@ void device_clear(device_t *device)
 			for (int x = 0; x < device->camera->width; x++)
 				device->framebuffer[y * device->camera->width + x] = device->background;
 	}
-	// memset(device->framebuffer, 0xff, device->camera->width * device->camera->height * sizeof(IUINT32));
+	// memset(device->framebuffer, 0xff, device->camera->width * device->camera->height * sizeof(uint));
 	if (device->zbuffer != NULL)
 		memset(device->zbuffer, 0, device->camera->width * device->camera->height * sizeof(float));
 	if (device->shadowbuffer != NULL)
@@ -1015,7 +991,6 @@ bool computeBarycentricCoords3d(point_t *res, const point_t *p0, const point_t *
 	return true;
 }
 
-// now is the core realize for rendering, so just do it.
 void device_draw_scanline(device_t *device, scanline_t *scanline, point_t *points, v2f *vfs)
 {
 	int y = scanline->y;
@@ -1167,24 +1142,6 @@ void calculate_tangent_and_binormal(vector_t *tangent, vector_t *binormal, const
 void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_t *t3) {
 	vertex_t *vertice[3] = { t1, t2, t3 };
 	point_t points[3];
-
-	//    matrix_apply(&c1, &t1->pos, &device->transform.world);
-	//    matrix_apply(&c2, &t2->pos, &device->transform.world);
-	//    matrix_apply(&c3, &t3->pos, &device->transform.world);
-
-	//    matrix_apply(&p1, &c1, &device->transform.view);
-
-	//    matrix_apply(&p2, &c2, &device->transform.view);
-	//    matrix_apply(&p3, &c3, &device->transform.view);
-
-	//    vector_t t21, t32;
-	//    vector_sub(&t21, &p2, &p1);
-	//    vector_sub(&t32, &p3, &p2);
-	//    vector_t normal;
-	//    vector_crossproduct(&normal, &t21, &t32);
-	//    if(vector_dotproduct(&normal, &p2) >= 0)
-	//        return;
-
 	matrix_t nm;
 	matrix_clone(&nm, &device->transform.model);
 	matrix_inverse(&nm);
@@ -1516,7 +1473,8 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 	device_draw_primitive(device, &p1, &p2, &p3);
 }
 
-void vert_shader(device_t *device, a2v *av, v2f *vf) {
+void vert_shader(device_t *device, a2v *av, v2f *vf)
+{
 	vf->pos = av->pos;
 	vf->normal = av->normal;
 	vf->color = av->color;
@@ -1538,20 +1496,7 @@ void frag_shader(device_t *device, v2f *vf, color_t *color) {
 	vector_t lightDir = dirLight.dir;
 	vector_inverse(&lightDir);
 	vector_normalize(&lightDir);
-
-	//    if(material->bump_tex_id != -1) {
-	//        color_t color = texture_read(&textures[material->bump_tex_id], tex->u, tex->v, vf->pos.w, 15);
-	//        vector_t bump = {color.r, color.g, color.b, color.a};
-	//        bump.x = bump.x * 2 - 1.0f;
-	//        bump.y = bump.y * 2 - 1.0f;
-	//        vector_scale(&bump, 1.0f);
-	//        float n = bump.x * bump.x + bump.y * bump.y;
-	//        if( n < 0.0f ) n = 0.0f; if( n > 1.0f ) n = 1.0f;
-	//        bump.z = sqrtf(1.0f - n);
-	//        normal = (vector_t){vector_dotproduct(&vf->storage0, &bump), vector_dotproduct(&vf->storage1, &bump), vector_dotproduct(&vf->storage2, &bump)};
-	//        vector_normalize(&normal);
-	//    }
-
+    
 	float diff = fmaxf(vector_dotproduct(&normal, &lightDir), 0.0f);
 	lightDir = dirLight.dir;
 	vector_normalize(&lightDir);
