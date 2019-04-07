@@ -2,19 +2,19 @@
 A cross-platform soft render engine based on SDL2
 
 
-##Requirement
+## Requirement
 
 - SDL2
 - libpng
 
 
-##Environment
+## Environment
 
 - xcode 
 - vs2017
 
 
-##Build
+## Build
 
 you should be ensure cmake which is installed at your mac,  and generate xcode project use command as:
 
@@ -28,7 +28,7 @@ compile visual studio project on windows:
 cd build directory, and click build_vs2017.bat
 
 
-##Tips
+## Tips
 
 libpng depends on zlib, so should be set -lz in "Other linker flags" at xcode project
 
