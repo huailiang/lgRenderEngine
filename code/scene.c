@@ -126,15 +126,16 @@ void draw_object(device_t *device, object_t* objects, int obj_cnt)
 		}
 		device->transform.model = object->matrix;
 		transform_update(&device->transform);
-		vertex_t *mesh = object->mesh;
-		for (uint j = 0; j < object->mesh_num; i += 3)
-		{
-			if (object->material_ids == NULL)
-				device->material = materials[0];
-			else
-				device->material = materials[object->material_ids[j / 3]];
-			clip_polys(device, &mesh[i], &mesh[j + 1], &mesh[j + 2], false);
-		}
+        vertex_t *mesh = object->mesh;
+        
+        for (uint j = 0; j < object->mesh_num; j += 3)
+        {
+            if (object->material_ids == NULL)
+                device->material = materials[0];
+            else
+                device->material = materials[object->material_ids[j / 3]];
+            clip_polys(device, &mesh[i], &mesh[j + 1], &mesh[j + 2], false);
+        }
 	}
 }
 

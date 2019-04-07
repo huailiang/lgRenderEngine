@@ -128,64 +128,62 @@ int main(int argc, char *argv[])
 			}
 #endif // #ifdef _MSC_VER
 
-			while (SDL_PollEvent(&e) != 0)
-			{
-                printf("event type is: %d\n",e.type);
-				if (e.type == SDL_QUIT)
-				{
-                    printf("quit checked");
-					quit = true;
-					break;
-				}
-				else if (e.type == SDL_KEYDOWN)
-				{
-					screen_keys[e.key.keysym.scancode] = 1;
-				}
-				else if (e.type == SDL_KEYUP)
-				{
-					screen_keys[e.key.keysym.scancode] = 0;
-				}
-				else if (e.type == SDL_MOUSEMOTION)
-				{
-					if (firstMouse)
-					{
-						c_lastX = e.motion.x;
-						c_lastY = e.motion.y;
-						firstMouse = false;
-					}
-					float xoffset = e.motion.x - c_lastX;
-					float yoffset = e.motion.y - c_lastY;
-					c_lastX = e.motion.x;
-					c_lastY = e.motion.y;
-					xoffset *= c_mouse_sensitivity;
-					yoffset *= c_mouse_sensitivity;
+            while (SDL_PollEvent(&e) != 0)
+            {
+//                printf("checked key event: %d\n",e.type);
+                if (e.type == SDL_QUIT)
+                {
+                    quit = true;
+                }
+                else if (e.type == SDL_KEYDOWN)
+                {
+                    screen_keys[e.key.keysym.scancode] = 1;
+                }
+                else if (e.type == SDL_KEYUP)
+                {
+                    screen_keys[e.key.keysym.scancode] = 0;
+                }
+                else if (e.type == SDL_MOUSEMOTION)
+                {
+                    if (firstMouse)
+                    {
+                        c_lastX = e.motion.x;
+                        c_lastY = e.motion.y;
+                        firstMouse = false;
+                    }
+                    float xoffset = e.motion.x - c_lastX;
+                    float yoffset = e.motion.y - c_lastY;
+                    c_lastX = e.motion.x;
+                    c_lastY = e.motion.y;
+                    xoffset *= c_mouse_sensitivity;
+                    yoffset *= c_mouse_sensitivity;
 
-					c_yaw += xoffset;
-					c_pitch += yoffset;
-					if (c_pitch > 89.0f) c_pitch = 89.0f;
-					if (c_pitch < -89.0f) c_pitch = -89.0f;
+                    c_yaw += xoffset;
+                    c_pitch += yoffset;
+                    if (c_pitch > 89.0f) c_pitch = 89.0f;
+                    if (c_pitch < -89.0f) c_pitch = -89.0f;
                     main_camera->dirty=true;
-				}
-			}
+                }
+            }
 
-			if (screen_keys[SDL_SCANCODE_W]) 
-			{
+            if (screen_keys[SDL_SCANCODE_W])
+            {
                 float velocity = c_movementspeed * deltaTime;
                 vector_t temp = main_camera->front;
                 vector_scale(&temp, velocity);
                 vector_add(&main_camera->pos, &main_camera->pos, &temp);
                 main_camera->dirty = true;
             }
-			if (screen_keys[SDL_SCANCODE_S])
-			{
+            if (screen_keys[SDL_SCANCODE_S])
+            {
                 float velocity = c_movementspeed * deltaTime;
                 vector_t temp = main_camera->front;
                 vector_scale(&temp, velocity);
                 vector_sub(&main_camera->pos, &main_camera->pos, &temp);
                 main_camera->dirty = true;
-			}
-			if (screen_keys[SDL_SCANCODE_A])
-			{
+            }
+            if (screen_keys[SDL_SCANCODE_A])
+            {
                 float velocity = c_movementspeed * deltaTime;
                 vector_t temp;
                 vector_crossproduct(&temp, &main_camera->front, &main_camera->worldup);
@@ -193,9 +191,9 @@ int main(int argc, char *argv[])
                 vector_scale(&temp, velocity);
                 vector_add(&main_camera->pos, &main_camera->pos, &temp);
                 main_camera->dirty = true;
-			}
-			if (screen_keys[SDL_SCANCODE_D]) 
-			{
+            }
+            if (screen_keys[SDL_SCANCODE_D])
+            {
                 float velocity = c_movementspeed * deltaTime;
                 vector_t temp;
                 vector_crossproduct(&temp, &main_camera->front, &main_camera->worldup);
@@ -203,7 +201,7 @@ int main(int argc, char *argv[])
                 vector_scale(&temp, velocity);
                 vector_sub(&main_camera->pos, &main_camera->pos, &temp);
                 main_camera->dirty = true;
-			}
+            }
             if (screen_keys[SDL_SCANCODE_Q])
             {
                 controlObj->theta -= 0.04f;
@@ -256,7 +254,7 @@ int main(int argc, char *argv[])
                 }
             }
             else kbhit = 0;
-            
+        
             // box auto rotate
             g_box->theta -= 0.04f;
             g_box->dirty = true;
@@ -270,9 +268,9 @@ int main(int argc, char *argv[])
             // shadowbuffer在这里设置是为了清空buffer
             device_set_shadowbuffer(&device, shadowbuffer);
             device_clear(&device);
-            
+
             if(main_camera->dirty) camera_init_by_euler(main_camera, c_yaw, c_pitch);
-            
+
             for(int i = 0; i < camera_count; i++)
             {
                 camera_t *camera = &cameras[i];
@@ -299,13 +297,14 @@ int main(int argc, char *argv[])
                 transform_update(&device.transform);
                 draw_object(&device, objects, object_count);
             }
-            
+
             for(int y = 0; y < SCREEN_HEIGHT; y++)
             {
                 for(int x = 0; x < SCREEN_WIDTH; x++)
                 {
                     uint color = framebuffer[y * SCREEN_WIDTH + x];
                     SDL_SetRenderDrawColor(xRenderer, (0xff<<16 & color)>>16, (0xff<<8 & color)>>8, 0xff&color, (0xff<<24 & color)>>24);
+//                    SDL_SetRenderDrawColor(xRenderer,x%100<=40?255:0,y%100<=70?255:0,0,SDL_ALPHA_OPAQUE);
                     SDL_RenderDrawPoint(xRenderer, x, y);
                 }
             }
