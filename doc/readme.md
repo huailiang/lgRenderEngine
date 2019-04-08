@@ -1,7 +1,7 @@
 # 软渲染相关内容
 
 ## 渲染管线概念
-![description](.\description.png)
+![description](./description.png)
 <br></br>
 
 ![pipeline1](http://www.ceeger.com/forum/attachment/thumb/1305/thread/2_3106_7d01f3c9ec55e5d.png)
@@ -51,7 +51,7 @@ Matrix4x4 MatrixAdd(const Matrix4x4& m1, const Matrix4x4& m2)
 
 ### 画直线
 给定两个屏幕坐标点，画一条直线。  
-![bresenham算法](.\bresenham.png)
+![bresenham算法](./bresenham.png)
 
 选择一种划线方法，DDA法，Bresenham算法，中点画线法，吴小林直线算法。  
 该直线不涉及模型空间到投影空间的坐标变换。用来理解画线方法原理，熟悉gdi的基本使用。
@@ -65,7 +65,7 @@ Matrix4x4 MatrixAdd(const Matrix4x4& m1, const Matrix4x4& m2)
 3. 光栅化，通过插值确定一个点的坐标，根据两个点画一条直线，从上到下或者从下到上依次画直线，最终在屏幕上画出一个三角形。(平底三角形，平顶三角形)
 
 
-![三角形](.\2.png)
+![三角形](./2.png)
 
 <br></br>
 
@@ -86,19 +86,19 @@ Matrix4x4 MatrixAdd(const Matrix4x4& m1, const Matrix4x4& m2)
 画多个物体相互之间有遮挡时，使用深度测试可以确保画出的图像是正确的。
 
 正确:  
-![正确](.\depthtest1.png)
+![正确](./depthtest1.png)
 <br></br>
 错误:  
-![错误](.\depthtest2.png)
+![错误](./depthtest2.png)
 
 在管线中的阶段:
-![顺序](.\order.png)
+![顺序](./order.png)
 
 ### 背面剔除
 背面剔除可以确保看不到的三角面不被渲染出来，节省计算能力，提高帧率。
 (也可以进行正面剔除)
 
-![剔除](.\cull.png)
+![剔除](./cull.png)
 
 
 1. 求出三角面中心点坐标  
@@ -116,7 +116,7 @@ isFrontFace = dot(camForward, normal) < 0;
 ### 立方体
 第一感觉应该是有8个顶点，实际需要24个顶点，因为相邻面共用的顶点的uv和法线都不同，认定是两个顶点，而不是一个。当然，顶点的坐标位置只有8个，常见做法是声明一个长度是8的数组VertexArray，存放顶点位置，再声明一个长度是24的数组IndexArray，存储24个值在[0, 7]之间的数字，对应VertexArray中的第n个元素。
 
-![索引](.\index.png)
+![索引](./index.png)
 
 举例，以顺时针为正方向时
 ```c++  
@@ -160,7 +160,7 @@ for (int i = 0; i < IndexCount; i += 4)
 漫反射:  
 
 各种方向的示意图
-![directions](.\directions.png)
+![directions](./directions.png)
 
 diffuse = dot(normal, lightDir)
 
@@ -168,8 +168,8 @@ diffuse = dot(normal, lightDir)
 高光:  
 
 phong 模型  
-![公式1](.\phong1.png)
-![公式2](.\phong2.png)
+![公式1](./phong1.png)
+![公式2](./phong2.png)
 
 翻译成代码就是: 
 ```csharp 
@@ -180,7 +180,7 @@ float specular = dot(relfectDir, lightDir);
 blinn-phong 模型:
 phong模型的改进版，简化了计算效果也不错。
 
-![blinnphong](.\blinnphong.png)
+![blinnphong](./blinnphong.png)
 翻译成代码就是: 
 ```csharp 
 float3 halfDir = normalize(lightDir + viewDir);
@@ -218,13 +218,13 @@ _Tangent2World = float3x3(tangent.x, binormal.x, normal.x,
 3. 正常渲染所有物体，渲染时把物体坐标转换到灯光空间，对比其深度值(depth)和shadowmap中记录的深度值(depthInSM)，如果 depth > depthInSM 表示在阴影中，否则不在阴影中。
 
 &emsp; shadow acne 问题
-![shadowacne](.\shadowacne.png)
+![shadowacne](./shadowacne.png)
 <br></br>
 
 &emsp; 成因
-![shadowacne1](.\shadowacne1.png)
+![shadowacne1](./shadowacne1.png)
 <br></br>
-![shadowacne1](.\shadowacne2.png)
+![shadowacne1](./shadowacne2.png)
 
 <br></br>
 
