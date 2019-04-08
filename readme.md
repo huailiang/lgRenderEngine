@@ -32,6 +32,12 @@ cd build directory, and click build_vs2017.bat
 
 libpng depends on zlib, so should be set -lz in "Other linker flags" at xcode project
 
+## Reinferences
+
+[resouces file format desc](/resources/readme.md)
+
 sdl: http://www.libsdl.org
 
 libpng: http://www.libpng.org/pub/png/libpng.html
+
+cmake: https://cmake.org/

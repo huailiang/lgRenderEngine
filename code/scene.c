@@ -106,6 +106,13 @@ void free_textures()
 	}
 }
 
+void init_materials()
+{
+	materials[material_cnt++] = (material_t) { NULL, { 0.2f, 0.2f, 0.2f }, { 0.5f, 0.5f, 0.5f }, { 0.2f, 0.2f, 0.2f }, { 0.5f, 0.5f, 0.5f }, { 0.5f, 0.5f, 0.5f }, 32.0f, 1.0f, 1.0f, 1, 1, NULL, -1, NULL, 2, NULL, -1, NULL, -1, NULL, -1, NULL, -1, NULL, -1 };
+	make_mesh_and_material_by_obj(&mesh_nan, &mesh_num_nan, &material_ids_nan, &material_ids_num_nan, "nanosuit");
+}
+
+
 void free_materials()
 {
 	for (int i = 0; i < material_cnt; i++)

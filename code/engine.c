@@ -878,8 +878,8 @@ color_t texture_read(const texture_t *texture, float u, float v, float z, float 
 	int vint = (int)v;
 	int uint_pls_1 = uint + 1;
 	int vint_pls_1 = vint + 1;
-	uint_pls_1 = CMID(uint_pls_1, 0, width - 1);
-	vint_pls_1 = CMID(vint_pls_1, 0, height - 1);
+	uint_pls_1 = clamp(uint_pls_1, 0, width - 1);
+	vint_pls_1 = clamp(vint_pls_1, 0, height - 1);
 
 	int textel00, textel10, textel01, textel11;
 	textel00 = data[(vint + 0)*width + (uint + 0)];
@@ -1035,10 +1035,10 @@ void device_draw_scanline(device_t *device, scanline_t *scanline, point_t *point
 
 					if (render_state & RENDER_STATE_COLOR) { a = vf.color.a; r = vf.color.r; g = vf.color.g; b = vf.color.b; }
 					if (render_state & RENDER_STATE_TEXTURE) { a = color.a; r = color.r; g = color.g; b = color.b; }
-					int A = CMID((int)(a * 255.0f), 0, 255);
-					int R = CMID((int)(r * 255.0f), 0, 255);
-					int G = CMID((int)(g * 255.0f), 0, 255);
-					int B = CMID((int)(b * 255.0f), 0, 255);
+					int A = clamp((int)(a * 255.0f), 0, 255);
+					int R = clamp((int)(r * 255.0f), 0, 255);
+					int G = clamp((int)(g * 255.0f), 0, 255);
+					int B = clamp((int)(b * 255.0f), 0, 255);
 					device->framebuffer[y*width + x] = (R << 16) | (G << 8) | B;
 				}
 			}

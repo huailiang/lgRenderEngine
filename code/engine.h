@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "common.h"
 
-extern int logbase2ofx(int n);
+int logbase2ofx(int n);
 
 typedef struct { float x, y, z, w; } vector_t;
 typedef vector_t point_t;

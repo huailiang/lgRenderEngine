@@ -76,11 +76,8 @@ int main(int argc, char *argv[])
         int indicator = 0;
 
         init_texture();
-        materials[material_cnt++] = (material_t){NULL, {0.2f, 0.2f, 0.2f}, {0.5f, 0.5f, 0.5f}, {0.2f, 0.2f, 0.2f}, {0.5f, 0.5f, 0.5f}, {0.5f, 0.5f, 0.5f}, 32.0f, 1.0f, 1.0f, 1, 1, NULL, -1, NULL, 2, NULL, -1, NULL, -1, NULL, -1, NULL, -1, NULL, -1};
+		init_materials();
         
-        make_mesh_and_material_by_obj(&mesh_nan, &mesh_num_nan, &material_ids_nan, &material_ids_num_nan, "nanosuit");
-        
-        // 缓存
         uint *framebuffer = (uint*)malloc(SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(uint));
         float *zbuffer = (float*)malloc(SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(float));
         float *shadowbuffer = (float*)malloc(SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(float));
@@ -116,7 +113,6 @@ int main(int argc, char *argv[])
 			lastFrame = current;
 
             printf("fps:%f\n", 1.0f / deltaTime);
-
 
             while (SDL_PollEvent(&e) != 0)
             {
@@ -251,7 +247,6 @@ int main(int argc, char *argv[])
             g_box1->theta += 0.04f;
             g_box1->dirty = true;
             
-            // Clear screen
             SDL_SetRenderDrawColor(xRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(xRenderer);
             

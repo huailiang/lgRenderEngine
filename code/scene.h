@@ -18,6 +18,7 @@ extern ulong material_ids_num_nan;
 
 void init_texture(void);
 void free_textures(void);
+void init_materials(void);
 void free_materials(void);
 void draw_object(device_t *device, object_t* objects, int obj_cnt);
 void draw_light(void);
