@@ -1,5 +1,5 @@
 
-A cross-platform soft render engine based on SDL2
+A cross-platform software render engine based on SDL2
 
 
 ## Requirement
@@ -16,14 +16,14 @@ A cross-platform soft render engine based on SDL2
 
 ## Build
 
-you should be ensure cmake which is installed at your mac,  and generate xcode project use command as:
+1. you should be ensure cmake installed at your mac,  and generate xcode project using command as:
 
 ```bash
 cd build
 sh build_osx.sh
 ```
 
-compile visual studio project on windows:
+2. compile visual studio project on windows:
 
 cd build directory, and click build_vs2017.bat
 

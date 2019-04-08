@@ -75,36 +75,23 @@ int main(int argc, char *argv[])
         int states[] = { RENDER_STATE_TEXTURE, RENDER_STATE_COLOR, RENDER_STATE_WIREFRAME };
         int indicator = 0;
 
+		float c_yaw = 0.0f;
+		float c_pitch = 0.0f;
+		float c_movementspeed = 2.0f;
+		float c_mouse_sensitivity = 0.7f;
+		float c_lastX = SCREEN_WIDTH >> 1, c_lastY = SCREEN_HEIGHT >> 1;
+		bool firstMouse = true;
+		memset(screen_keys, 0, sizeof(int) * KEY_CNT);
+
         init_texture();
 		init_materials();
-        
-        uint *framebuffer = (uint*)malloc(SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(uint));
-        float *zbuffer = (float*)malloc(SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(float));
-        float *shadowbuffer = (float*)malloc(SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(float));
-        pshadowbuffer = shadowbuffer;
-        
-        float c_yaw = 0.0f;
-        float c_pitch = 0.0f;
-        float c_movementspeed = 2.0f;
-        float c_mouse_sensitivity = 0.7f;
-        float c_lastX = SCREEN_WIDTH >> 1, c_lastY = SCREEN_HEIGHT >> 1;
-        bool firstMouse = true;
-        memset(screen_keys, 0, sizeof(int) * KEY_CNT);
-        
         draw_light();
         init_maincamera();
         draw_groud();
         draw_boxs();
-
-        device_set_framebuffer(&device, framebuffer);
-        device_set_zbuffer(&device, zbuffer);
-        device_set_shadowbuffer(&device, shadowbuffer);
-        device_set_background(&device, 0x55555555);
-        device_set_camera(&device, main_camera);
-        transform_update(&device.transform);
+		init_buffers(&device);
         
         object_t *controlObj = g_box1;
-        
 		SDL_Event e;
 		while (!quit)
 		{
@@ -116,7 +103,6 @@ int main(int argc, char *argv[])
 
             while (SDL_PollEvent(&e) != 0)
             {
-//                printf("checked key event: %d\n",e.type);
                 if (e.type == SDL_QUIT)
                 {
                     quit = true;
@@ -247,58 +233,9 @@ int main(int argc, char *argv[])
             g_box1->theta += 0.04f;
             g_box1->dirty = true;
             
-            SDL_SetRenderDrawColor(xRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-            SDL_RenderClear(xRenderer);
-            
-            // shadowbuffer在这里设置是为了清空buffer
-            device_set_shadowbuffer(&device, shadowbuffer);
-            device_clear(&device);
-
-            if(main_camera->dirty) camera_init_by_euler(main_camera, c_yaw, c_pitch);
-
-            for(int i = 0; i < camera_count; i++)
-            {
-                camera_t *camera = &cameras[i];
-                if(camera->main)
-                {
-                    device.cull = 1;
-                    device_set_framebuffer(&device, framebuffer);
-                    device_set_zbuffer(&device, zbuffer);
-                    device_set_shadowbuffer(&device, NULL);
-                }
-                else
-                {
-                    device.cull = 2;
-                    device_set_framebuffer(&device, NULL);
-                    device_set_zbuffer(&device, NULL);
-                    device_set_shadowbuffer(&device, shadowbuffer);
-                }
-                if(camera->dirty)
-                {
-                    camera_update(camera);
-                    camera->dirty = false;
-                }
-                device_set_camera(&device, camera);
-                transform_update(&device.transform);
-                draw_object(&device, objects, object_count);
-            }
-
-            for(int y = 0; y < SCREEN_HEIGHT; y++)
-            {
-                for(int x = 0; x < SCREEN_WIDTH; x++)
-                {
-                    uint color = framebuffer[y * SCREEN_WIDTH + x];
-                    SDL_SetRenderDrawColor(xRenderer, (0xff<<16 & color)>>16, (0xff<<8 & color)>>8, 0xff&color, (0xff<<24 & color)>>24);
-                    SDL_RenderDrawPoint(xRenderer, x, y);
-                }
-            }
-            SDL_RenderPresent(xRenderer);
+			render_scene(xRenderer, &device, c_yaw, c_pitch);
 		}
         free_scene();
-        free(framebuffer);
-        free(zbuffer);
-        free(shadowbuffer);
-        
 		sdl_close();
 	}
 	return 0;

@@ -193,10 +193,9 @@ int make_mesh_and_material_by_obj(vertex_t **mesh, ulong *mesh_num, int **materi
     for (i = 0; i < attrib.num_face_num_verts; i++) 
 	{
         size_t f;
-        assert(attrib.face_num_verts[i] % 3 == 0); /* assume all triangle faces. */
+        assert(attrib.face_num_verts[i] % 3 == 0);
         (*material_ids)[i] = attrib.material_ids[i];
-        if((*material_ids)[i] >= 0)
-            (*material_ids)[i] += start_material_cnt;
+		if ((*material_ids)[i] >= 0) (*material_ids)[i] += start_material_cnt;
         
         for (f = 0; f < (size_t)attrib.face_num_verts[i] / 3; f++) 
 		{
