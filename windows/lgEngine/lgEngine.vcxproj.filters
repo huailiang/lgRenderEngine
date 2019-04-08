@@ -15,27 +15,33 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\code\tiny3D.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\code\utils.c">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\..\code\main.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\code\engine.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\scene.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\code\tiny3D.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\code\utils.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\code\tinyobj_loader_c.h">
+    <ClInclude Include="..\..\code\scene.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\code\scene.h">
+    <ClInclude Include="..\..\code\engine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\obj_loader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\common.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,10 +2,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#ifdef _MSC_VER
-#include<Windows.h>
-#endif // _MSC_VER
-
 #include "SDL.h"
 #include "engine.h"
 #include "scene.h"
@@ -32,7 +28,7 @@ bool sdl_init()
 		{
 			printf("Warning: Linear texture filtering not enabled!");
 		}
-		xWindow = SDL_CreateWindow("LgSoftRenderEngine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		xWindow = SDL_CreateWindow("Liang Cross-platform Software Render Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 		if (xWindow == NULL)
 		{
 			printf("windows could not be created!, sdl error: %s\n", SDL_GetError());
@@ -119,14 +115,8 @@ int main(int argc, char *argv[])
 			deltaTime = (current - lastFrame) * 0.001f;
 			lastFrame = current;
 
-#ifdef _MSC_VER
-            printf("fps delta :%f %f\n", deltaTime, 1.0f / deltaTime);
-			float wait = 1.0f / FPS;
-			if (deltaTime < wait)
-			{
-				Sleep(1000.0f* (wait - deltaTime));
-			}
-#endif // #ifdef _MSC_VER
+            printf("fps:%f\n", 1.0f / deltaTime);
+
 
             while (SDL_PollEvent(&e) != 0)
             {

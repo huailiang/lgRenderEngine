@@ -160,14 +160,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\code\engine.c" />
     <ClCompile Include="..\..\code\main.c" />
-    <ClCompile Include="..\..\code\tiny3D.c" />
+    <ClCompile Include="..\..\code\scene.c" />
     <ClCompile Include="..\..\code\utils.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\code\common.h" />
+    <ClInclude Include="..\..\code\engine.h" />
+    <ClInclude Include="..\..\code\obj_loader.h" />
     <ClInclude Include="..\..\code\scene.h" />
-    <ClInclude Include="..\..\code\tiny3D.h" />
-    <ClInclude Include="..\..\code\tinyobj_loader_c.h" />
     <ClInclude Include="..\..\code\utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
