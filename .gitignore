@@ -1,6 +1,7 @@
 **/Temp/
 **/.vs/
 **/.vscode/
+**/build/project/
 **/build/CMakeCache*
 **/build/cmake_install.cmake
 **/build/CMakeFiles/
