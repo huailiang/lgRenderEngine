@@ -150,10 +150,7 @@ void render_scene(SDL_Renderer* renderer, device_t *device,float yaw, float pitc
 	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	SDL_RenderClear(renderer);
 
-	// shadowbuffer在这里设置是为了清空buffer
-	device_set_shadowbuffer(device, shadowbuffer);
 	device_clear(device);
-
 	if (main_camera->dirty) camera_init_by_euler(main_camera, yaw, pitch);
 
 	for (int i = 0; i < camera_count; i++)
@@ -220,7 +217,7 @@ void draw_object(device_t *device, object_t* objects, int obj_cnt)
 	}
 }
 
-void draw_light()
+void init_light()
 {
 	dirLight = (dirlight_t) { {0.0f, -1.0f, 1.0f, 0.0f}, { 0.3f, 0.3f, 0.3f, 1.0f }, { 0.8f, 0.8f, 0.8f, 1.0f }, { 0.3f, 0.3f, 0.3f, 1.0f }, true };
 	if (dirLight.shadow == true)
@@ -273,7 +270,7 @@ void init_maincamera()
     camera_count++;
 }
 
-void draw_groud()
+void init_groud()
 {
     ground = &objects[object_count++];
     ground->pos = (point_t){0, 0, 0, 1};
@@ -288,7 +285,7 @@ void draw_groud()
     ground->dirty = true;
 }
 
-void draw_boxs()
+void init_boxs()
 {
     g_box = &objects[object_count++];
     g_box->pos = (point_t){-1, 0, 0, 1};

@@ -85,10 +85,10 @@ int main(int argc, char *argv[])
 
         init_texture();
 		init_materials();
-        draw_light();
+        init_light();
         init_maincamera();
-        draw_groud();
-        draw_boxs();
+        init_groud();
+        init_boxs();
 		init_buffers(&device);
         
         object_t *controlObj = g_box1;
@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 			deltaTime = (current - lastFrame) * 0.001f;
 			lastFrame = current;
 
-            printf("fps:%f\n", 1.0f / deltaTime);
+			printf("fps:%04.2f\n", deltaTime < 1e-2 ? 100.0f : 1.0f / deltaTime);
 
             while (SDL_PollEvent(&e) != 0)
             {

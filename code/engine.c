@@ -784,17 +784,12 @@ void device_pixel(device_t *device, int x, int y, uint color)
 
 void device_clear(device_t *device)
 {
-	if (device->framebuffer != NULL)
-    {
-		for (int y = 0; y < device->camera->height; y++)
-			for (int x = 0; x < device->camera->width; x++)
-				device->framebuffer[y * device->camera->width + x] = device->background;
-	}
-	// memset(device->framebuffer, 0xff, device->camera->width * device->camera->height * sizeof(uint));
+	//backgroud color: 0x55555555
+	memset(device->framebuffer, 0x55, device->camera->width * device->camera->height * sizeof(uint));
 	if (device->zbuffer != NULL)
 		memset(device->zbuffer, 0, device->camera->width * device->camera->height * sizeof(float));
 	if (device->shadowbuffer != NULL)
-    {
+	{
 		for (int y = 0; y < device->camera->height; y++)
 			for (int x = 0; x < device->camera->width; x++)
 				device->shadowbuffer[y * device->camera->width + x] = 1.0f;
@@ -1214,7 +1209,9 @@ void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_
 	}
 }
 
-void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool world) {
+void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool world) 
+{
+
 #define CLIP_CODE_GZ    0x0001
 #define CLIP_CODE_LZ    0x0002
 #define CLIP_CODE_IZ    0x0004
