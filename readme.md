@@ -25,19 +25,23 @@ sh build_osx.sh
 
 2. compile visual studio project on windows:
 
-cd build directory, and click build_vs2017.bat
+	cd build directory, and click build_vs2017.bat
 
 
 ## Tips
 
 libpng depends on zlib, so should be set -lz in "Other linker flags" at xcode project
 
+
 ## Reinferences
 
-[resouces file format desc](/resources/readme.md)
 
-sdl: http://www.libsdl.org
+	tutor: [guide](/doc/readme.md)
 
-libpng: http://www.libpng.org/pub/png/libpng.html
+	resources: [asset format](/resources/readme.md)
 
-cmake: https://cmake.org/
+	sdl: http://www.libsdl.org
+
+	libpng: http://www.libpng.org/pub/png/libpng.html
+
+	cmake: https://cmake.org/
