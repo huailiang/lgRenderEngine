@@ -855,7 +855,7 @@ color_t texture_read(const texture_t *texture, float u, float v, float z, float 
 	int width, height;
 	width = texture->width;
 	height = texture->height;
-	if (texture->use_mipmap)
+	if(texture->use_mipmap)
     {
 		int tmiplevels = logbase2ofx(width);
 		int miplevel = tmiplevels * (z / maxz);
@@ -1134,7 +1134,8 @@ void calculate_tangent_and_binormal(vector_t *tangent, vector_t *binormal, const
 	}
 }
 
-void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_t *t3) {
+void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_t *t3) 
+{
 	vertex_t *vertice[3] = { t1, t2, t3 };
 	point_t points[3];
 	matrix_t nm;
@@ -1142,13 +1143,10 @@ void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_
 	matrix_inverse(&nm);
 	matrix_transpose(&nm);
 
-	//    if (transform_check_cvv(&c1) != 0) return;
-	//    if (transform_check_cvv(&c2) != 0) return;
-	//    if (transform_check_cvv(&c3) != 0) return;
-
 	a2v a2vs[3];
 	v2f v2fs[3];
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 3; i++) 
+	{
 		vertex_t *vertex = vertice[i];
 		a2v *av = &a2vs[i];
 
@@ -1162,7 +1160,6 @@ void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_
 		matrix_apply(&av->tangent, &av->tangent, &device->transform.model);
 		vector_crossproduct(&av->binormal, &av->normal, &av->tangent);
 		vector_scale(&av->binormal, av->tangent.w);
-		//matrix_apply(&av->binormal, &av->binormal, &device->transform.model);
 		matrix_apply(&vertex->pos, &vertex->pos, &device->transform.vp);
 		points[i] = vertex->pos; // 透视空间的pos
 
@@ -1172,9 +1169,7 @@ void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_
 		av->color = vertex->color;
 		av->texcoord = vertex->tc;
 
-		vert_shader(device, av, &v2fs[i]); // 顶点着色器
-//        vertex_rhw_init(vertex);
-        
+		vert_shader(device, av, &v2fs[i]); 
 		transform_homogenize(&vertex->pos, &vertex->pos, device->camera->width, device->camera->height);
 	}
 
@@ -1215,7 +1210,6 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 #define CLIP_CODE_GZ    0x0001
 #define CLIP_CODE_LZ    0x0002
 #define CLIP_CODE_IZ    0x0004
-
 #define CLIP_CODE_GX    0x0001
 #define CLIP_CODE_LX    0x0002
 #define CLIP_CODE_IX    0x0004
@@ -1228,29 +1222,20 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 	int num_verts_in = 0;
 	float z_factor_x, z_factor_y, z_factor, z_test;
 	float xi, yi, x01i, y01i, x02i, y02i, t1, t2, ui, vi, u01i, v01i, u02i, v02i;
-	bool cliped = false;
 
 	vector_t v;
 	vertex_t p1 = *v1, p2 = *v2, p3 = *v3;
 
-	if (world == false)
-    {
-		matrix_apply(&p1.pos, &p1.pos, &device->transform.mv);
-		matrix_apply(&p2.pos, &p2.pos, &device->transform.mv);
-		matrix_apply(&p3.pos, &p3.pos, &device->transform.mv);
-	}
-	else
-    {
-		matrix_apply(&p1.pos, &p1.pos, &device->transform.view);
-		matrix_apply(&p2.pos, &p2.pos, &device->transform.view);
-		matrix_apply(&p3.pos, &p3.pos, &device->transform.view);
-	}
+	matrix_t* matrix = world ? &device->transform.view : &device->transform.mv;
+	matrix_apply(&p1.pos, &p1.pos, matrix);
+	matrix_apply(&p2.pos, &p2.pos, matrix);
+	matrix_apply(&p3.pos, &p3.pos, matrix);
 
-	z_factor_y = tan(device->camera->fovy*0.5);
+	z_factor_y = tan(device->camera->fovy * 0.5);
 	z_factor_x = z_factor_y / device->camera->aspect;
 	z_factor = z_factor_x;
-	z_test = z_factor * p1.pos.z;
 
+	z_test = z_factor * p1.pos.z;
 	if (p1.pos.x > z_test)
 		vertex_ccodes[0] = CLIP_CODE_GX;
 	else if (p1.pos.x < -z_test)
@@ -1259,7 +1244,6 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 		vertex_ccodes[0] = CLIP_CODE_IX;
 
 	z_test = z_factor * p2.pos.z;
-
 	if (p2.pos.x > z_test)
 		vertex_ccodes[1] = CLIP_CODE_GX;
 	else if (p2.pos.x < -z_test)
@@ -1268,7 +1252,6 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 		vertex_ccodes[1] = CLIP_CODE_IX;
 
 	z_test = z_factor * p3.pos.z;
-
 	if (p3.pos.x > z_test)
 		vertex_ccodes[2] = CLIP_CODE_GX;
 	else if (p3.pos.x < -z_test)
@@ -1333,9 +1316,7 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 	if (((vertex_ccodes[0] | vertex_ccodes[1] | vertex_ccodes[2]) & CLIP_CODE_LZ))
 	{
 		vertex_t temp;
-		//num_verts_in = 0;
-		// 三角形有1个顶点在近裁剪面内侧，2个顶点在外侧
-		// 三角形有2个顶点在近裁剪面内侧，1个顶点在外侧
+		// 三角形有1个顶点在近裁剪面内侧，2个顶点在外侧, 三角形有2个顶点在近裁剪面内侧，1个顶点在外侧
 		if (num_verts_in == 1)
 		{
 			if (vertex_ccodes[0] == CLIP_CODE_IZ) { }
@@ -1390,8 +1371,6 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 
 			p3.tc.u = ui;
 			p3.tc.v = vi;
-
-			cliped = true;
 		}
 		else if (num_verts_in == 2)
         {
@@ -1460,8 +1439,6 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 			matrix_apply(&np2.pos, &np2.pos, &device->transform.view_r);
 			matrix_apply(&np3.pos, &np3.pos, &device->transform.view_r);
 			device_draw_primitive(device, &np1, &np2, &np3);
-
-			cliped = true;
 		}
 	}
 	matrix_apply(&p1.pos, &p1.pos, &device->transform.view_r);
@@ -1482,7 +1459,8 @@ void vert_shader(device_t *device, a2v *av, v2f *vf)
 	vf->storage2 = (vector_t) { av->tangent.z, av->binormal.z, av->normal.z };
 }
 
-void frag_shader(device_t *device, v2f *vf, color_t *color) {
+void frag_shader(device_t *device, v2f *vf, color_t *color) 
+{
 	material_t *material = &device->material;
 	vector_t viewdir, viewPos = device->camera->pos;
 	vector_sub(&viewdir, &viewPos, &vf->pos);
@@ -1543,8 +1521,7 @@ void frag_shader(device_t *device, v2f *vf, color_t *color) {
 				{
 					for (int j = -1; j <= 1; ++j)
 					{
-						if (y + j < 0 || y + j >= camera->height || x + i < 0 || x + i >= camera->width)
-							continue;
+						if (y + j < 0 || y + j >= camera->height || x + i < 0 || x + i >= camera->width) continue;
 						float pcfDepth = pshadowbuffer[(y + j)*camera->width + (x + i)];
 						shadow += tempPos.z - bias > pcfDepth ? 1.0 : 0.0;
 					}
@@ -1594,5 +1571,3 @@ void frag_shader(device_t *device, v2f *vf, color_t *color) {
 		color_add(color, color, &temp);
 	}
 }
-
-

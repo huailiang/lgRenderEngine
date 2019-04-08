@@ -11,8 +11,8 @@ int screen_keys[KEY_CNT];
 float deltaTime = 0.0f;
 Uint32 lastFrame = 0;
 
-SDL_Window* xWindow = NULL;
-SDL_Renderer* xRenderer = NULL;
+SDL_Window* window = NULL;
+SDL_Renderer* renderer = NULL;
 
 bool sdl_init()
 {
@@ -28,23 +28,23 @@ bool sdl_init()
 		{
 			printf("Warning: Linear texture filtering not enabled!");
 		}
-		xWindow = SDL_CreateWindow("Liang Cross-platform Software Render Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-		if (xWindow == NULL)
+		window = SDL_CreateWindow("Liang Cross-platform Software Render Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		if (window == NULL)
 		{
 			printf("windows could not be created!, sdl error: %s\n", SDL_GetError());
 			success = false;
 		}
 		else
 		{
-			xRenderer = SDL_CreateRenderer(xWindow, -1, SDL_RENDERER_ACCELERATED);
-			if (xRenderer == NULL)
+			renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+			if (renderer == NULL)
 			{
 				printf("sdl renderer create failed, sdl error: %s\n", SDL_GetError());
 				success = false;
 			}
 			else
 			{
-				SDL_SetRenderDrawColor(xRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+				SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 			}
 		}
 	}
@@ -54,10 +54,10 @@ bool sdl_init()
 
 void sdl_close()
 {
-	SDL_DestroyRenderer(xRenderer);
-	SDL_DestroyWindow(xWindow);
-	xWindow = NULL;
-	xRenderer = NULL;
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
+	window = NULL;
+	renderer = NULL;
 	SDL_Quit();
 }
 
@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 			deltaTime = (current - lastFrame) * 0.001f;
 			lastFrame = current;
 
-			printf("fps:%04.2f\n", deltaTime < 1e-2 ? 100.0f : 1.0f / deltaTime);
+			printf("fps: %04.2f\n", deltaTime < 1e-2 ? 100.0f : 1.0f / deltaTime);
 
             while (SDL_PollEvent(&e) != 0)
             {
@@ -233,7 +233,7 @@ int main(int argc, char *argv[])
             g_box1->theta += 0.04f;
             g_box1->dirty = true;
             
-			render_scene(xRenderer, &device, c_yaw, c_pitch);
+			render_scene(renderer, &device, c_yaw, c_pitch);
 		}
         free_scene();
 		sdl_close();
