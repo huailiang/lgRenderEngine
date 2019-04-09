@@ -1,10 +1,14 @@
+
 #ifndef __engine__
 #define __engine__
 
 #include <stdbool.h>
 #include "common.h"
 
-int logbase2ofx(int n);
+typedef unsigned int IUINT32;
+
+#define CMID(x, min, max) (((x) < (min)) ? (min) : (((x) > (max)) ? (max) : (x)))
+extern int logbase2ofx(int n);
 
 typedef struct { float x, y, z, w; } vector_t;
 typedef vector_t point_t;
@@ -37,7 +41,7 @@ void matrix_set_scale(matrix_t *m, float sx, float sy, float sz);
 void matrix_set_rotate(matrix_t *m, const vector_t *v, float theta);
 void matrix_set_rotate_translate_scale(matrix_t *m, const vector_t *axis, float theta, const point_t *pos, const vector_t *scale);
 void matrix_set_axis(matrix_t *m, const vector_t *xaxis, const vector_t *yaxis, const vector_t *zaxis, const point_t *pos);
-// set_lookat m, eye, at, up
+//set_lookat m, eye, at, up
 // zaxis = normal(At - Eye)
 // xaxis = normal(cross(Up, zaxis))
 // yaxis = cross(zaxis, xaxis)
@@ -46,7 +50,7 @@ void matrix_set_axis(matrix_t *m, const vector_t *xaxis, const vector_t *yaxis, 
 // xaxis.z           yaxis.z           zaxis.z          0
 //-dot(xaxis, eye)  -dot(yaxis, eye)  -dot(zaxis, eye)  1
 void matrix_set_lookat(matrix_t *m, const vector_t *eye, const vector_t *at, const vector_t *up);
-//set_perspective m, fovy, aspect, zn, zf
+//      12)).set_perspective m, fovy, aspect, zn, zf
 // zoom = 1 / tan(fov/2)
 // zoomy = 1 / tan(fovy/2)
 // zoomx = zoomy * aspect
@@ -55,25 +59,29 @@ void matrix_set_lookat(matrix_t *m, const vector_t *eye, const vector_t *at, con
 // 0        0       zf/(zf-zn)      1
 // 0        0       zn*zf/(zn-zf)   0
 void matrix_set_perspective(matrix_t *m, float fovy, float aspect, float zn, float zf);
-// set_ortho m, left, right, bottom, top, near, far
+//      13)).set_ortho m, left, right, bottom, top, near, far
 // 2/(r-l)      0            0           0
 // 0            2/(t-b)      0           0
 // 0            0            1/(zf-zn)   0
 // (l+r)/(l-r)  (t+b)/(b-t)  zn/(zn-zf)  1
 void matrix_set_ortho(matrix_t *m, float l, float r, float b, float t, float zn, float zf);
 
-typedef struct { matrix_t model, view, view_r, projection, vp, mv, mvp; } transform_t;
-// transform_update (world * view * projection
-void transform_update(transform_t *ts);
-// transform_apply
-void transform_apply(const transform_t *ts, vector_t *y, const vector_t *x);
-// transform_check_cvv(v)
-int transform_check_cvv(const vector_t *v);
-// transform_homogenize(ts, y, x)
-void transform_homogenize(vector_t *y, const vector_t *x, float width, float height);
-// transform_homogenize(ts, y, x)
-void transform_homogenize_reverse(vector_t *y, const vector_t *x, float w, float width, float height);
+typedef struct 
+{
+	matrix_t model;
+	matrix_t view;
+	matrix_t view_r;       // view reverse
+	matrix_t projection;
+	matrix_t vp;          
+	matrix_t mv;         
+	matrix_t mvp;         
+} transform_t;
 
+void transform_update(transform_t *ts);
+void transform_apply(const transform_t *ts, vector_t *y, const vector_t *x);
+int transform_check_cvv(const vector_t *v);
+void transform_homogenize(vector_t *y, const vector_t *x, float width, float height);
+void transform_homogenize_reverse(vector_t *y, const vector_t *x, float w, float width, float height);
 typedef struct { float r, g, b, a; } color_t;
 void color_init(color_t *c);
 void color_product(color_t *c, const color_t *a, const color_t *b);
@@ -82,7 +90,8 @@ void color_add(color_t *c, const color_t *a, const color_t *b);
 void color_sub(color_t *c, const color_t *a, const color_t *b);
 void color_interpolating(color_t *dest, const color_t *src1, const color_t *src2, const color_t *src3, float a, float b, float c);
 
-typedef struct
+
+typedef struct 
 {
 	char *name;
 	color_t ambient;
@@ -91,32 +100,31 @@ typedef struct
 	color_t transmittance;
 	color_t emission;
 	float shininess;
-	float ior;
-    float dissolve;
+	float ior;      /* index of refraction */
+	float dissolve;
 	int illum;
 	int pad0;
-	char *ambient_texname;
+	char *ambient_texname;            /* map_Ka */
 	int ambient_tex_id;
-	char *diffuse_texname;
+	char *diffuse_texname;            /* map_Kd */
 	int diffuse_tex_id;
-	char *specular_texname;
+	char *specular_texname;           /* map_Ks */
 	int specular_tex_id;
-	char *specular_highlight_texname;
+	char *specular_highlight_texname; /* map_Ns */
 	int specular_highlight_tex_id;
-	char *bump_texname;
+	char *bump_texname;               /* map_bump, bump */
 	int bump_tex_id;
-	char *displacement_texname;
-    int displacement_tex_id;
-	char *alpha_texname;
-    int alpha_tex_id;
+	char *displacement_texname;       /* disp */
+	int displacement_tex_id;
+	char *alpha_texname;              /* map_d */
+	int alpha_tex_id;
 } material_t;
-
 #define NUM_MATERIAL 100
 extern material_t materials[NUM_MATERIAL];
 extern int material_cnt;
 void free_material(material_t *material);
 
-typedef struct
+typedef struct 
 {
 	point_t pos;
 	float constant;
@@ -127,17 +135,22 @@ typedef struct
 	color_t spec;
 	bool shadow;
 } pointlight_t;
-
 #define NR_POINT_LIGHTS 100
 extern pointlight_t pointLights[NR_POINT_LIGHTS];
 extern int pointlight_cnt;
-typedef struct{ vector_t dir; color_t ambi,diff,spec; bool shadow;} dirlight_t;
+
+typedef struct 
+{
+	vector_t dir;
+	color_t ambi;
+	color_t diff;
+	color_t spec;
+	bool shadow;
+} dirlight_t;
 extern dirlight_t dirLight;
 
 typedef enum { perspective, orthographic } PROJECTION;
-typedef struct
-{
-	// public
+typedef struct {
 	vector_t pos;
 	vector_t front;
 	vector_t worldup;
@@ -147,8 +160,8 @@ typedef struct
 	int width;
 	int height;
 	float fovy;
-	float zn; //near
-	float zf; //far
+	float zn;
+	float zf;
 	float left;
 	float right;
 	float bottom;
@@ -156,8 +169,6 @@ typedef struct
 	bool dirty;
 	PROJECTION projection;
 	bool main;
-
-	// private
 	float aspect;
 } camera_t;
 #define MAX_NUM_CAMERA 10
@@ -179,34 +190,38 @@ void storage_add(storage_t *c, storage_t *a, const storage_t *b);
 void storage_scale(storage_t *t, float k);
 void storage_interpolating(storage_t *dest, const storage_t *src1, const storage_t *src2, const storage_t *src3, float a, float b, float c);
 
-typedef struct { point_t pos; texcoord_t tc; color_t color; vector_t normal; } vertex_t; 
+typedef struct { point_t pos; texcoord_t tc; color_t color; vector_t normal; } vertex_t; // 提供4个额外的插值寄存器
+
 typedef struct { vertex_t v, v1, v2; } edge_t;
 typedef struct { float top, bottom; edge_t left, right; } trapezoid_t;
 typedef struct { vertex_t v, step; int x, y, w; } scanline_t;
 
-// 除坐标以外 颜色和纹理索引除以w
+// 注意是除坐标意外颜色和纹理索引除以w
 void vertex_rhw_init(vertex_t *v);
+
 void vertex_interp(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float k);
+
 void vertex_division(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float w);
+
 void vertex_add(vertex_t *y, const vertex_t *x);
 
 extern float *pshadowbuffer;
 
-typedef struct
+typedef struct 
 {
-	int render_state;
-	transform_t transform;
-	material_t material;
-	uint *framebuffer;
-	float *zbuffer;
+	int render_state;          
+	transform_t transform;      
+	material_t material;        
+	IUINT32 *framebuffer;       
+	float *zbuffer;            
 	float *shadowbuffer;       
-	uint background;            
-	uint foreground;         
-	camera_t *camera;          
-	bool blend;               
-	float blend_sfactor;      
-	float blend_dfactor;       
-	int cull;                   // 0:不裁剪;1:裁剪反面;2:裁剪正面
+	IUINT32 background;         
+	IUINT32 foreground;        
+	camera_t *camera;           
+	bool blend;                
+	float blend_sfactor;        
+	float blend_dfactor;        
+	int cull;                  
 }device_t;
 
 #define RENDER_STATE_WIREFRAME      1		// 渲染线框
@@ -214,16 +229,15 @@ typedef struct
 #define RENDER_STATE_COLOR          4		// 渲染颜色
 
 void device_init(device_t *device);
-void device_set_background(device_t *device, uint color);
-void device_set_framebuffer(device_t *device, uint *framebuffer);
+void device_set_background(device_t *device, IUINT32 color);
+void device_set_framebuffer(device_t *device, IUINT32 *framebuffer);
 void device_set_zbuffer(device_t *device, float *zbuffer);
 void device_set_shadowbuffer(device_t *device, float *shadowbuffer);
 void device_set_camera(device_t *device, camera_t *camera);
-void device_pixel(device_t *device, int x, int y, uint color);
+void device_pixel(device_t *device, int x, int y, IUINT32 color);
 void device_clear(device_t *device);
 
-// entity object
-typedef struct
+typedef struct 
 {
 	vertex_t *mesh;
 	unsigned long mesh_num;
@@ -237,26 +251,26 @@ typedef struct
 	float theta;
 	matrix_t matrix;
 } object_t;
-
 #define MAX_NUM_OBJECT 100
 extern object_t objects[MAX_NUM_OBJECT];
 extern int object_count;
 
-typedef struct
-{
-	uint **datas;          
-	uint datas_len;
-	bool use_mipmap;        
-	uint width;
-	uint height;
-} texture_t;
 
+typedef struct 
+{
+	IUINT32 **datas;            // data
+	IUINT32 datas_len;
+	bool use_mipmap;            // able mipmap
+	IUINT32 width;
+	IUINT32 height;
+} texture_t;
 #define MAX_NUM_TEXTURE 100
 extern texture_t textures[MAX_NUM_TEXTURE];
 extern int texture_count;
+
 void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool world);
 
-typedef struct
+typedef struct 
 {
 	vector_t pos;
 	color_t color;
@@ -266,7 +280,7 @@ typedef struct
 	texcoord_t texcoord;
 } a2v;
 
-typedef struct
+typedef struct 
 {
 	vector_t pos;
 	texcoord_t texcoord;
@@ -279,5 +293,6 @@ typedef struct
 
 void vert_shader(device_t *device, a2v *av, v2f *vf);
 void frag_shader(device_t *device, v2f *vf, color_t *color);
+
 
 #endif /* __engine__ */

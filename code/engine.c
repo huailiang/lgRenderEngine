@@ -1,10 +1,11 @@
 #include "engine.h"
+
 #include <stdbool.h>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
 
-void vector_interpolating(vector_t *dest, const vector_t *src1, const vector_t *src2, const vector_t *src3, float a, float b, float c)
+void vector_interpolating(vector_t *dest, const vector_t *src1, const vector_t *src2, const vector_t *src3, float a, float b, float c) 
 {
 	dest->x = dest->y = dest->z = dest->w = 0.0f;
 	vector_t each = *src1;
@@ -18,19 +19,18 @@ void vector_interpolating(vector_t *dest, const vector_t *src1, const vector_t *
 	vector_add(dest, dest, &each);
 }
 
-void texcoord_add(texcoord_t *c, texcoord_t *a, const texcoord_t *b)
+void texcoord_add(texcoord_t *c, texcoord_t *a, const texcoord_t *b) 
 {
 	c->u = a->u + b->u;
 	c->v = a->v + b->v;
 }
-
-void texcoord_scale(texcoord_t *t, float k)
+void texcoord_scale(texcoord_t *t, float k) 
 {
 	t->u *= k;
 	t->v *= k;
 }
 
-void texcoord_interpolating(texcoord_t *dest, const texcoord_t *src1, const texcoord_t *src2, const texcoord_t *src3, float a, float b, float c)
+void texcoord_interpolating(texcoord_t *dest, const texcoord_t *src1, const texcoord_t *src2, const texcoord_t *src3, float a, float b, float c) 
 {
 	dest->u = dest->v = 0.0f;
 	texcoord_t each = *src1;
@@ -44,7 +44,7 @@ void texcoord_interpolating(texcoord_t *dest, const texcoord_t *src1, const texc
 	texcoord_add(dest, dest, &each);
 }
 
-void storage_add(storage_t *c, storage_t *a, const storage_t *b)
+void storage_add(storage_t *c, storage_t *a, const storage_t *b) 
 {
 	c->a = a->a + b->a;
 	c->b = a->b + b->b;
@@ -52,7 +52,7 @@ void storage_add(storage_t *c, storage_t *a, const storage_t *b)
 	c->d = a->d + b->d;
 }
 
-void storage_scale(storage_t *t, float k)
+void storage_scale(storage_t *t, float k) 
 {
 	t->a *= k;
 	t->b *= k;
@@ -60,7 +60,7 @@ void storage_scale(storage_t *t, float k)
 	t->d *= k;
 }
 
-void storage_interpolating(storage_t *dest, const storage_t *src1, const storage_t *src2, const storage_t *src3, float a, float b, float c)
+void storage_interpolating(storage_t *dest, const storage_t *src1, const storage_t *src2, const storage_t *src3, float a, float b, float c) 
 {
 	dest->a = dest->b = dest->c = dest->d = 0.0f;
 	storage_t each = *src1;
@@ -74,7 +74,7 @@ void storage_interpolating(storage_t *dest, const storage_t *src1, const storage
 	storage_add(dest, dest, &each);
 }
 
-void v2f_interpolating(v2f *dest, const v2f *src1, const v2f *src2, const v2f *src3, float a, float b, float c)
+void v2f_interpolating(v2f *dest, const v2f *src1, const v2f *src2, const v2f *src3, float a, float b, float c) 
 {
 	vector_interpolating(&dest->pos, &src1->pos, &src2->pos, &src3->pos, a, b, c);
 	color_interpolating(&dest->color, &src1->color, &src2->color, &src3->color, a, b, c);
@@ -85,7 +85,7 @@ void v2f_interpolating(v2f *dest, const v2f *src1, const v2f *src2, const v2f *s
 	vector_interpolating(&dest->storage2, &src1->storage2, &src2->storage2, &src3->storage2, a, b, c);
 }
 
-int logbase2ofx(int n)
+int logbase2ofx(int n) 
 {
 	if (n <= 0) return 0;
 	int r = 0;
@@ -97,26 +97,27 @@ int logbase2ofx(int n)
 	return r - 1;
 }
 
-float vector_length(vector_t *v)
+
+float vector_length(vector_t *v) 
 {
 	return sqrt(v->x * v->x + v->y * v->y + v->z * v->z);
 }
 
-void vector_add(vector_t *c, const vector_t *a, const vector_t *b)
+void vector_add(vector_t *c, const vector_t *a, const vector_t *b) 
 {
 	c->x = a->x + b->x;
 	c->y = a->y + b->y;
 	c->z = a->z + b->z;
 }
 
-void vector_sub(vector_t *c, const vector_t *a, const vector_t *b)
+void vector_sub(vector_t *c, const vector_t *a, const vector_t *b) 
 {
 	c->x = a->x - b->x;
 	c->y = a->y - b->y;
 	c->z = a->z - b->z;
 }
 
-void vector_scale(vector_t *v, float k)
+void vector_scale(vector_t *v, float k) 
 {
 	v->x *= k;
 	v->y *= k;
@@ -124,34 +125,35 @@ void vector_scale(vector_t *v, float k)
 	v->w *= k;
 }
 
-void vector_inverse(vector_t *v)
+void vector_inverse(vector_t *v) 
 {
 	v->x = -v->x;
 	v->y = -v->y;
 	v->z = -v->z;
 }
 
-float vector_dotproduct(const vector_t *a, const vector_t *b)
+
+float vector_dotproduct(const vector_t *a, const vector_t *b) 
 {
 	return a->x * b->x + a->y * b->y + a->z * b->z;
 }
 
-void vector_crossproduct(vector_t *c, const vector_t *a, const vector_t *b)
+void vector_crossproduct(vector_t *c, const vector_t *a, const vector_t *b) 
 {
 	c->x = a->y*b->z - a->z*b->y;
 	c->y = a->z*b->x - a->x*b->z;
 	c->z = a->x*b->y - a->y*b->x;
 }
 
-// interp t[0, 1]
-void vector_interp(vector_t *c, const vector_t *a, const vector_t *b, float t)
+void vector_interp(vector_t *c, const vector_t *a, const vector_t *b, float t) 
 {
 	c->x = interp(a->x, b->x, t);
 	c->y = interp(a->y, b->y, t);
 	c->z = interp(a->z, b->z, t);
 	c->w = interp(a->w, b->w, t);
 }
-void vector_clone(vector_t *dest, const vector_t *src)
+
+void vector_clone(vector_t *dest, const vector_t *src) 
 {
 	dest->x = src->x;
 	dest->y = src->y;
@@ -159,15 +161,14 @@ void vector_clone(vector_t *dest, const vector_t *src)
 	dest->w = src->w;
 }
 
-// reflect
-void vector_reflect(vector_t *r, const vector_t *v, const vector_t *n)
+void vector_reflect(vector_t *r, const vector_t *v, const vector_t *n) 
 {
 	vector_clone(r, n);
 	vector_scale(r, -2 * vector_dotproduct(v, n));
 	vector_add(r, r, v);
 }
 
-void vector_normalize(vector_t *v)
+void vector_normalize(vector_t *v) 
 {
 	float len = vector_length(v);
 	if (fabsf(len) < 1e-6) return;
@@ -177,42 +178,44 @@ void vector_normalize(vector_t *v)
 	v->z *= k;
 }
 
-void matrix_add(matrix_t *c, const matrix_t *a, const matrix_t *b)
+
+void matrix_add(matrix_t *c, const matrix_t *a, const matrix_t *b) 
 {
 	for (int i = 0; i < 4; i++)
 		for (int j = 0; j < 4; j++)
 			c->m[i][j] = a->m[i][j] + b->m[i][j];
 }
 
-void matrix_sub(matrix_t *c, const matrix_t *a, const matrix_t *b)
+void matrix_sub(matrix_t *c, const matrix_t *a, const matrix_t *b) 
 {
 	for (int i = 0; i < 4; i++)
 		for (int j = 0; j < 4; j++)
 			c->m[i][j] = a->m[i][j] - b->m[i][j];
 }
 
-void matrix_mul(matrix_t *c, const matrix_t *a, const matrix_t *b)
+void matrix_mul(matrix_t *c, const matrix_t *a, const matrix_t *b) 
 {
 	for (int i = 0; i < 4; i++)
 		for (int j = 0; j < 4; j++)
 			c->m[i][j] = a->m[i][0] * b->m[0][j] + a->m[i][1] * b->m[1][j] + a->m[i][2] * b->m[2][j] + a->m[i][3] * b->m[3][j];
 }
 
-void matrix_scale(matrix_t *m, float k)
+void matrix_scale(matrix_t *m, float k) 
 {
 	for (int i = 0; i < 4; i++)
 		for (int j = 0; j < 4; j++)
 			m->m[i][j] *= k;
 }
 
-void matrix_inverse(matrix_t *m)
+void matrix_inverse(matrix_t *m) 
 {
 	float t[3][6];
 	int i, j, k;
 	float f;
+
 	for (i = 0; i < 3; i++)
-		for (j = 0; j < 6; j++)
-        {
+		for (j = 0; j < 6; j++) 
+		{
 			if (j < 3)
 				t[i][j] = m->m[i][j];
 			else if (j == i + 3)
@@ -221,15 +224,14 @@ void matrix_inverse(matrix_t *m)
 				t[i][j] = 0;
 		}
 
-	for (i = 0; i < 3; i++)
-    {
+	for (i = 0; i < 3; i++) 
+	{
 		f = t[i][i];
 		for (j = 0; j < 6; j++)
 			t[i][j] /= f;
-		for (j = 0; j < 3; j++)
-        {
-			if (j != i)
-            {
+		for (j = 0; j < 3; j++) 
+		{
+			if (j != i) {
 				f = t[j][i];
 				for (k = 0; k < 6; k++)
 					t[j][k] = t[j][k] - t[i][k] * f;
@@ -246,7 +248,7 @@ void matrix_inverse(matrix_t *m)
 	m->m[3][2] = -m->m[3][2];
 }
 
-void matrix_transpose(matrix_t *m)
+void matrix_transpose(matrix_t *m) 
 {
 	for (int i = 0; i < 3; i++)
 		for (int j = i + 1; j < 3; j++)
@@ -257,8 +259,7 @@ void matrix_transpose(matrix_t *m)
 		}
 }
 
-//  apply v = v * m
-void matrix_apply(vector_t *y, const vector_t *x, const matrix_t *m)
+void matrix_apply(vector_t *y, const vector_t *x, const matrix_t *m) 
 {
 	float X = x->x, Y = x->y, Z = x->z, W = x->w;
 	y->x = X * m->m[0][0] + Y * m->m[1][0] + Z * m->m[2][0] + W * m->m[3][0];
@@ -267,14 +268,15 @@ void matrix_apply(vector_t *y, const vector_t *x, const matrix_t *m)
 	y->w = X * m->m[0][3] + Y * m->m[1][3] + Z * m->m[2][3] + W * m->m[3][3];
 }
 
-void matrix_clone(matrix_t *dest, const matrix_t *src)
+void matrix_clone(matrix_t *dest, const matrix_t *src) 
 {
-	for (int i = 0; i < 4; i++)
-		for (int j = 0; j < 4; j++)
+	int i, j;
+	for (i = 0; i < 4; i++)
+		for (j = 0; j < 4; j++)
 			dest->m[i][j] = src->m[i][j];
 }
 
-void matrix_set_identity(matrix_t *m)
+void matrix_set_identity(matrix_t *m) 
 {
 	for (int i = 0; i < 4; i++)
 		for (int j = 0; j < 4; j++)
@@ -284,14 +286,14 @@ void matrix_set_identity(matrix_t *m)
 				m->m[i][j] = 0.0f;
 }
 
-void matrix_set_zero(matrix_t *m)
+void matrix_set_zero(matrix_t *m) 
 {
 	for (int i = 0; i < 4; i++)
 		for (int j = 0; j < 4; j++)
 			m->m[i][j] = 0.0f;
 }
 
-void matrix_set_translate(matrix_t *m, float dx, float dy, float dz)
+void matrix_set_translate(matrix_t *m, float dx, float dy, float dz) 
 {
 	matrix_set_identity(m);
 	m->m[3][0] = dx;
@@ -299,19 +301,18 @@ void matrix_set_translate(matrix_t *m, float dx, float dy, float dz)
 	m->m[3][2] = dz;
 }
 
-void matrix_set_scale(matrix_t *m, float sx, float sy, float sz)
+void matrix_set_scale(matrix_t *m, float sx, float sy, float sz) 
 {
 	matrix_set_identity(m);
 	m->m[0][0] = sx;
 	m->m[1][1] = sy;
 	m->m[2][2] = sz;
 }
-
-//  set_rotate m, x, y, z, theta
+// set_rotate m, x, y, z, theta
 // x*x*(1-cos0)+cos0    x*y*(1-cos0)+z*sin0   x*z*(1-cos0)-y*sin0
 // x*y*(1-cos0)-z*sin0  y*y*(1-cos0)+cos0     y*z*(1-cos0)+x*sin0
 // x*z*(1-cos0)+y*sin0  y*z*(1-cos0)-x*sin0   z*z*(1-cos0)+cos0
-void matrix_set_rotate(matrix_t *m, const vector_t *v, float theta)
+void matrix_set_rotate(matrix_t *m, const vector_t *v, float theta) 
 {
 	float x = v->x, y = v->y, z = v->z;
 	float qsin = (float)sin(theta * 0.5f);
@@ -336,7 +337,7 @@ void matrix_set_rotate(matrix_t *m, const vector_t *v, float theta)
 	m->m[3][3] = 1.0f;
 }
 
-void matrix_set_rotate_translate_scale(matrix_t *m, const vector_t *axis, float theta, const point_t *pos, const vector_t *scale)
+void matrix_set_rotate_translate_scale(matrix_t *m, const vector_t *axis, float theta, const point_t *pos, const vector_t *scale) 
 {
 	matrix_set_scale(m, scale->x, scale->y, scale->z);
 	matrix_t r, t = *m;
@@ -346,8 +347,7 @@ void matrix_set_rotate_translate_scale(matrix_t *m, const vector_t *axis, float 
 	m->m[3][1] = pos->y;
 	m->m[3][2] = pos->z;
 }
-
-void matrix_set_axis(matrix_t *m, const vector_t *xaxis, const vector_t *yaxis, const vector_t *zaxis, const point_t *pos)
+void matrix_set_axis(matrix_t *m, const vector_t *xaxis, const vector_t *yaxis, const vector_t *zaxis, const point_t *pos) 
 {
 	m->m[0][0] = xaxis->x;
 	m->m[0][1] = xaxis->y;
@@ -364,8 +364,7 @@ void matrix_set_axis(matrix_t *m, const vector_t *xaxis, const vector_t *yaxis, 
 	m->m[0][3] = m->m[1][3] = m->m[2][3] = 0.0f;
 	m->m[3][3] = 1.0f;
 }
-
-// set_lookat m, eye, at, up
+//set_lookat m, eye, at, up
 // zaxis = normal(At - Eye)
 // xaxis = normal(cross(Up, zaxis))
 // yaxis = cross(zaxis, xaxis)
@@ -374,8 +373,7 @@ void matrix_set_axis(matrix_t *m, const vector_t *xaxis, const vector_t *yaxis, 
 // xaxis.y           yaxis.y           zaxis.y          0
 // xaxis.z           yaxis.z           zaxis.z          0
 //-dot(xaxis, eye)  -dot(yaxis, eye)  -dot(zaxis, eye)  1
-void matrix_set_lookat(matrix_t *m, const vector_t *eye, const vector_t *at, const vector_t *up)
-{
+void matrix_set_lookat(matrix_t *m, const vector_t *eye, const vector_t *at, const vector_t *up) {
 	vector_t zaxis, xaxis, yaxis;
 	vector_sub(&zaxis, at, eye);
 	vector_normalize(&zaxis);
@@ -398,8 +396,7 @@ void matrix_set_lookat(matrix_t *m, const vector_t *eye, const vector_t *at, con
 	m->m[0][3] = m->m[1][3] = m->m[2][3] = 0.0f;
 	m->m[3][3] = 1.0f;
 }
-
-// set_perspective m, fovy, aspect, zn, zf
+//set_perspective m, fovy, aspect, zn, zf
 // zoom = 1 / tan(fov/2)
 // zoomy = 1 / tan(fovy/2)
 // zoomx = zoomy * aspect
@@ -407,8 +404,7 @@ void matrix_set_lookat(matrix_t *m, const vector_t *eye, const vector_t *at, con
 // 0        zoomy   0               0
 // 0        0       zf/(zf-zn)      1
 // 0        0       zn*zf/(zn-zf)   0
-void matrix_set_perspective(matrix_t *m, float fovy, float aspect, float zn, float zf)
-{
+void matrix_set_perspective(matrix_t *m, float fovy, float aspect, float zn, float zf) {
 	float zoomy = 1.0f / (float)tan(fovy * 0.5f);
 	float zoomx = zoomy * aspect;
 	m->m[0][0] = zoomx;
@@ -419,14 +415,12 @@ void matrix_set_perspective(matrix_t *m, float fovy, float aspect, float zn, flo
 	m->m[0][1] = m->m[0][2] = m->m[0][3] = m->m[1][0] = m->m[1][2] = m->m[1][3] = 0.0f;
 	m->m[2][0] = m->m[2][1] = m->m[3][0] = m->m[3][1] = m->m[3][3] = 0.0f;
 }
-
 // set_ortho m, left, right, bottom, top, near, far
 // 2/(r-l)      0            0           0
 // 0            2/(t-b)      0           0
 // 0            0            1/(zf-zn)   0
 // (l+r)/(l-r)  (t+b)/(b-t)  zn/(zn-zf)  1
-void matrix_set_ortho(matrix_t *m, float l, float r, float b, float t, float zn, float zf)
-{
+void matrix_set_ortho(matrix_t *m, float l, float r, float b, float t, float zn, float zf) {
 	m->m[0][0] = 2.0f / (r - l);
 	m->m[1][1] = 2.0f / (t - b);
 	m->m[2][2] = 1.0f / (zf - zn);
@@ -438,20 +432,20 @@ void matrix_set_ortho(matrix_t *m, float l, float r, float b, float t, float zn,
 	m->m[2][0] = m->m[2][1] = m->m[2][3] = 0.0f;
 }
 
-void transform_update(transform_t *ts)
+
+void transform_update(transform_t *ts) 
 {
 	matrix_mul(&ts->mv, &ts->model, &ts->view);
 	matrix_mul(&ts->vp, &ts->view, &ts->projection);
 	matrix_mul(&ts->mvp, &ts->mv, &ts->projection);
 }
 
-void transform_apply(const transform_t *ts, vector_t *y, const vector_t *x)
+void transform_apply(const transform_t *ts, vector_t *y, const vector_t *x) 
 {
 	matrix_apply(y, x, &ts->mvp);
 }
 
-int transform_check_cvv(const vector_t *v)
-{
+int transform_check_cvv(const vector_t *v) {
 	float w = v->w;
 	int check = 0;
 	if (v->z < 0.0f) check |= 1;
@@ -463,7 +457,7 @@ int transform_check_cvv(const vector_t *v)
 	return check;
 }
 
-void transform_homogenize(vector_t *y, const vector_t *x, float width, float height)
+void transform_homogenize(vector_t *y, const vector_t *x, float width, float height) 
 {
 	float rhw = 1.0f / x->w;
 	y->x = (x->x * rhw + 1.0f) * width * 0.5f;
@@ -472,7 +466,7 @@ void transform_homogenize(vector_t *y, const vector_t *x, float width, float hei
 	y->w = rhw;
 }
 
-void transform_homogenize_reverse(vector_t *y, const vector_t *x, float w, float width, float height)
+void transform_homogenize_reverse(vector_t *y, const vector_t *x, float w, float width, float height) 
 {
 	y->x = (x->x * 2 / width - 1.0f) * w;
 	y->y = (1.0f - x->y * 2 / height) * w;
@@ -480,7 +474,7 @@ void transform_homogenize_reverse(vector_t *y, const vector_t *x, float w, float
 	y->w = w;
 }
 
-void color_init(color_t *c)
+void color_init(color_t *c) 
 {
 	c->r = 0.0f;
 	c->g = 0.0f;
@@ -488,7 +482,7 @@ void color_init(color_t *c)
 	c->a = 0.0f;
 }
 
-void color_product(color_t *c, const color_t *a, const color_t *b)
+void color_product(color_t *c, const color_t *a, const color_t *b) 
 {
 	c->r = a->r * b->r;
 	c->g = a->g * b->g;
@@ -496,22 +490,20 @@ void color_product(color_t *c, const color_t *a, const color_t *b)
 	c->a = a->a * b->a;
 }
 
-void color_product_array(color_t *c, const color_t *a, const float *b)
+void color_product_array(color_t *c, const color_t *a, const float *b) 
 {
 	c->r = a->r * b[0];
 	c->g = a->g * b[1];
 	c->b = a->b * b[2];
 }
-
-void color_scale(color_t *c, float k)
+void color_scale(color_t *c, float k) 
 {
 	c->r *= k;
 	c->g *= k;
 	c->b *= k;
 	c->a *= k;
 }
-
-void color_add(color_t *c, const color_t *a, const color_t *b)
+void color_add(color_t *c, const color_t *a, const color_t *b) 
 {
 	c->r = a->r + b->r;
 	c->g = a->g + b->g;
@@ -519,7 +511,7 @@ void color_add(color_t *c, const color_t *a, const color_t *b)
 	c->a = a->a + b->a;
 }
 
-void color_sub(color_t *c, const color_t *a, const color_t *b)
+void color_sub(color_t *c, const color_t *a, const color_t *b) 
 {
 	c->r = a->r - b->r;
 	c->g = a->g - b->g;
@@ -527,8 +519,7 @@ void color_sub(color_t *c, const color_t *a, const color_t *b)
 	c->a = a->a - b->a;
 }
 
-void color_interpolating(color_t *dest, const color_t *src1, const color_t *src2, const color_t *src3, float a, float b, float c)
-{
+void color_interpolating(color_t *dest, const color_t *src1, const color_t *src2, const color_t *src3, float a, float b, float c) {
 	dest->r = dest->g = dest->b = dest->a = 0.0f;
 	color_t each = *src1;
 	color_scale(&each, a);
@@ -550,8 +541,7 @@ int texture_count = 0;
 material_t materials[NUM_MATERIAL];
 int material_cnt;
 
-void free_material(material_t *material)
-{
+void free_material(material_t *material) {
 	free(material->name);
 	free(material->bump_texname);
 	free(material->alpha_texname);
@@ -564,12 +554,14 @@ void free_material(material_t *material)
 
 pointlight_t pointLights[NR_POINT_LIGHTS];
 int pointlight_cnt;
+
 dirlight_t dirLight;
+
 camera_t cameras[MAX_NUM_CAMERA];
 int camera_count = 0;
 
-void camera_init_by_euler(camera_t *camera, float yaw, float pitch)
-{
+// 利用欧拉角原理来实现摄像机旋转
+void camera_init_by_euler(camera_t *camera, float yaw, float pitch) {
 	camera->front.x = sin(angle_to_radian(yaw)) * cos(angle_to_radian(pitch));
 	camera->front.y = -sin(angle_to_radian(pitch));
 	camera->front.z = cos(angle_to_radian(yaw)) * cos(angle_to_radian(pitch));
@@ -584,7 +576,7 @@ void camera_init_projection(camera_t *camera)
 		matrix_set_ortho(&camera->projection_matrix, camera->left, camera->right, camera->bottom, camera->top, camera->zn, camera->zf);
 }
 
-void camera_update(camera_t *camera)
+void camera_update(camera_t *camera) 
 {
 	vector_t right, at, up, front = camera->front;
 	vector_crossproduct(&right, &camera->worldup, &camera->front);
@@ -598,7 +590,9 @@ void camera_update(camera_t *camera)
 	matrix_set_axis(&camera->view_matrix_r, &right, &up, &front, &camera->pos);
 }
 
-void vertex_rhw_init(vertex_t *v)
+
+// 注意是除坐标意外颜色和纹理索引除以w
+void vertex_rhw_init(vertex_t *v) 
 {
 	float rhw = 1.0f / v->pos.w;
 	v->tc.u *= rhw;
@@ -608,7 +602,7 @@ void vertex_rhw_init(vertex_t *v)
 	v->color.b *= rhw;
 }
 
-void vertex_interp(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float k)
+void vertex_interp(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float k) 
 {
 	vector_interp(&y->pos, &x1->pos, &x2->pos, k);
 	y->tc.u = interp(x1->tc.u, x2->tc.u, k);
@@ -618,7 +612,7 @@ void vertex_interp(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float k)
 	y->color.b = interp(x1->color.b, x2->color.b, k);
 }
 
-void vertex_division(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float w)
+void vertex_division(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float w) 
 {
 	float inv = 1.0f / w;
 	y->pos.x = (x2->pos.x - x1->pos.x) * inv;
@@ -632,8 +626,7 @@ void vertex_division(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float 
 	y->color.b = (x2->color.b - x1->color.b) * inv;
 }
 
-void vertex_add(vertex_t *y, const vertex_t *x)
-{
+void vertex_add(vertex_t *y, const vertex_t *x) {
 	y->pos.x += x->pos.x;
 	y->pos.y += x->pos.y;
 	y->pos.z += x->pos.z;
@@ -645,18 +638,20 @@ void vertex_add(vertex_t *y, const vertex_t *x)
 	y->color.b += x->color.b;
 }
 
-int trapezoid_init_triangle(trapezoid_t *trap, const vertex_t *p1, const vertex_t *p2, const vertex_t *p3)
+// 根据三角形生成 0-2 个梯形，并且返回合法梯形的数量
+int trapezoid_init_triangle(trapezoid_t *trap, const vertex_t *p1, const vertex_t *p2, const vertex_t *p3) 
 {
 	const vertex_t *p;
 	float k, x;
+
 	if (p1->pos.y > p2->pos.y) p = p1, p1 = p2, p2 = p;
 	if (p1->pos.y > p3->pos.y) p = p1, p1 = p3, p3 = p;
 	if (p2->pos.y > p3->pos.y) p = p2, p2 = p3, p3 = p;
 	if (p1->pos.y == p2->pos.y && p1->pos.y == p3->pos.y) return 0;
 	if (p1->pos.x == p2->pos.x && p1->pos.x == p3->pos.x) return 0;
 
-	if (p1->pos.y == p2->pos.y)
-    {	// triangle down
+	if (p1->pos.y == p2->pos.y) 
+	{	// triangle down
 		if (p1->pos.x > p2->pos.x) p = p1, p1 = p2, p2 = p;
 		trap[0].top = p1->pos.y;
 		trap[0].bottom = p3->pos.y;
@@ -667,8 +662,8 @@ int trapezoid_init_triangle(trapezoid_t *trap, const vertex_t *p1, const vertex_
 		return (trap[0].top < trap[0].bottom) ? 1 : 0;
 	}
 
-	if (p2->pos.y == p3->pos.y)
-    {	// triangle up
+	if (p2->pos.y == p3->pos.y) 
+	{	// triangle up
 		if (p2->pos.x > p3->pos.x) p = p2, p2 = p3, p3 = p;
 		trap[0].top = p1->pos.y;
 		trap[0].bottom = p3->pos.y;
@@ -687,8 +682,8 @@ int trapezoid_init_triangle(trapezoid_t *trap, const vertex_t *p1, const vertex_
 	k = (p3->pos.y - p1->pos.y) / (p2->pos.y - p1->pos.y);
 	x = p1->pos.x + (p2->pos.x - p1->pos.x) * k;
 
-	if (x <= p3->pos.x)
-    {	// triangle left
+	if (x <= p3->pos.x) 
+	{		// triangle left
 		trap[0].left.v1 = *p1;
 		trap[0].left.v2 = *p2;
 		trap[0].right.v1 = *p1;
@@ -698,8 +693,8 @@ int trapezoid_init_triangle(trapezoid_t *trap, const vertex_t *p1, const vertex_
 		trap[1].right.v1 = *p1;
 		trap[1].right.v2 = *p3;
 	}
-	else
-    {	// triangle right
+	else 
+	{					// triangle right
 		trap[0].left.v1 = *p1;
 		trap[0].left.v2 = *p3;
 		trap[0].right.v1 = *p1;
@@ -709,10 +704,12 @@ int trapezoid_init_triangle(trapezoid_t *trap, const vertex_t *p1, const vertex_
 		trap[1].right.v1 = *p2;
 		trap[1].right.v2 = *p3;
 	}
+
 	return 2;
 }
 
-void trapezoid_edge_interp(trapezoid_t *trap, float y)
+// 按照 Y 坐标计算出左右两条边纵坐标等于 Y 的顶点
+void trapezoid_edge_interp(trapezoid_t *trap, float y) 
 {
 	float s1 = trap->left.v2.pos.y - trap->left.v1.pos.y;
 	float s2 = trap->right.v2.pos.y - trap->right.v1.pos.y;
@@ -722,7 +719,8 @@ void trapezoid_edge_interp(trapezoid_t *trap, float y)
 	vertex_interp(&trap->right.v, &trap->right.v1, &trap->right.v2, t2);
 }
 
-void trapezoid_init_scan_line(const trapezoid_t *trap, scanline_t *scanline, int y)
+// 根据左右两边的端点，初始化计算出扫描线的起点和步长
+void trapezoid_init_scan_line(const trapezoid_t *trap, scanline_t *scanline, int y) 
 {
 	float width = trap->right.v.pos.x - trap->left.v.pos.x;
 	scanline->x = (int)(trap->left.v.pos.x + 0.5f);
@@ -732,6 +730,7 @@ void trapezoid_init_scan_line(const trapezoid_t *trap, scanline_t *scanline, int
 
 	scanline->y = y;
 	scanline->v = trap->left.v;
+
 	vertex_division(&scanline->step, &trap->left.v, &trap->right.v, width);
 }
 
@@ -746,12 +745,12 @@ void device_init(device_t *device)
 	matrix_set_identity(&device->transform.view);
 }
 
-void device_set_background(device_t *device, uint color)
+void device_set_background(device_t *device, IUINT32 color)
 {
 	device->background = color;
 }
 
-void device_set_framebuffer(device_t *device, uint *framebuffer)
+void device_set_framebuffer(device_t *device, IUINT32 *framebuffer)
 {
 	device->framebuffer = framebuffer;
 }
@@ -774,22 +773,26 @@ void device_set_camera(device_t *device, camera_t *camera)
 	device->transform.projection = camera->projection_matrix;
 }
 
-void device_pixel(device_t *device, int x, int y, uint color)
+void device_pixel(device_t *device, int x, int y, IUINT32 color) 
 {
-	if (x >= 0 && x < device->camera->width && y >= 0 && y < device->camera->height)
-    {
+	if (x >= 0 && x < device->camera->width && y >= 0 && y < device->camera->height) 
+	{
 		device->framebuffer[y * device->camera->width + x] = color;
 	}
 }
 
-void device_clear(device_t *device)
+void device_clear(device_t *device) 
 {
-	//backgroud color: 0x55555555
-	memset(device->framebuffer, 0x55, device->camera->width * device->camera->height * sizeof(uint));
+	if (device->framebuffer != NULL) 
+	{
+		for (int y = 0; y < device->camera->height; y++)
+			for (int x = 0; x < device->camera->width; x++)
+				device->framebuffer[y * device->camera->width + x] = device->background;
+	}
+	// memset(device->framebuffer, 0xff, device->camera->width * device->camera->height * sizeof(IUINT32));
 	if (device->zbuffer != NULL)
 		memset(device->zbuffer, 0, device->camera->width * device->camera->height * sizeof(float));
-	if (device->shadowbuffer != NULL)
-	{
+	if (device->shadowbuffer != NULL) {
 		for (int y = 0; y < device->camera->height; y++)
 			for (int x = 0; x < device->camera->width; x++)
 				device->shadowbuffer[y * device->camera->width + x] = 1.0f;
@@ -797,8 +800,19 @@ void device_clear(device_t *device)
 }
 
 
-
-void device_draw_line(device_t *device, int x1, int y1, int x2, int y2, uint c)
+///*
+//    m = dy / dx
+//    如果(ε + m) < 0.5 (或表示为2*(ε + m) < 1)
+//        ε = ε + m
+//    其他情况
+//        ε = ε + m – 1
+//将上述公式都乘以dx, 并将ε*dx用新符号ξ表示，可得
+//    如果2*(ξ + dy) < dx
+//        ξ = ξ + dy
+//    其他情况
+//        ξ = ξ + dy – dx
+//*/
+void device_draw_line(device_t *device, int x1, int y1, int x2, int y2, IUINT32 c) 
 {
 	int dx = x2 - x1;
 	int dy = y2 - y1;
@@ -813,21 +827,20 @@ void device_draw_line(device_t *device, int x1, int y1, int x2, int y2, uint c)
 		{
 			device_pixel(device, x, y, c);
 			eps += dy;
-			if ((eps << 1) >= dx)
-            {
+			if ((eps << 1) >= dx) 
+			{
 				y += uy;
 				eps -= dx;
 			}
 		}
 	}
-	else
-    {
+	else 
+	{
 		for (y = y1; y != y2 + uy; y += uy)
 		{
 			device_pixel(device, x, y, c);
 			eps += dx;
-			if ((eps << 1) >= dy)
-            {
+			if ((eps << 1) >= dy) {
 				x += ux;
 				eps -= dy;
 			}
@@ -835,48 +848,50 @@ void device_draw_line(device_t *device, int x1, int y1, int x2, int y2, uint c)
 	}
 }
 
-uint texture_value_read(const texture_t *texture, float u, float v)
+IUINT32 texture_value_read(const texture_t *texture, float u, float v) 
 {
-	uint* data = texture->datas[0];
+	IUINT32* data = texture->datas[0];
 	int width, height;
 	width = texture->width;
 	height = texture->height;
 	u = (u - (int)u) * (width - 1);
 	v = (v - (int)v) * (height - 1);
+	int uint = (int)u;
 	int vint = (int)v;
-	uint res = data[vint*width + (int)u];
+	IUINT32 res = data[vint*width + uint];
 	return res;
 }
 
-color_t texture_read(const texture_t *texture, float u, float v, float z, float maxz)
+// 双线性插值和mipmap
+color_t texture_read(const texture_t *texture, float u, float v, float z, float maxz) 
 {
 	color_t color;
-	uint* data = texture->datas[0];
+	IUINT32* data = texture->datas[0];
 	int width, height;
 	width = texture->width;
 	height = texture->height;
-	if(texture->use_mipmap)
-    {
+	if (texture->use_mipmap) {
 		int tmiplevels = logbase2ofx(width);
 		int miplevel = tmiplevels * (z / maxz);
 		if (miplevel > tmiplevels) miplevel = tmiplevels;
-		data = (uint*)texture->datas[miplevel];
-		for (int ts = 0; ts < miplevel; ts++)
-        {
+		data = (IUINT32*)texture->datas[miplevel];
+		for (int ts = 0; ts < miplevel; ts++) {
 			width = width >> 1;
 			height = height >> 1;
 		}
 	}
+	// wrap 方式
 	u = (u - (int)u) * (width - 1);
 	v = (v - (int)v) * (height - 1);
 	int uint = (int)u;
 	int vint = (int)v;
 	int uint_pls_1 = uint + 1;
 	int vint_pls_1 = vint + 1;
-	uint_pls_1 = clamp(uint_pls_1, 0, width - 1);
-	vint_pls_1 = clamp(vint_pls_1, 0, height - 1);
+	uint_pls_1 = CMID(uint_pls_1, 0, width - 1);
+	vint_pls_1 = CMID(vint_pls_1, 0, height - 1);
 
 	int textel00, textel10, textel01, textel11;
+
 	textel00 = data[(vint + 0)*width + (uint + 0)];
 	textel10 = data[(vint_pls_1)*width + (uint + 0)];
 	textel01 = data[(vint + 0)*width + (uint_pls_1)];
@@ -904,6 +919,7 @@ color_t texture_read(const texture_t *texture, float u, float v, float z, float 
 
 	float dtu = u - (float)uint;
 	float dtv = v - (float)vint;
+
 	float one_minus_dtu = 1.0 - dtu;
 	float one_minus_dtv = 1.0 - dtv;
 
@@ -935,7 +951,7 @@ color_t texture_read(const texture_t *texture, float u, float v, float z, float 
 	return color;
 }
 
-bool computeBarycentricCoords3d(point_t *res, const point_t *p0, const point_t *p1, const point_t *p2, const point_t *p)
+bool computeBarycentricCoords3d(point_t *res, const point_t *p0, const point_t *p1, const point_t *p2, const point_t *p) 
 {
 	vector_t d1, d2, n;
 	vector_sub(&d1, p1, p0);
@@ -943,8 +959,8 @@ bool computeBarycentricCoords3d(point_t *res, const point_t *p0, const point_t *
 	vector_crossproduct(&n, &d1, &d2);
 	float u1, u2, u3, u4;
 	float v1, v2, v3, v4;
-	if ((fabs(n.x) >= fabs(n.y)) && (fabs(n.x) >= fabs(n.z)))
-    {
+	if ((fabs(n.x) >= fabs(n.y)) && (fabs(n.x) >= fabs(n.z))) 
+	{
 		u1 = p0->y - p2->y;
 		u2 = p1->y - p2->y;
 		u3 = p->y - p0->y;
@@ -954,8 +970,8 @@ bool computeBarycentricCoords3d(point_t *res, const point_t *p0, const point_t *
 		v3 = p->z - p0->z;
 		v4 = p->z - p2->z;
 	}
-	else if (fabs(n.y) >= fabs(n.z))
-    {
+	else if (fabs(n.y) >= fabs(n.z)) 
+	{
 		u1 = p0->z - p2->z;
 		u2 = p1->z - p2->z;
 		u3 = p->z - p0->z;
@@ -965,8 +981,8 @@ bool computeBarycentricCoords3d(point_t *res, const point_t *p0, const point_t *
 		v3 = p->x - p0->x;
 		v4 = p->x - p2->x;
 	}
-	else
-    {
+	else 
+	{
 		u1 = p0->x - p2->x;
 		u2 = p1->x - p2->x;
 		u3 = p->x - p0->x;
@@ -978,7 +994,10 @@ bool computeBarycentricCoords3d(point_t *res, const point_t *p0, const point_t *
 	}
 
 	float denom = v1 * u2 - v2 * u1;
-	if (fabsf(denom) < 1e-6) return false;
+	if (fabsf(denom) < 1e-6) 
+	{
+		return false;
+	}
 	float oneOverDenom = 1.0f / denom;
 	res->x = (v4 * u2 - v2 * u4) * oneOverDenom;
 	res->y = (v1 * u3 - v3 * u1) * oneOverDenom;
@@ -986,30 +1005,29 @@ bool computeBarycentricCoords3d(point_t *res, const point_t *p0, const point_t *
 	return true;
 }
 
-void device_draw_scanline(device_t *device, scanline_t *scanline, point_t *points, v2f *vfs)
+// now is the core realize for rendering, so just do it.
+void device_draw_scanline(device_t *device, scanline_t *scanline, point_t *points, v2f *vfs) 
 {
 	int y = scanline->y;
 	int x = scanline->x;
 	int width = device->camera->width;
 	int render_state = device->render_state;
 	int count = scanline->w;
-	for (; count > 0 && x < width; x++, count--)
-    {
-		if (x >= 0)
-        {
-			if (device->shadowbuffer != NULL)
-            {
+	for (; count > 0 && x < width; x++, count--) {
+		if (x >= 0) {
+			if (device->shadowbuffer != NULL) {
 				float z = scanline->v.pos.z;
-				if (z <= device->shadowbuffer[y*width + x])  device->shadowbuffer[y*width + x] = z;
+				if (z <= device->shadowbuffer[y*width + x]) {
+					device->shadowbuffer[y*width + x] = z;
+				}
 			}
 
 			float rhw = scanline->v.pos.w;
-			if (device->zbuffer == NULL || rhw >= device->zbuffer[y*width + x])
-            {
-				if (device->zbuffer != NULL) device->zbuffer[y*width + x] = rhw;
+			if (device->zbuffer == NULL || rhw >= device->zbuffer[y*width + x]) {
+				if (device->zbuffer != NULL)
+					device->zbuffer[y*width + x] = rhw;
 
-				if (device->framebuffer != NULL)
-                {
+				if (device->framebuffer != NULL) {
 					color_t color = { 0.0f, 0.0f, 0.0f, 1.0f };
 					v2f vf;
 					float w = 1.0f / scanline->v.pos.w;
@@ -1018,9 +1036,11 @@ void device_draw_scanline(device_t *device, scanline_t *scanline, point_t *point
 					transform_homogenize_reverse(&interpos, &interpos, w, device->camera->width, device->camera->height);
 					computeBarycentricCoords3d(&barycenter, &points[0], &points[1], &points[2], &interpos);
 
+
 					v2f_interpolating(&vf, &vfs[0], &vfs[1], &vfs[2], barycenter.x, barycenter.y, barycenter.z);
 					vf.pos.w = w;
 					vector_normalize(&vf.normal);
+
 					frag_shader(device, &vf, &color);
 
 					float a = 1.0f;
@@ -1028,12 +1048,26 @@ void device_draw_scanline(device_t *device, scanline_t *scanline, point_t *point
 					float g = 0.0f;
 					float b = 0.0f;
 
-					if (render_state & RENDER_STATE_COLOR) { a = vf.color.a; r = vf.color.r; g = vf.color.g; b = vf.color.b; }
-					if (render_state & RENDER_STATE_TEXTURE) { a = color.a; r = color.r; g = color.g; b = color.b; }
-					int A = clamp((int)(a * 255.0f), 0, 255);
-					int R = clamp((int)(r * 255.0f), 0, 255);
-					int G = clamp((int)(g * 255.0f), 0, 255);
-					int B = clamp((int)(b * 255.0f), 0, 255);
+					if (render_state & RENDER_STATE_COLOR) 
+					{
+						a = vf.color.a;
+						r = vf.color.r;
+						g = vf.color.g;
+						b = vf.color.b;
+					}
+					if (render_state & RENDER_STATE_TEXTURE) 
+					{
+						a = color.a;
+						r = color.r;
+						g = color.g;
+						b = color.b;
+					}
+
+					int A = CMID((int)(a * 255.0f), 0, 255);
+					int R = CMID((int)(r * 255.0f), 0, 255);
+					int G = CMID((int)(g * 255.0f), 0, 255);
+					int B = CMID((int)(b * 255.0f), 0, 255);
+
 					device->framebuffer[y*width + x] = (R << 16) | (G << 8) | B;
 				}
 			}
@@ -1043,47 +1077,24 @@ void device_draw_scanline(device_t *device, scanline_t *scanline, point_t *point
 }
 
 // core render function
-void device_render_trap(device_t *device, trapezoid_t *trap, point_t *points, v2f *v2fs)
+void device_render_trap(device_t *device, trapezoid_t *trap, point_t *points, v2f *v2fs) 
 {
 	scanline_t scanline;
 	int j, top, bottom;
 	top = (int)(trap->top + 0.5f);
 	bottom = (int)(trap->bottom + 0.5f);
-	for (j = top; j < bottom; j++)
-    {
-		if (j >= 0 && j < device->camera->height)
-        {
+	for (j = top; j < bottom; j++) {
+		if (j >= 0 && j < device->camera->height) {
 			trapezoid_edge_interp(trap, (float)j + 0.5f);
 			trapezoid_init_scan_line(trap, &scanline, j);
 			device_draw_scanline(device, &scanline, points, v2fs);
 		}
-		if (j >= device->camera->height) break;
+		if (j >= device->camera->height)
+			break;
 	}
 }
-/*
-void CalculateTangentArray(vector_t *tangent, vector_t *binormal, const vector_t *vec1, const vector_t *vec2, const vector_t *vec3, float u1, float v1, float u2, float v2, float u3, float v3)
-{
-	float x1 = vec2->x - vec1->x;
-	float x2 = vec3->x - vec1->x;
-	float y1 = vec2->y - vec1->y;
-	float y2 = vec3->y - vec1->y;
-	float z1 = vec2->z - vec1->z;
-	float z2 = vec3->z - vec1->z;
-	float s1 = u2 - u1;
-	float s2 = u3 - u1;
-	float t1 = v2 - v1;
-	float t2 = v3 - v1;
-	float r = 1.0f / (s1 * t2 - s2 * t1);
-	vector_t sdir = {(t2 * x1 - t1 * x2) * r, (t2 * y1 - t1 * y2) * r, (t2 * z1 - t1 * z2) * r};
-	vector_t tdir = {(s1 * x2 - s2 * x1) * r, (s1 * y2 - s2 * y1) * r, (s1 * z2 - s2 * z1) * r};
 
-	const Vector3D& n = normal[a]; const Vector3D& t = tan1[a];
-	// Gram-Schmidt orthogonalize.
-	tangent[a] = (t - n * Dot(n, t)).Normalize();
-	// Calculate handedness.
-	tangent[a].w = (Dot(Cross(n, t), tan2[a]) < 0.0F) ? -1.0F : 1.0F;
-}
-*/
+
 // http://www.cnblogs.com/ThreeThousandBigWorld/archive/2012/07/16/2593892.html
 // http://blog.chinaunix.net/uid-26651460-id-3083223.html
 // http://stackoverflow.com/questions/5255806/how-to-calculate-tangent-and-binormal
@@ -1132,21 +1143,30 @@ void calculate_tangent_and_binormal(vector_t *tangent, vector_t *binormal, const
 		//vector_inverse(tangent);
 		//vector_inverse(binormal);
 	}
+
+	//binormal->w = 0.0f;
 }
 
 void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_t *t3) 
 {
 	vertex_t *vertice[3] = { t1, t2, t3 };
 	point_t points[3];
+
+
+	// 正规矩阵
 	matrix_t nm;
 	matrix_clone(&nm, &device->transform.model);
 	matrix_inverse(&nm);
 	matrix_transpose(&nm);
 
+	//    简单的cvv裁剪，整个三角形裁减掉
+	//    if (transform_check_cvv(&c1) != 0) return;
+	//    if (transform_check_cvv(&c2) != 0) return;
+	//    if (transform_check_cvv(&c3) != 0) return;
+
 	a2v a2vs[3];
 	v2f v2fs[3];
-	for (int i = 0; i < 3; i++) 
-	{
+	for (int i = 0; i < 3; i++) {
 		vertex_t *vertex = vertice[i];
 		a2v *av = &a2vs[i];
 
@@ -1160,6 +1180,7 @@ void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_
 		matrix_apply(&av->tangent, &av->tangent, &device->transform.model);
 		vector_crossproduct(&av->binormal, &av->normal, &av->tangent);
 		vector_scale(&av->binormal, av->tangent.w);
+		//matrix_apply(&av->binormal, &av->binormal, &device->transform.model);
 		matrix_apply(&vertex->pos, &vertex->pos, &device->transform.vp);
 		points[i] = vertex->pos; // 透视空间的pos
 
@@ -1169,73 +1190,88 @@ void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_
 		av->color = vertex->color;
 		av->texcoord = vertex->tc;
 
-		vert_shader(device, av, &v2fs[i]); 
+		vert_shader(device, av, &v2fs[i]); // 顶点着色器
+//        vertex_rhw_init(vertex);
+
 		transform_homogenize(&vertex->pos, &vertex->pos, device->camera->width, device->camera->height);
 	}
 
-	if (device->cull > 0)
-    {
+	// 背面剔除
+	if (device->cull > 0) {
 		vector_t t21, t32;
 		vector_sub(&t21, &t2->pos, &t1->pos);
 		vector_sub(&t32, &t3->pos, &t2->pos);
-		if (device->cull == 1)
-        {
-			if (t21.x * t32.y - t32.x * t21.y <= 0) return;
+		if (device->cull == 1) {
+			if (t21.x * t32.y - t32.x * t21.y <= 0)    // 计算叉积
+				return;
 		}
-		else if (device->cull == 2)
-        {
-			if (t21.x * t32.y - t32.x * t21.y > 0)  return;
+		else if (device->cull == 2) {
+			if (t21.x * t32.y - t32.x * t21.y > 0)     // 计算叉积
+				return;
 		}
 	}
 
-	if (device->render_state & (RENDER_STATE_TEXTURE | RENDER_STATE_COLOR))
-    {
+	if (device->render_state & (RENDER_STATE_TEXTURE | RENDER_STATE_COLOR)) {
 		trapezoid_t traps[2];
 		int n = trapezoid_init_triangle(traps, t1, t2, t3);
 		if (n >= 1) device_render_trap(device, &traps[0], points, v2fs);
 		if (n >= 2) device_render_trap(device, &traps[1], points, v2fs);
 	}
 
-	if ((device->render_state & RENDER_STATE_WIREFRAME) && device->framebuffer != NULL)
-    {
+	if ((device->render_state & RENDER_STATE_WIREFRAME) && device->framebuffer != NULL) {
 		device_draw_line(device, (int)t1->pos.x, (int)t1->pos.y, (int)t2->pos.x, (int)t2->pos.y, device->foreground);
 		device_draw_line(device, (int)t1->pos.x, (int)t1->pos.y, (int)t3->pos.x, (int)t3->pos.y, device->foreground);
 		device_draw_line(device, (int)t3->pos.x, (int)t3->pos.y, (int)t2->pos.x, (int)t2->pos.y, device->foreground);
 	}
 }
 
-void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool world) 
-{
-
+void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool world) {
 #define CLIP_CODE_GZ    0x0001
 #define CLIP_CODE_LZ    0x0002
 #define CLIP_CODE_IZ    0x0004
+
 #define CLIP_CODE_GX    0x0001
 #define CLIP_CODE_LX    0x0002
 #define CLIP_CODE_IX    0x0004
+
 #define CLIP_CODE_GY    0x0001
 #define CLIP_CODE_LY    0x0002
 #define CLIP_CODE_IY    0x0004
+
 #define CLIP_CODE_NULL  0x0000
 
 	int vertex_ccodes[3];
 	int num_verts_in = 0;
+
 	float z_factor_x, z_factor_y, z_factor, z_test;
+
 	float xi, yi, x01i, y01i, x02i, y02i, t1, t2, ui, vi, u01i, v01i, u02i, v02i;
 
+	bool cliped = false;
+
 	vector_t v;
+
 	vertex_t p1 = *v1, p2 = *v2, p3 = *v3;
 
-	matrix_t* matrix = world ? &device->transform.view : &device->transform.mv;
-	matrix_apply(&p1.pos, &p1.pos, matrix);
-	matrix_apply(&p2.pos, &p2.pos, matrix);
-	matrix_apply(&p3.pos, &p3.pos, matrix);
+	if (world == false) 
+	{
+		matrix_apply(&p1.pos, &p1.pos, &device->transform.mv);
+		matrix_apply(&p2.pos, &p2.pos, &device->transform.mv);
+		matrix_apply(&p3.pos, &p3.pos, &device->transform.mv);
+	}
+	else 
+	{
+		matrix_apply(&p1.pos, &p1.pos, &device->transform.view);
+		matrix_apply(&p2.pos, &p2.pos, &device->transform.view);
+		matrix_apply(&p3.pos, &p3.pos, &device->transform.view);
+	}
 
-	z_factor_y = tan(device->camera->fovy * 0.5);
+
+	z_factor_y = tan(device->camera->fovy*0.5);
 	z_factor_x = z_factor_y / device->camera->aspect;
 	z_factor = z_factor_x;
-
 	z_test = z_factor * p1.pos.z;
+
 	if (p1.pos.x > z_test)
 		vertex_ccodes[0] = CLIP_CODE_GX;
 	else if (p1.pos.x < -z_test)
@@ -1244,6 +1280,7 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 		vertex_ccodes[0] = CLIP_CODE_IX;
 
 	z_test = z_factor * p2.pos.z;
+
 	if (p2.pos.x > z_test)
 		vertex_ccodes[1] = CLIP_CODE_GX;
 	else if (p2.pos.x < -z_test)
@@ -1252,6 +1289,7 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 		vertex_ccodes[1] = CLIP_CODE_IX;
 
 	z_test = z_factor * p3.pos.z;
+
 	if (p3.pos.x > z_test)
 		vertex_ccodes[2] = CLIP_CODE_GX;
 	else if (p3.pos.x < -z_test)
@@ -1260,75 +1298,100 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 		vertex_ccodes[2] = CLIP_CODE_IX;
 
 	if (((vertex_ccodes[0] == CLIP_CODE_GX) && (vertex_ccodes[1] == CLIP_CODE_GX) && (vertex_ccodes[2] == CLIP_CODE_GX))
-		|| ((vertex_ccodes[0] == CLIP_CODE_LX) && (vertex_ccodes[1] == CLIP_CODE_LX) && (vertex_ccodes[2] == CLIP_CODE_LX))) return;
+		|| ((vertex_ccodes[0] == CLIP_CODE_LX) && (vertex_ccodes[1] == CLIP_CODE_LX) && (vertex_ccodes[2] == CLIP_CODE_LX))) {
+		return;
+	}
 
 	z_factor = z_factor_y;
 	z_test = z_factor * p1.pos.z;
 
-	if (p1.pos.y > z_test) vertex_ccodes[0] = CLIP_CODE_GY;
-	else if (p1.pos.y < -z_test) vertex_ccodes[0] = CLIP_CODE_LY;
-	else vertex_ccodes[0] = CLIP_CODE_IY;
+	if (p1.pos.y > z_test)
+		vertex_ccodes[0] = CLIP_CODE_GY;
+	else if (p1.pos.y < -z_test)
+		vertex_ccodes[0] = CLIP_CODE_LY;
+	else
+		vertex_ccodes[0] = CLIP_CODE_IY;
 
 	z_test = z_factor * p2.pos.z;
 
-	if (p2.pos.y > z_test) vertex_ccodes[1] = CLIP_CODE_GY;
-	else if (p2.pos.y < -z_test) vertex_ccodes[1] = CLIP_CODE_LY;
-	else vertex_ccodes[1] = CLIP_CODE_IY;
+	if (p2.pos.y > z_test)
+		vertex_ccodes[1] = CLIP_CODE_GY;
+	else if (p2.pos.y < -z_test)
+		vertex_ccodes[1] = CLIP_CODE_LY;
+	else
+		vertex_ccodes[1] = CLIP_CODE_IY;
 
 	z_test = z_factor * p3.pos.z;
 
-	if (p3.pos.y > z_test) vertex_ccodes[2] = CLIP_CODE_GY;
-	else if (p3.pos.y < -z_test) vertex_ccodes[2] = CLIP_CODE_LY;
-	else vertex_ccodes[2] = CLIP_CODE_IY;
+	if (p3.pos.y > z_test)
+		vertex_ccodes[2] = CLIP_CODE_GY;
+	else if (p3.pos.y < -z_test)
+		vertex_ccodes[2] = CLIP_CODE_LY;
+	else
+		vertex_ccodes[2] = CLIP_CODE_IY;
 
 	if (((vertex_ccodes[0] == CLIP_CODE_GY) && (vertex_ccodes[1] == CLIP_CODE_GY) && (vertex_ccodes[2] == CLIP_CODE_GY))
-		|| ((vertex_ccodes[0] == CLIP_CODE_LY) && (vertex_ccodes[1] == CLIP_CODE_LY) && (vertex_ccodes[2] == CLIP_CODE_LY))) return;
+		|| ((vertex_ccodes[0] == CLIP_CODE_LY) && (vertex_ccodes[1] == CLIP_CODE_LY) && (vertex_ccodes[2] == CLIP_CODE_LY))) {
+		return;
+	}
 
 	// 是否完全在远裁剪面或近裁剪面外侧
-	if (p1.pos.z > device->camera->zf) vertex_ccodes[0] = CLIP_CODE_GZ;
-	else if (p1.pos.z < device->camera->zn) vertex_ccodes[0] = CLIP_CODE_LZ;
-	else
-    {
+	if (p1.pos.z > device->camera->zf)
+		vertex_ccodes[0] = CLIP_CODE_GZ;
+	else if (p1.pos.z < device->camera->zn)
+		vertex_ccodes[0] = CLIP_CODE_LZ;
+	else 
+	{
 		vertex_ccodes[0] = CLIP_CODE_IZ;
 		num_verts_in++;
 	}
 
-	if (p2.pos.z > device->camera->zf) vertex_ccodes[1] = CLIP_CODE_GZ;
-	else if (p2.pos.z < device->camera->zn) vertex_ccodes[1] = CLIP_CODE_LZ;
-	else
-    {
+	if (p2.pos.z > device->camera->zf)
+		vertex_ccodes[1] = CLIP_CODE_GZ;
+	else if (p2.pos.z < device->camera->zn)
+		vertex_ccodes[1] = CLIP_CODE_LZ;
+	else 
+	{
 		vertex_ccodes[1] = CLIP_CODE_IZ;
 		num_verts_in++;
 	}
 
-	if (p3.pos.z > device->camera->zf) vertex_ccodes[2] = CLIP_CODE_GZ;
-	else if (p3.pos.z < device->camera->zn) vertex_ccodes[2] = CLIP_CODE_LZ;
-	else
-    {
+
+	if (p3.pos.z > device->camera->zf)
+		vertex_ccodes[2] = CLIP_CODE_GZ;
+	else if (p3.pos.z < device->camera->zn)
+		vertex_ccodes[2] = CLIP_CODE_LZ;
+	else 
+	{
 		vertex_ccodes[2] = CLIP_CODE_IZ;
 		num_verts_in++;
 	}
 
+
 	if (((vertex_ccodes[0] == CLIP_CODE_GZ) && (vertex_ccodes[1] == CLIP_CODE_GZ) && (vertex_ccodes[2] == CLIP_CODE_GZ))
-		|| ((vertex_ccodes[0] == CLIP_CODE_LZ) && (vertex_ccodes[1] == CLIP_CODE_LZ) && (vertex_ccodes[2] == CLIP_CODE_LZ))) return;
+		|| ((vertex_ccodes[0] == CLIP_CODE_LZ) && (vertex_ccodes[1] == CLIP_CODE_LZ) && (vertex_ccodes[2] == CLIP_CODE_LZ))) {
+		return;
+	}
 
 	// 判断是否有顶点在近裁剪面外侧
 	if (((vertex_ccodes[0] | vertex_ccodes[1] | vertex_ccodes[2]) & CLIP_CODE_LZ))
 	{
 		vertex_t temp;
-		// 三角形有1个顶点在近裁剪面内侧，2个顶点在外侧, 三角形有2个顶点在近裁剪面内侧，1个顶点在外侧
+		//num_verts_in = 0;
+		// 三角形有1个顶点在近裁剪面内侧，2个顶点在外侧
+		// 三角形有2个顶点在近裁剪面内侧，1个顶点在外侧
 		if (num_verts_in == 1)
 		{
-			if (vertex_ccodes[0] == CLIP_CODE_IZ) { }
-			else if (vertex_ccodes[1] == CLIP_CODE_IZ)
-            {
+			if (vertex_ccodes[0] == CLIP_CODE_IZ) {}
+			else if (vertex_ccodes[1] == CLIP_CODE_IZ) 
+			{
 				temp = p1;
 				p1 = p2;
 				p2 = p3;
 				p3 = temp;
 			}
-			else
-            {
+			else 
+			{
 				temp = p1;
 				p1 = p3;
 				p3 = p2;
@@ -1371,20 +1434,24 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 
 			p3.tc.u = ui;
 			p3.tc.v = vi;
+
+			cliped = true;
 		}
-		else if (num_verts_in == 2)
-        {
+		else if (num_verts_in == 2) 
+		{
 			// 外侧的点
-			if (vertex_ccodes[0] == CLIP_CODE_LZ) { }
-			else if (vertex_ccodes[1] == CLIP_CODE_LZ)
-            {
+			if (vertex_ccodes[0] == CLIP_CODE_LZ) 
+			{
+			}
+			else if (vertex_ccodes[1] == CLIP_CODE_LZ) 
+			{
 				temp = p1;
 				p1 = p2;
 				p2 = p3;
 				p3 = temp;
 			}
-			else
-            {
+			else 
+			{
 				temp = p1;
 				p1 = p3;
 				p3 = p2;
@@ -1439,6 +1506,8 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 			matrix_apply(&np2.pos, &np2.pos, &device->transform.view_r);
 			matrix_apply(&np3.pos, &np3.pos, &device->transform.view_r);
 			device_draw_primitive(device, &np1, &np2, &np3);
+
+			cliped = true;
 		}
 	}
 	matrix_apply(&p1.pos, &p1.pos, &device->transform.view_r);
@@ -1447,7 +1516,7 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 	device_draw_primitive(device, &p1, &p2, &p3);
 }
 
-void vert_shader(device_t *device, a2v *av, v2f *vf)
+void vert_shader(device_t *device, a2v *av, v2f *vf) 
 {
 	vf->pos = av->pos;
 	vf->normal = av->normal;
@@ -1457,6 +1526,7 @@ void vert_shader(device_t *device, a2v *av, v2f *vf)
 	vf->storage0 = (vector_t) { av->tangent.x, av->binormal.x, av->normal.x };
 	vf->storage1 = (vector_t) { av->tangent.y, av->binormal.y, av->normal.y };
 	vf->storage2 = (vector_t) { av->tangent.z, av->binormal.z, av->normal.z };
+
 }
 
 void frag_shader(device_t *device, v2f *vf, color_t *color) 
@@ -1471,7 +1541,7 @@ void frag_shader(device_t *device, v2f *vf, color_t *color)
 	vector_t lightDir = dirLight.dir;
 	vector_inverse(&lightDir);
 	vector_normalize(&lightDir);
-    
+
 	float diff = fmaxf(vector_dotproduct(&normal, &lightDir), 0.0f);
 	lightDir = dirLight.dir;
 	vector_normalize(&lightDir);
@@ -1493,7 +1563,6 @@ void frag_shader(device_t *device, v2f *vf, color_t *color)
 	color_scale(&temp, spec);
 	color_add(color, color, &temp);
 
-	// 计算阴影
 	if (dirLight.shadow)
 	{
 		// fragPos -> 灯的坐标系 -> 灯的透视矩阵 -> 求得z坐标比较
@@ -1510,29 +1579,31 @@ void frag_shader(device_t *device, v2f *vf, color_t *color)
 		matrix_apply(&tempNormal, &tempNormal, &camera->view_matrix);
 		vector_inverse(&tempNormal);
 		float dot = vector_dotproduct(&tempNormal, &camera->front);
-		if (dot > 0)
-        {
+		if (dot > 0) {
 			float bias = 0.015 * (1.0 - dot);
 			if (bias < 0.002f) bias = 0.001;
-			if (y >= 0 && x >= 0 && y < camera->height && x < camera->width)
-            {
+			if (y >= 0 && x >= 0 && y < camera->height && x < camera->width) 
+			{
 				float shadow = 0.0;
 				for (int i = -1; i <= 1; ++i)
 				{
 					for (int j = -1; j <= 1; ++j)
 					{
-						if (y + j < 0 || y + j >= camera->height || x + i < 0 || x + i >= camera->width) continue;
+						if (y + j < 0 || y + j >= camera->height || x + i < 0 || x + i >= camera->width)
+							continue;
 						float pcfDepth = pshadowbuffer[(y + j)*camera->width + (x + i)];
 						shadow += tempPos.z - bias > pcfDepth ? 1.0 : 0.0;
 					}
 				}
 				shadow /= 9.0;
+
 				color_t temp = { 0.3f,0.3f,0.3f,0.3f };
 				color_scale(&temp, shadow);
 				color_sub(color, color, &temp);
 			}
 		}
 	}
+
 
 	int i = 0;
 	for (i = 0; i < pointlight_cnt; i++)
@@ -1552,7 +1623,8 @@ void frag_shader(device_t *device, v2f *vf, color_t *color)
 		float spec = powf(fmaxf(vector_dotproduct(&viewdir, &vec), 0.0f), shininess);
 		float num = pointlight->constant + pointlight->linear * distance + pointlight->quadratic * (distance * distance);
 		float attenuation = 0;
-		if (num != 0) attenuation = 1.0f / num;
+		if (num != 0)
+			attenuation = 1.0f / num;
 
 		color_t c = (color_t) { 0.0f, 0.0f, 0.0f, 1.0f };
 		color_t c2 = material->ambient_tex_id == -1 ? material->ambient : texture_read(&textures[material->ambient_tex_id], tex->u, tex->v, vf->pos.w, 15);
@@ -1571,3 +1643,5 @@ void frag_shader(device_t *device, v2f *vf, color_t *color)
 		color_add(color, color, &temp);
 	}
 }
+
+

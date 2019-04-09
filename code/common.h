@@ -5,6 +5,8 @@
 typedef unsigned int uint;  //32bit
 typedef unsigned long long ulong; //64bit
 
+#define REAL_WIDTH  600
+#define REAL_HEIGHT  600
 #define SCREEN_WIDTH  600
 #define SCREEN_HEIGHT  600
 #define KEY_CNT 512
