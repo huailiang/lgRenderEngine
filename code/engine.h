@@ -5,9 +5,6 @@
 #include <stdbool.h>
 #include "common.h"
 
-typedef unsigned int IUINT32;
-
-#define CMID(x, min, max) (((x) < (min)) ? (min) : (((x) > (max)) ? (max) : (x)))
 extern int logbase2ofx(int n);
 
 typedef struct { float x, y, z, w; } vector_t;
@@ -50,7 +47,7 @@ void matrix_set_axis(matrix_t *m, const vector_t *xaxis, const vector_t *yaxis, 
 // xaxis.z           yaxis.z           zaxis.z          0
 //-dot(xaxis, eye)  -dot(yaxis, eye)  -dot(zaxis, eye)  1
 void matrix_set_lookat(matrix_t *m, const vector_t *eye, const vector_t *at, const vector_t *up);
-//      12)).set_perspective m, fovy, aspect, zn, zf
+// set_perspective m, fovy, aspect, zn, zf
 // zoom = 1 / tan(fov/2)
 // zoomy = 1 / tan(fovy/2)
 // zoomx = zoomy * aspect
@@ -59,7 +56,7 @@ void matrix_set_lookat(matrix_t *m, const vector_t *eye, const vector_t *at, con
 // 0        0       zf/(zf-zn)      1
 // 0        0       zn*zf/(zn-zf)   0
 void matrix_set_perspective(matrix_t *m, float fovy, float aspect, float zn, float zf);
-//      13)).set_ortho m, left, right, bottom, top, near, far
+// set_ortho m, left, right, bottom, top, near, far
 // 2/(r-l)      0            0           0
 // 0            2/(t-b)      0           0
 // 0            0            1/(zf-zn)   0
@@ -150,7 +147,8 @@ typedef struct
 extern dirlight_t dirLight;
 
 typedef enum { perspective, orthographic } PROJECTION;
-typedef struct {
+typedef struct
+{
 	vector_t pos;
 	vector_t front;
 	vector_t worldup;
@@ -212,11 +210,11 @@ typedef struct
 	int render_state;          
 	transform_t transform;      
 	material_t material;        
-	IUINT32 *framebuffer;       
+	uint32 *framebuffer;
 	float *zbuffer;            
 	float *shadowbuffer;       
-	IUINT32 background;         
-	IUINT32 foreground;        
+	uint32 background;
+	uint32 foreground;
 	camera_t *camera;           
 	bool blend;                
 	float blend_sfactor;        
@@ -229,12 +227,12 @@ typedef struct
 #define RENDER_STATE_COLOR          4		// 渲染颜色
 
 void device_init(device_t *device);
-void device_set_background(device_t *device, IUINT32 color);
-void device_set_framebuffer(device_t *device, IUINT32 *framebuffer);
+void device_set_background(device_t *device, uint32 color);
+void device_set_framebuffer(device_t *device, uint32 *framebuffer);
 void device_set_zbuffer(device_t *device, float *zbuffer);
 void device_set_shadowbuffer(device_t *device, float *shadowbuffer);
 void device_set_camera(device_t *device, camera_t *camera);
-void device_pixel(device_t *device, int x, int y, IUINT32 color);
+void device_pixel(device_t *device, int x, int y, uint32 color);
 void device_clear(device_t *device);
 
 typedef struct 
@@ -258,11 +256,11 @@ extern int object_count;
 
 typedef struct 
 {
-	IUINT32 **datas;            // data
-	IUINT32 datas_len;
-	bool use_mipmap;            // able mipmap
-	IUINT32 width;
-	IUINT32 height;
+	uint32 **datas;
+	uint32 datas_len;
+	bool use_mipmap;
+    uint32 width;
+	uint32 height;
 } texture_t;
 #define MAX_NUM_TEXTURE 100
 extern texture_t textures[MAX_NUM_TEXTURE];

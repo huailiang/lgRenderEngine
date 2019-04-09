@@ -116,27 +116,33 @@ void init_materials()
 	make_mesh_and_material_by_obj(&mesh_man, &mesh_num_man, &material_ids_man, &material_ids_num_man, "nanosuit");
 }
 
-//void free_materials()
-//{
-//	for (int i = 0; i < material_cnt; i++)
-//	{
-//		free_material(&materials[i]);
-//	}
-//}
-
-void init_buffers(device_t *device)
+void free_materials()
 {
-	framebuffer = (uint*)malloc(SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(uint));
-	zbuffer = (float*)malloc(SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(float));
-	shadowbuffer = (float*)malloc(SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(float));
-	pshadowbuffer = shadowbuffer;
+    for (int i = 0; i < material_cnt; i++)
+    {
+        free_material(&materials[i]);
+    }
+    free(mesh_man);
+    free(material_ids_man);
+}
 
-	device_set_framebuffer(device, framebuffer);
-	device_set_zbuffer(device, zbuffer);
-	device_set_shadowbuffer(device, shadowbuffer);
-	device_set_background(device, 0x55555555);
-	device_set_camera(device, main_camera);
-	transform_update(&(device->transform));
+void init_buffers()
+{
+    framebuffer = (uint*)malloc(SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(uint));
+    zbuffer = (float*)malloc(SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(float));
+    shadowbuffer = (float*)malloc(SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(float));
+    pshadowbuffer = shadowbuffer;
+
+}
+
+void init_devices(device_t *device)
+{
+    device_set_framebuffer(device, framebuffer);
+    device_set_zbuffer(device, zbuffer);
+    device_set_shadowbuffer(device, shadowbuffer);
+    device_set_background(device, 0x55555555);
+    device_set_camera(device, main_camera);
+    transform_update(&(device->transform));
 }
 
 void free_buffers()
@@ -311,8 +317,7 @@ void init_boxs()
 
 void free_scene()
 {
-    free(mesh_man);
-    free(material_ids_man);
+   
     free_materials();
     free_textures();
 	free_buffers();

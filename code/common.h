@@ -2,8 +2,8 @@
 #define __common__
 
 
-typedef unsigned int uint;  //32bit
-typedef unsigned long long ulong; //64bit
+typedef unsigned int uint32;
+typedef unsigned long long ulong; 
 
 #define REAL_WIDTH  600
 #define REAL_HEIGHT  600

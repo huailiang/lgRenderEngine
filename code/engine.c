@@ -745,12 +745,12 @@ void device_init(device_t *device)
 	matrix_set_identity(&device->transform.view);
 }
 
-void device_set_background(device_t *device, IUINT32 color)
+void device_set_background(device_t *device, uint32 color)
 {
 	device->background = color;
 }
 
-void device_set_framebuffer(device_t *device, IUINT32 *framebuffer)
+void device_set_framebuffer(device_t *device, uint32 *framebuffer)
 {
 	device->framebuffer = framebuffer;
 }
@@ -773,7 +773,7 @@ void device_set_camera(device_t *device, camera_t *camera)
 	device->transform.projection = camera->projection_matrix;
 }
 
-void device_pixel(device_t *device, int x, int y, IUINT32 color) 
+void device_pixel(device_t *device, int x, int y, uint32 color)
 {
 	if (x >= 0 && x < device->camera->width && y >= 0 && y < device->camera->height) 
 	{
@@ -789,7 +789,7 @@ void device_clear(device_t *device)
 			for (int x = 0; x < device->camera->width; x++)
 				device->framebuffer[y * device->camera->width + x] = device->background;
 	}
-	// memset(device->framebuffer, 0xff, device->camera->width * device->camera->height * sizeof(IUINT32));
+	// memset(device->framebuffer, 0xff, device->camera->width * device->camera->height * sizeof(uint32));
 	if (device->zbuffer != NULL)
 		memset(device->zbuffer, 0, device->camera->width * device->camera->height * sizeof(float));
 	if (device->shadowbuffer != NULL) {
@@ -812,7 +812,7 @@ void device_clear(device_t *device)
 //    其他情况
 //        ξ = ξ + dy – dx
 //*/
-void device_draw_line(device_t *device, int x1, int y1, int x2, int y2, IUINT32 c) 
+void device_draw_line(device_t *device, int x1, int y1, int x2, int y2, uint32 c) 
 {
 	int dx = x2 - x1;
 	int dy = y2 - y1;
@@ -848,9 +848,9 @@ void device_draw_line(device_t *device, int x1, int y1, int x2, int y2, IUINT32 
 	}
 }
 
-IUINT32 texture_value_read(const texture_t *texture, float u, float v) 
+uint32 texture_value_read(const texture_t *texture, float u, float v) 
 {
-	IUINT32* data = texture->datas[0];
+	uint32* data = texture->datas[0];
 	int width, height;
 	width = texture->width;
 	height = texture->height;
@@ -858,7 +858,7 @@ IUINT32 texture_value_read(const texture_t *texture, float u, float v)
 	v = (v - (int)v) * (height - 1);
 	int uint = (int)u;
 	int vint = (int)v;
-	IUINT32 res = data[vint*width + uint];
+	uint32 res = data[vint*width + uint];
 	return res;
 }
 
@@ -866,7 +866,7 @@ IUINT32 texture_value_read(const texture_t *texture, float u, float v)
 color_t texture_read(const texture_t *texture, float u, float v, float z, float maxz) 
 {
 	color_t color;
-	IUINT32* data = texture->datas[0];
+	uint32* data = texture->datas[0];
 	int width, height;
 	width = texture->width;
 	height = texture->height;
@@ -874,7 +874,7 @@ color_t texture_read(const texture_t *texture, float u, float v, float z, float 
 		int tmiplevels = logbase2ofx(width);
 		int miplevel = tmiplevels * (z / maxz);
 		if (miplevel > tmiplevels) miplevel = tmiplevels;
-		data = (IUINT32*)texture->datas[miplevel];
+		data = (uint32*)texture->datas[miplevel];
 		for (int ts = 0; ts < miplevel; ts++) {
 			width = width >> 1;
 			height = height >> 1;
@@ -887,8 +887,8 @@ color_t texture_read(const texture_t *texture, float u, float v, float z, float 
 	int vint = (int)v;
 	int uint_pls_1 = uint + 1;
 	int vint_pls_1 = vint + 1;
-	uint_pls_1 = CMID(uint_pls_1, 0, width - 1);
-	vint_pls_1 = CMID(vint_pls_1, 0, height - 1);
+	uint_pls_1 = clamp(uint_pls_1, 0, width - 1);
+	vint_pls_1 = clamp(vint_pls_1, 0, height - 1);
 
 	int textel00, textel10, textel01, textel11;
 
@@ -1013,11 +1013,15 @@ void device_draw_scanline(device_t *device, scanline_t *scanline, point_t *point
 	int width = device->camera->width;
 	int render_state = device->render_state;
 	int count = scanline->w;
-	for (; count > 0 && x < width; x++, count--) {
-		if (x >= 0) {
-			if (device->shadowbuffer != NULL) {
+	for (; count > 0 && x < width; x++, count--)
+    {
+		if (x >= 0)
+        {
+			if (device->shadowbuffer != NULL)
+            {
 				float z = scanline->v.pos.z;
-				if (z <= device->shadowbuffer[y*width + x]) {
+				if (z <= device->shadowbuffer[y*width + x])
+                {
 					device->shadowbuffer[y*width + x] = z;
 				}
 			}
@@ -1063,10 +1067,10 @@ void device_draw_scanline(device_t *device, scanline_t *scanline, point_t *point
 						b = color.b;
 					}
 
-					int A = CMID((int)(a * 255.0f), 0, 255);
-					int R = CMID((int)(r * 255.0f), 0, 255);
-					int G = CMID((int)(g * 255.0f), 0, 255);
-					int B = CMID((int)(b * 255.0f), 0, 255);
+					int A = clamp((int)(a * 255.0f), 0, 255);
+					int R = clamp((int)(r * 255.0f), 0, 255);
+					int G = clamp((int)(g * 255.0f), 0, 255);
+					int B = clamp((int)(b * 255.0f), 0, 255);
 
 					device->framebuffer[y*width + x] = (R << 16) | (G << 8) | B;
 				}
@@ -1140,29 +1144,19 @@ void calculate_tangent_and_binormal(vector_t *tangent, vector_t *binormal, const
 	if (vector_dotproduct(&tangentCross, &normal) < 0.0f)
 	{
 		tangent->w = -1;
-		//vector_inverse(tangent);
-		//vector_inverse(binormal);
 	}
-
-	//binormal->w = 0.0f;
 }
 
 void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_t *t3) 
 {
 	vertex_t *vertice[3] = { t1, t2, t3 };
 	point_t points[3];
-
-
+    
 	// 正规矩阵
 	matrix_t nm;
 	matrix_clone(&nm, &device->transform.model);
 	matrix_inverse(&nm);
 	matrix_transpose(&nm);
-
-	//    简单的cvv裁剪，整个三角形裁减掉
-	//    if (transform_check_cvv(&c1) != 0) return;
-	//    if (transform_check_cvv(&c2) != 0) return;
-	//    if (transform_check_cvv(&c3) != 0) return;
 
 	a2v a2vs[3];
 	v2f v2fs[3];
@@ -1191,41 +1185,46 @@ void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_
 		av->texcoord = vertex->tc;
 
 		vert_shader(device, av, &v2fs[i]); // 顶点着色器
-//        vertex_rhw_init(vertex);
 
 		transform_homogenize(&vertex->pos, &vertex->pos, device->camera->width, device->camera->height);
 	}
 
 	// 背面剔除
-	if (device->cull > 0) {
+	if (device->cull > 0)
+    {
 		vector_t t21, t32;
 		vector_sub(&t21, &t2->pos, &t1->pos);
 		vector_sub(&t32, &t3->pos, &t2->pos);
-		if (device->cull == 1) {
+		if (device->cull == 1)
+        {
 			if (t21.x * t32.y - t32.x * t21.y <= 0)    // 计算叉积
 				return;
 		}
-		else if (device->cull == 2) {
+		else if (device->cull == 2)
+        {
 			if (t21.x * t32.y - t32.x * t21.y > 0)     // 计算叉积
 				return;
 		}
 	}
 
-	if (device->render_state & (RENDER_STATE_TEXTURE | RENDER_STATE_COLOR)) {
+	if (device->render_state & (RENDER_STATE_TEXTURE | RENDER_STATE_COLOR))
+    {
 		trapezoid_t traps[2];
 		int n = trapezoid_init_triangle(traps, t1, t2, t3);
 		if (n >= 1) device_render_trap(device, &traps[0], points, v2fs);
 		if (n >= 2) device_render_trap(device, &traps[1], points, v2fs);
 	}
 
-	if ((device->render_state & RENDER_STATE_WIREFRAME) && device->framebuffer != NULL) {
+	if ((device->render_state & RENDER_STATE_WIREFRAME) && device->framebuffer != NULL)
+    {
 		device_draw_line(device, (int)t1->pos.x, (int)t1->pos.y, (int)t2->pos.x, (int)t2->pos.y, device->foreground);
 		device_draw_line(device, (int)t1->pos.x, (int)t1->pos.y, (int)t3->pos.x, (int)t3->pos.y, device->foreground);
 		device_draw_line(device, (int)t3->pos.x, (int)t3->pos.y, (int)t2->pos.x, (int)t2->pos.y, device->foreground);
 	}
 }
 
-void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool world) {
+void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool world)
+{
 #define CLIP_CODE_GZ    0x0001
 #define CLIP_CODE_LZ    0x0002
 #define CLIP_CODE_IZ    0x0004
@@ -1244,13 +1243,9 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 	int num_verts_in = 0;
 
 	float z_factor_x, z_factor_y, z_factor, z_test;
-
 	float xi, yi, x01i, y01i, x02i, y02i, t1, t2, ui, vi, u01i, v01i, u02i, v02i;
-
 	bool cliped = false;
-
 	vector_t v;
-
 	vertex_t p1 = *v1, p2 = *v2, p3 = *v3;
 
 	if (world == false) 
@@ -1579,7 +1574,8 @@ void frag_shader(device_t *device, v2f *vf, color_t *color)
 		matrix_apply(&tempNormal, &tempNormal, &camera->view_matrix);
 		vector_inverse(&tempNormal);
 		float dot = vector_dotproduct(&tempNormal, &camera->front);
-		if (dot > 0) {
+		if (dot > 0)
+        {
 			float bias = 0.015 * (1.0 - dot);
 			if (bias < 0.002f) bias = 0.001;
 			if (y >= 0 && x >= 0 && y < camera->height && x < camera->width) 

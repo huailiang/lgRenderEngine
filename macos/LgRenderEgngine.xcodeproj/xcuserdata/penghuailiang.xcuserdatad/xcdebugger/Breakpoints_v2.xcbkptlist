@@ -170,13 +170,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../code/utils.c"
-            timestampString = "576315205.680312"
+            timestampString = "576520566.151695"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "399"
-            endingLineNumber = "399"
-            landmarkName = "load_png_image()"
-            landmarkType = "9">
+            startingLineNumber = "393"
+            endingLineNumber = "393"
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -186,12 +186,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../code/scene.c"
-            timestampString = "576323033.752054"
+            timestampString = "576520566.151746"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "109"
             endingLineNumber = "109"
-            landmarkName = "free_materials()"
+            landmarkName = "free_textures()"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -202,11 +202,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../code/main.c"
-            timestampString = "576323033.752165"
+            timestampString = "576520566.15179"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "314"
-            endingLineNumber = "314"
+            startingLineNumber = "161"
+            endingLineNumber = "161"
             landmarkName = "main()"
             landmarkType = "9">
          </BreakpointContent>

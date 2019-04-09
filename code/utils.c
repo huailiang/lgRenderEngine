@@ -46,7 +46,8 @@ void CalcNormal(float N[3], float v0[3], float v1[3], float v2[3]) {
 	}
 }
 
-int make_mesh_and_material_by_obj(vertex_t **mesh, unsigned long *mesh_num, int **material_ids, unsigned long *material_ids_num, const char *name) {
+int make_mesh_and_material_by_obj(vertex_t **mesh, ulong *mesh_num, int **material_ids, ulong *material_ids_num, const char *name)
+{
 	tinyobj_attrib_t attrib;
 	tinyobj_shape_t* shapes = NULL;
 	size_t num_shapes;
@@ -323,19 +324,19 @@ int make_mesh_and_material_by_obj(vertex_t **mesh, unsigned long *mesh_num, int 
 }
 
 int generate_mipmaps(texture_t *texture, float gamma) {
-	IUINT32 **mipmaps = NULL;
+	uint32 **mipmaps = NULL;
 	int num_mip_levels = logbase2ofx(texture->width) + 1;
 	texture->datas_len = num_mip_levels;
-	mipmaps = (IUINT32**)malloc(num_mip_levels * sizeof(IUINT32*));
+	mipmaps = (uint32**)malloc(num_mip_levels * sizeof(uint32*));
 	mipmaps[0] = texture->datas[0];
 	int mip_width = texture->width;
 	int mip_height = texture->height;
 	for (int mip_level = 1; mip_level < num_mip_levels; mip_level++) {
 		mip_width = mip_width >> 1;
 		mip_height = mip_height >> 1;
-		mipmaps[mip_level] = (IUINT32*)malloc(mip_width * mip_height * sizeof(IUINT32));
-		IUINT32 *src_buffer = mipmaps[mip_level - 1];
-		IUINT32 *dest_buffer = mipmaps[mip_level];
+		mipmaps[mip_level] = (uint32*)malloc(mip_width * mip_height * sizeof(uint32));
+		uint32 *src_buffer = mipmaps[mip_level - 1];
+		uint32 *dest_buffer = mipmaps[mip_level];
 		for (int x = 0; x < mip_width; x++)
 		{
 			for (int y = 0; y < mip_height; y++)
@@ -346,7 +347,7 @@ int generate_mipmaps(texture_t *texture, float gamma) {
 					r3, g3, b3, a3;
 				int r_avg, g_avg, b_avg, a_avg;
 
-				IUINT32 c = src_buffer[(x * 2 + 0) + (y * 2 + 0)*mip_width * 2];
+				uint32 c = src_buffer[(x * 2 + 0) + (y * 2 + 0)*mip_width * 2];
 				b0 = c & 0xff;
 				g0 = (c >> 8) & 0xff;
 				r0 = (c >> 16) & 0xff;
@@ -370,15 +371,15 @@ int generate_mipmaps(texture_t *texture, float gamma) {
 				r3 = (c >> 16) & 0xff;
 				a3 = (c >> 24) & 0xff;
 
-				r_avg = (IUINT32)(0.5f + gamma * (r0 + r1 + r2 + r3) / 4);
-				g_avg = (IUINT32)(0.5f + gamma * (g0 + g1 + g2 + g3) / 4);
-				b_avg = (IUINT32)(0.5f + gamma * (b0 + b1 + b2 + b3) / 4);
-				a_avg = (IUINT32)(0.5f + gamma * (b0 + b1 + b2 + b3) / 4);
+				r_avg = (uint32)(0.5f + gamma * (r0 + r1 + r2 + r3) / 4);
+				g_avg = (uint32)(0.5f + gamma * (g0 + g1 + g2 + g3) / 4);
+				b_avg = (uint32)(0.5f + gamma * (b0 + b1 + b2 + b3) / 4);
+				a_avg = (uint32)(0.5f + gamma * (b0 + b1 + b2 + b3) / 4);
 
-				int R = CMID(r_avg, 0, 255);
-				int G = CMID(g_avg, 0, 255);
-				int B = CMID(b_avg, 0, 255);
-				int A = CMID(a_avg, 0, 255);
+				int R = clamp(r_avg, 0, 255);
+				int G = clamp(g_avg, 0, 255);
+				int B = clamp(b_avg, 0, 255);
+				int A = clamp(a_avg, 0, 255);
 
 				dest_buffer[x + y * mip_width] = (A << 24) | (R << 16) | (G << 8) | B;
 			}
@@ -482,7 +483,7 @@ int load_png_image(const char *name, unsigned int **bits, unsigned int *width, u
 
 // 返回-1读取失败，返回id号对应texture编号
 int make_texture_by_png(const char *name, bool mipmap) {
-	IUINT32 *data = NULL;
+	uint32 *data = NULL;
 	texture_t *texture = &textures[texture_count];
 	char trueName[100];
 	char *findPos = NULL;
@@ -493,7 +494,7 @@ int make_texture_by_png(const char *name, bool mipmap) {
 	}
 	int res = load_png_image(findPos == NULL ? name : trueName, &data, &texture->width, &texture->height);
 	if (res == 0) {
-		texture->datas = (IUINT32**)malloc(1 * sizeof(IUINT32*));
+		texture->datas = (uint32**)malloc(1 * sizeof(uint32*));
 		texture->datas[0] = data;
 		if (mipmap) {
 			texture->use_mipmap = true;
