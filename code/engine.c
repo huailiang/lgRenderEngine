@@ -145,12 +145,12 @@ void vector_crossproduct(vector_t *c, const vector_t *a, const vector_t *b)
 	c->z = a->x*b->y - a->y*b->x;
 }
 
-void vector_interp(vector_t *c, const vector_t *a, const vector_t *b, float t) 
+void vector_lerp(vector_t *c, const vector_t *a, const vector_t *b, float t) 
 {
-	c->x = interp(a->x, b->x, t);
-	c->y = interp(a->y, b->y, t);
-	c->z = interp(a->z, b->z, t);
-	c->w = interp(a->w, b->w, t);
+	c->x = lerp(a->x, b->x, t);
+	c->y = lerp(a->y, b->y, t);
+	c->z = lerp(a->z, b->z, t);
+	c->w = lerp(a->w, b->w, t);
 }
 
 void vector_clone(vector_t *dest, const vector_t *src) 
@@ -608,14 +608,14 @@ void vertex_rhw_init(vertex_t *v)
 	v->color.b *= rhw;
 }
 
-void vertex_interp(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float k) 
+void vertex_lerp(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float k)
 {
-	vector_interp(&y->pos, &x1->pos, &x2->pos, k);
-	y->tc.u = interp(x1->tc.u, x2->tc.u, k);
-	y->tc.v = interp(x1->tc.v, x2->tc.v, k);
-	y->color.r = interp(x1->color.r, x2->color.r, k);
-	y->color.g = interp(x1->color.g, x2->color.g, k);
-	y->color.b = interp(x1->color.b, x2->color.b, k);
+	vector_lerp(&y->pos, &x1->pos, &x2->pos, k);
+	y->tc.u = lerp(x1->tc.u, x2->tc.u, k);
+	y->tc.v = lerp(x1->tc.v, x2->tc.v, k);
+	y->color.r = lerp(x1->color.r, x2->color.r, k);
+	y->color.g = lerp(x1->color.g, x2->color.g, k);
+	y->color.b = lerp(x1->color.b, x2->color.b, k);
 }
 
 void vertex_division(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float w) 
@@ -717,14 +717,14 @@ int trapezoid_init_triangle(trapezoid_t *trap, const vertex_t *p1, const vertex_
 }
 
 // 按照 Y 坐标计算出左右两条边纵坐标等于 Y 的顶点
-void trapezoid_edge_interp(trapezoid_t *trap, float y) 
+void trapezoid_edge_lerp(trapezoid_t *trap, float y)
 {
 	float s1 = trap->left.v2.pos.y - trap->left.v1.pos.y;
 	float s2 = trap->right.v2.pos.y - trap->right.v1.pos.y;
 	float t1 = (y - trap->left.v1.pos.y) / s1;
 	float t2 = (y - trap->right.v1.pos.y) / s2;
-	vertex_interp(&trap->left.v, &trap->left.v1, &trap->left.v2, t1);
-	vertex_interp(&trap->right.v, &trap->right.v1, &trap->right.v2, t2);
+	vertex_lerp(&trap->left.v, &trap->left.v1, &trap->left.v2, t1);
+	vertex_lerp(&trap->right.v, &trap->right.v1, &trap->right.v2, t2);
 }
 
 // 根据左右两边的端点，初始化计算出扫描线的起点和步长
@@ -1092,7 +1092,7 @@ void device_render_trap(device_t *device, trapezoid_t *trap, point_t *points, v2
 	{
 		if (j >= 0 && j < device->camera->height) 
 		{
-			trapezoid_edge_interp(trap, (float)j + 0.5f);
+			trapezoid_edge_lerp(trap, (float)j + 0.5f);
 			trapezoid_init_scan_line(trap, &scanline, j);
 			device_draw_scanline(device, &scanline, points, v2fs);
 		}

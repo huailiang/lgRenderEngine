@@ -16,7 +16,7 @@ void vector_scale(vector_t *v, float k);
 void vector_inverse(vector_t *v);
 float vector_dotproduct(const vector_t *a, const vector_t *b);
 void vector_crossproduct(vector_t *c, const vector_t *a, const vector_t *b);
-void vector_interp(vector_t *c, const vector_t *a, const vector_t *b, float t);
+void vector_lerp(vector_t *c, const vector_t *a, const vector_t *b, float t);
 void vector_clone(vector_t *dest, const vector_t *src);
 void vector_reflect(vector_t *r, const vector_t *v, const vector_t *n);
 void vector_normalize(vector_t *v);
@@ -174,7 +174,7 @@ typedef struct { vertex_t v, step; int x, y, w; } scanline_t;
 // 除坐标以外, 颜色和纹理索引除以w
 void vertex_rhw_init(vertex_t *v);
 
-void vertex_interp(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float k);
+void vertex_lerp(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float k);
 
 void vertex_division(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float w);
 
@@ -208,7 +208,7 @@ void device_set_background(device_t *device, uint32 color);
 void device_set_framebuffer(device_t *device, uint32 *framebuffer);
 void device_set_zbuffer(device_t *device, float *zbuffer);
 void device_set_shadowbuffer(device_t *device, float *shadowbuffer);
-void device_set_camera(device_t *device, camera_t *camera);
+void device_set_camera(device_t *device, const camera_t *camera);
 void device_pixel(device_t *device, int x, int y, uint32 color);
 void device_clear(device_t *device);
 

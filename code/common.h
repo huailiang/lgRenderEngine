@@ -16,6 +16,6 @@ typedef unsigned long long ulong;
 #define angle_to_radian(X) ((X)/180*PI)
 #define radian_to_angle(X) ((X)/PI*180)
 #define clamp(x, min, max) (((x) < (min)) ? (min) : (((x) > (max)) ? (max) : (x)))
-#define interp(a, b, t) ((a) + ((b) - (a)) * (t))
+#define lerp(a, b, t) ((a) + ((b) - (a)) * (t))
 
 #endif /* __common__ */
