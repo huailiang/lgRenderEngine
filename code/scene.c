@@ -126,23 +126,19 @@ void free_materials()
     free(material_ids_man);
 }
 
-void init_buffers()
+void init_buffers(device_t *device)
 {
     framebuffer = (uint32*)malloc(SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(uint32));
     zbuffer = (float*)malloc(SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(float));
     shadowbuffer = (float*)malloc(SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(float));
     pshadowbuffer = shadowbuffer;
 
-}
-
-void init_devices(device_t *device)
-{
-    device_set_framebuffer(device, framebuffer);
-    device_set_zbuffer(device, zbuffer);
-    device_set_shadowbuffer(device, shadowbuffer);
-    device_set_background(device, 0x55555555);
-    device_set_camera(device, main_camera);
-    transform_update(&(device->transform));
+	device_set_framebuffer(device, framebuffer);
+	device_set_zbuffer(device, zbuffer);
+	device_set_shadowbuffer(device, shadowbuffer);
+	device_set_background(device, 0x55555555);
+	device_set_camera(device, main_camera);
+	transform_update(&(device->transform));
 }
 
 void free_buffers()
@@ -157,7 +153,9 @@ void render_scene(SDL_Renderer* renderer, device_t *device,float yaw, float pitc
 	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	SDL_RenderClear(renderer);
 
+	device_set_shadowbuffer(device, shadowbuffer);
 	device_clear(device);
+
 	if (main_camera->dirty) camera_init_by_euler(main_camera, yaw, pitch);
 
 	for (int i = 0; i < camera_count; i++)
@@ -199,30 +197,30 @@ void render_scene(SDL_Renderer* renderer, device_t *device,float yaw, float pitc
 	SDL_RenderPresent(renderer);
 }
 
-//void draw_object(device_t *device, object_t* objects, int obj_cnt)
-//{
-//	for (int i = 0; i < obj_cnt; i++)
-//	{
-//		object_t *object = &objects[i];
-//		if (object->dirty)
-//		{
-//			matrix_set_rotate_translate_scale(&object->matrix, &object->axis, object->theta, &object->pos, &object->scale);
-//			object->dirty = false;
-//		}
-//		device->transform.model = object->matrix;
-//		transform_update(&device->transform);
-//        vertex_t *mesh = object->mesh;
-//
-//        for (uint j = 0; j < object->mesh_num; j += 3)
-//        {
-//            if (object->material_ids == NULL)
-//                device->material = materials[0];
-//            else
-//                device->material = materials[object->material_ids[j / 3]];
-//            clip_polys(device, &mesh[i], &mesh[j + 1], &mesh[j + 2], false);
-//        }
-//	}
-//}
+
+void draw_object(device_t *device, object_t *objects, int obj_cnt)
+{
+	for (int i = 0; i < obj_cnt; i++)
+	{
+		object_t *object = &objects[i];
+		if (object->dirty == true)
+		{
+			matrix_set_rotate_translate_scale(&object->matrix, &object->axis, object->theta, &object->pos, &object->scale);
+			object->dirty = false;
+		}
+		device->transform.model = object->matrix;
+		transform_update(&device->transform);
+		vertex_t *mesh = object->mesh;
+		for (int i = 0; i < object->mesh_num; i += 3)
+		{
+			if (object->material_ids == NULL)
+				device->material = materials[0];
+			else
+				device->material = materials[object->material_ids[i / 3]];
+			clip_polys(device, &mesh[i], &mesh[i + 1], &mesh[i + 2], false);
+		}
+	}
+}
 
 void init_light()
 {
@@ -317,7 +315,6 @@ void init_boxs()
 
 void free_scene()
 {
-   
     free_materials();
     free_textures();
 	free_buffers();
