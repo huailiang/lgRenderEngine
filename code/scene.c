@@ -13,7 +13,7 @@ vertex_t ground_mesh[6] = {
 };
 
 vertex_t box_mesh[36] = {
-	// Positions                  // texcoord   //color						// normal
+	// pos						 // texcoord    //color						// normal
 	{{-0.5f, -0.5f, -0.5f, 1.0f},{ 0.0f,  0.0f},{ 1.0f, 0.2f, 0.2f, 1.0f }, { 0.0f,  0.0f, -1.0f,  0.0f}},
 	{{-0.5f,  0.5f, -0.5f, 1.0f},{ 0.0f,  1.0f},{ 1.0f, 0.2f, 0.2f, 1.0f }, { 0.0f,  0.0f, -1.0f,  0.0f}},
 	{{0.5f,  0.5f, -0.5f, 1.0f}, {1.0f,  1.0f}, { 1.0f, 0.2f, 0.2f, 1.0f }, {0.0f,   0.0f, -1.0f , 0.0f}},
@@ -62,7 +62,7 @@ float* zbuffer;
 float* shadowbuffer;
 camera_t* main_camera;
 object_t* ground;
-object_t* g_box,*g_box1;
+object_t* g_man,*g_box;
 vertex_t* mesh_man;
 ulong mesh_num_man;
 int* material_ids_man;
@@ -149,10 +149,10 @@ void free_buffers()
 
 void update_scene(float delta)
 {
-	g_box->theta -= 0.04f;
+	//g_man->theta -= 0.04f;
+	//g_man->dirty = true;
+	g_box->theta += 0.04f;
 	g_box->dirty = true;
-	g_box1->theta += 0.04f;
-	g_box1->dirty = true;
 }
 
 void render_scene(SDL_Renderer* renderer, device_t *device,float yaw, float pitch)
@@ -295,29 +295,29 @@ void init_groud()
 
 void init_boxs()
 {
-	g_box = &objects[object_count++];
-	g_box->pos = (point_t) { -1, 0, 0, 1 };
-	g_box->scale = (vector_t) { 0.1, 0.1, 0.1, 0 };
-	g_box->axis = (vector_t) { 0, 1, 0, 1 };
-	g_box->theta = 0.0f;
-	g_box->mesh = mesh_man;
-	g_box->mesh_num = mesh_num_man;
-	g_box->material_ids = material_ids_man;
-	g_box->texture_id = 1;
-	g_box->shadow = true;
-	g_box->dirty = true;
+	//g_man = &objects[object_count++];
+	//g_man->pos = (point_t) { -1, 0, 0, 1 };
+	//g_man->scale = (vector_t) { 0.1, 0.1, 0.1, 0 };
+	//g_man->axis = (vector_t) { 0, 1, 0, 1 };
+	//g_man->theta = 0.0f;
+	//g_man->mesh = mesh_man;
+	//g_man->mesh_num = mesh_num_man;
+	//g_man->material_ids = material_ids_man;
+	//g_man->texture_id = 1;
+	//g_man->shadow = true;
+	//g_man->dirty = true;
 
-	g_box1 = &objects[object_count++];
-	g_box1->pos = (point_t) { 0, 2, -1, 1 };
-	g_box1->scale = (vector_t) { 0.2, 0.2, 0.2, 0 };
-	g_box1->axis = (vector_t) { 1, 0, 1, 1 };
-	g_box1->theta = 0.0f;
-	g_box1->mesh = box_mesh;
-	g_box1->mesh_num = 36;
-	g_box1->material_ids = NULL;
-	g_box1->texture_id = 0;
-	g_box1->shadow = false;
-	g_box1->dirty = true;
+	g_box = &objects[object_count++];
+	g_box->pos = (point_t) { 0, 2, -1, 1 };
+	g_box->scale = (vector_t) { 0.2, 0.2, 0.2, 0 };
+	g_box->axis = (vector_t) { 1, 0, 1, 1 };
+	g_box->theta = 0.0f;
+	g_box->mesh = box_mesh;
+	g_box->mesh_num = 36;
+	g_box->material_ids = NULL;
+	g_box->texture_id = 0;
+	g_box->shadow = false;
+	g_box->dirty = true;
 }
 
 void free_scene()

@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 extern camera_t *main_camera;
-extern object_t* g_box,*g_box1;
+extern object_t* g_man,*g_box;
 
 void init_texture(void);
 void free_textures(void);

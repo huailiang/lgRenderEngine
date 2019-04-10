@@ -101,40 +101,25 @@ typedef struct
 	float dissolve;
 	int illum;
 	int pad0;
-	char *ambient_texname;            /* map_Ka */
+	char *ambient_texname;           
 	int ambient_tex_id;
-	char *diffuse_texname;            /* map_Kd */
+	char *diffuse_texname;           
 	int diffuse_tex_id;
-	char *specular_texname;           /* map_Ks */
+	char *specular_texname;         
 	int specular_tex_id;
-	char *specular_highlight_texname; /* map_Ns */
+	char *specular_highlight_texname; 
 	int specular_highlight_tex_id;
-	char *bump_texname;               /* map_bump, bump */
+	char *bump_texname;             
 	int bump_tex_id;
-	char *displacement_texname;       /* disp */
+	char *displacement_texname;    
 	int displacement_tex_id;
-	char *alpha_texname;              /* map_d */
+	char *alpha_texname;         
 	int alpha_tex_id;
 } material_t;
 #define NUM_MATERIAL 100
 extern material_t materials[NUM_MATERIAL];
 extern int material_cnt;
 void free_material(material_t *material);
-
-typedef struct 
-{
-	point_t pos;
-	float constant;
-	float linear;
-	float quadratic;
-	color_t ambi;
-	color_t diff;
-	color_t spec;
-	bool shadow;
-} pointlight_t;
-#define NR_POINT_LIGHTS 100
-extern pointlight_t pointLights[NR_POINT_LIGHTS];
-extern int pointlight_cnt;
 
 typedef struct 
 {
@@ -194,7 +179,7 @@ typedef struct { vertex_t v, v1, v2; } edge_t;
 typedef struct { float top, bottom; edge_t left, right; } trapezoid_t;
 typedef struct { vertex_t v, step; int x, y, w; } scanline_t;
 
-// 注意是除坐标意外颜色和纹理索引除以w
+// 除坐标以外, 颜色和纹理索引除以w
 void vertex_rhw_init(vertex_t *v);
 
 void vertex_interp(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float k);

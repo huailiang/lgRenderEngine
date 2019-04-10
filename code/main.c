@@ -81,10 +81,10 @@ int main(int argc, char * argv[])
 		init_light();
 		init_maincamera();
 		init_buffers(&device);
-		init_groud();
+		//init_groud();
         init_boxs();
         
-		object_t *controlObj = g_box1;
+		object_t *controlObj = g_box;
 		SDL_Event e;
 		while (!quit)
 		{

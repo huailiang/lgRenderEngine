@@ -347,6 +347,7 @@ void matrix_set_rotate_translate_scale(matrix_t *m, const vector_t *axis, float 
 	m->m[3][1] = pos->y;
 	m->m[3][2] = pos->z;
 }
+
 void matrix_set_axis(matrix_t *m, const vector_t *xaxis, const vector_t *yaxis, const vector_t *zaxis, const point_t *pos) 
 {
 	m->m[0][0] = xaxis->x;
@@ -373,7 +374,8 @@ void matrix_set_axis(matrix_t *m, const vector_t *xaxis, const vector_t *yaxis, 
 // xaxis.y           yaxis.y           zaxis.y          0
 // xaxis.z           yaxis.z           zaxis.z          0
 //-dot(xaxis, eye)  -dot(yaxis, eye)  -dot(zaxis, eye)  1
-void matrix_set_lookat(matrix_t *m, const vector_t *eye, const vector_t *at, const vector_t *up) {
+void matrix_set_lookat(matrix_t *m, const vector_t *eye, const vector_t *at, const vector_t *up) 
+{
 	vector_t zaxis, xaxis, yaxis;
 	vector_sub(&zaxis, at, eye);
 	vector_normalize(&zaxis);
@@ -404,7 +406,8 @@ void matrix_set_lookat(matrix_t *m, const vector_t *eye, const vector_t *at, con
 // 0        zoomy   0               0
 // 0        0       zf/(zf-zn)      1
 // 0        0       zn*zf/(zn-zf)   0
-void matrix_set_perspective(matrix_t *m, float fovy, float aspect, float zn, float zf) {
+void matrix_set_perspective(matrix_t *m, float fovy, float aspect, float zn, float zf) 
+{
 	float zoomy = 1.0f / (float)tan(fovy * 0.5f);
 	float zoomx = zoomy * aspect;
 	m->m[0][0] = zoomx;
@@ -420,7 +423,8 @@ void matrix_set_perspective(matrix_t *m, float fovy, float aspect, float zn, flo
 // 0            2/(t-b)      0           0
 // 0            0            1/(zf-zn)   0
 // (l+r)/(l-r)  (t+b)/(b-t)  zn/(zn-zf)  1
-void matrix_set_ortho(matrix_t *m, float l, float r, float b, float t, float zn, float zf) {
+void matrix_set_ortho(matrix_t *m, float l, float r, float b, float t, float zn, float zf) 
+{
 	m->m[0][0] = 2.0f / (r - l);
 	m->m[1][1] = 2.0f / (t - b);
 	m->m[2][2] = 1.0f / (zf - zn);
@@ -445,7 +449,8 @@ void transform_apply(const transform_t *ts, vector_t *y, const vector_t *x)
 	matrix_apply(y, x, &ts->mvp);
 }
 
-int transform_check_cvv(const vector_t *v) {
+int transform_check_cvv(const vector_t *v) 
+{
 	float w = v->w;
 	int check = 0;
 	if (v->z < 0.0f) check |= 1;
@@ -457,6 +462,7 @@ int transform_check_cvv(const vector_t *v) {
 	return check;
 }
 
+//归一化
 void transform_homogenize(vector_t *y, const vector_t *x, float width, float height) 
 {
 	float rhw = 1.0f / x->w;
@@ -519,7 +525,8 @@ void color_sub(color_t *c, const color_t *a, const color_t *b)
 	c->a = a->a - b->a;
 }
 
-void color_interpolating(color_t *dest, const color_t *src1, const color_t *src2, const color_t *src3, float a, float b, float c) {
+void color_interpolating(color_t *dest, const color_t *src1, const color_t *src2, const color_t *src3, float a, float b, float c) 
+{
 	dest->r = dest->g = dest->b = dest->a = 0.0f;
 	color_t each = *src1;
 	color_scale(&each, a);
@@ -553,16 +560,14 @@ void free_material(material_t *material)
 	free(material->specular_highlight_texname);
 }
 
-pointlight_t pointLights[NR_POINT_LIGHTS];
-int pointlight_cnt;
-
 dirlight_t dirLight;
 
 camera_t cameras[MAX_NUM_CAMERA];
 int camera_count = 0;
 
 // 利用欧拉角原理来实现摄像机旋转
-void camera_init_by_euler(camera_t *camera, float yaw, float pitch) {
+void camera_init_by_euler(camera_t *camera, float yaw, float pitch) 
+{
 	camera->front.x = sin(angle_to_radian(yaw)) * cos(angle_to_radian(pitch));
 	camera->front.y = -sin(angle_to_radian(pitch));
 	camera->front.z = cos(angle_to_radian(yaw)) * cos(angle_to_radian(pitch));
@@ -627,7 +632,8 @@ void vertex_division(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float 
 	y->color.b = (x2->color.b - x1->color.b) * inv;
 }
 
-void vertex_add(vertex_t *y, const vertex_t *x) {
+void vertex_add(vertex_t *y, const vertex_t *x) 
+{
 	y->pos.x += x->pos.x;
 	y->pos.y += x->pos.y;
 	y->pos.z += x->pos.z;
@@ -639,7 +645,8 @@ void vertex_add(vertex_t *y, const vertex_t *x) {
 	y->color.b += x->color.b;
 }
 
-// 根据三角形生成 0-2 个梯形，并且返回合法梯形的数量
+// 光栅 三角形
+// https://blog.csdn.net/cppyin/article/details/6232453
 int trapezoid_init_triangle(trapezoid_t *trap, const vertex_t *p1, const vertex_t *p2, const vertex_t *p3) 
 {
 	const vertex_t *p;
@@ -695,7 +702,7 @@ int trapezoid_init_triangle(trapezoid_t *trap, const vertex_t *p1, const vertex_
 		trap[1].right.v2 = *p3;
 	}
 	else 
-	{					// triangle right
+	{	// triangle right
 		trap[0].left.v1 = *p1;
 		trap[0].left.v2 = *p3;
 		trap[0].right.v1 = *p1;
@@ -784,16 +791,11 @@ void device_pixel(device_t *device, int x, int y, uint32 color)
 
 void device_clear(device_t *device) 
 {
-	if (device->framebuffer != NULL) 
-	{
-		for (int y = 0; y < device->camera->height; y++)
-			for (int x = 0; x < device->camera->width; x++)
-				device->framebuffer[y * device->camera->width + x] = device->background;
-	}
-	// memset(device->framebuffer, 0xff, device->camera->width * device->camera->height * sizeof(uint32));
+	memset(device->framebuffer, 0x55, device->camera->width * device->camera->height * sizeof(uint32));
 	if (device->zbuffer != NULL)
 		memset(device->zbuffer, 0, device->camera->width * device->camera->height * sizeof(float));
-	if (device->shadowbuffer != NULL) {
+	if (device->shadowbuffer != NULL) 
+	{
 		for (int y = 0; y < device->camera->height; y++)
 			for (int x = 0; x < device->camera->width; x++)
 				device->shadowbuffer[y * device->camera->width + x] = 1.0f;
@@ -841,7 +843,8 @@ void device_draw_line(device_t *device, int x1, int y1, int x2, int y2, uint32 c
 		{
 			device_pixel(device, x, y, c);
 			eps += dx;
-			if ((eps << 1) >= dy) {
+			if ((eps << 1) >= dy) 
+			{
 				x += ux;
 				eps -= dy;
 			}
@@ -863,7 +866,7 @@ uint32 texture_value_read(const texture_t *texture, float u, float v)
 	return res;
 }
 
-// 双线性插值和mipmap
+// biLinearFilter & mipmap
 color_t texture_read(const texture_t *texture, float u, float v, float z, float maxz) 
 {
 	color_t color;
@@ -871,17 +874,19 @@ color_t texture_read(const texture_t *texture, float u, float v, float z, float 
 	int width, height;
 	width = texture->width;
 	height = texture->height;
-	if (texture->use_mipmap) {
+	if (texture->use_mipmap) 
+	{
 		int tmiplevels = logbase2ofx(width);
 		int miplevel = tmiplevels * (z / maxz);
 		if (miplevel > tmiplevels) miplevel = tmiplevels;
 		data = (uint32*)texture->datas[miplevel];
-		for (int ts = 0; ts < miplevel; ts++) {
+		for (int ts = 0; ts < miplevel; ts++) 
+		{
 			width = width >> 1;
 			height = height >> 1;
 		}
 	}
-	// wrap 方式
+	// wrap mode
 	u = (u - (int)u) * (width - 1);
 	v = (v - (int)v) * (height - 1);
 	int uint = (int)u;
@@ -952,7 +957,7 @@ color_t texture_read(const texture_t *texture, float u, float v, float z, float 
 	return color;
 }
 
-bool computeBarycentricCoords3d(point_t *res, const point_t *p0, const point_t *p1, const point_t *p2, const point_t *p) 
+bool computeBarycentricCoords3d(point_t *res, const point_t *p0, const point_t *p1, const point_t *p2, const point_t *p)
 {
 	vector_t d1, d2, n;
 	vector_sub(&d1, p1, p0);
@@ -960,7 +965,7 @@ bool computeBarycentricCoords3d(point_t *res, const point_t *p0, const point_t *
 	vector_crossproduct(&n, &d1, &d2);
 	float u1, u2, u3, u4;
 	float v1, v2, v3, v4;
-	if ((fabs(n.x) >= fabs(n.y)) && (fabs(n.x) >= fabs(n.z))) 
+	if ((fabs(n.x) >= fabs(n.y)) && (fabs(n.x) >= fabs(n.z)))
 	{
 		u1 = p0->y - p2->y;
 		u2 = p1->y - p2->y;
@@ -971,7 +976,7 @@ bool computeBarycentricCoords3d(point_t *res, const point_t *p0, const point_t *
 		v3 = p->z - p0->z;
 		v4 = p->z - p2->z;
 	}
-	else if (fabs(n.y) >= fabs(n.z)) 
+	else if (fabs(n.y) >= fabs(n.z))
 	{
 		u1 = p0->z - p2->z;
 		u2 = p1->z - p2->z;
@@ -982,7 +987,7 @@ bool computeBarycentricCoords3d(point_t *res, const point_t *p0, const point_t *
 		v3 = p->x - p0->x;
 		v4 = p->x - p2->x;
 	}
-	else 
+	else
 	{
 		u1 = p0->x - p2->x;
 		u2 = p1->x - p2->x;
@@ -995,10 +1000,8 @@ bool computeBarycentricCoords3d(point_t *res, const point_t *p0, const point_t *
 	}
 
 	float denom = v1 * u2 - v2 * u1;
-	if (fabsf(denom) < 1e-6) 
-	{
-		return false;
-	}
+	if (fabsf(denom) < 1e-6) return false;
+
 	float oneOverDenom = 1.0f / denom;
 	res->x = (v4 * u2 - v2 * u4) * oneOverDenom;
 	res->y = (v1 * u3 - v3 * u1) * oneOverDenom;
@@ -1028,11 +1031,11 @@ void device_draw_scanline(device_t *device, scanline_t *scanline, point_t *point
 			}
 
 			float rhw = scanline->v.pos.w;
-			if (device->zbuffer == NULL || rhw >= device->zbuffer[y*width + x]) {
-				if (device->zbuffer != NULL)
-					device->zbuffer[y*width + x] = rhw;
-
-				if (device->framebuffer != NULL) {
+			if (device->zbuffer == NULL || rhw >= device->zbuffer[y*width + x]) 
+			{
+				if (device->zbuffer != NULL) device->zbuffer[y*width + x] = rhw;
+				if (device->framebuffer != NULL) 
+				{
 					color_t color = { 0.0f, 0.0f, 0.0f, 1.0f };
 					v2f vf;
 					float w = 1.0f / scanline->v.pos.w;
@@ -1040,7 +1043,6 @@ void device_draw_scanline(device_t *device, scanline_t *scanline, point_t *point
 					point_t interpos = scanline->v.pos;
 					transform_homogenize_reverse(&interpos, &interpos, w, device->camera->width, device->camera->height);
 					computeBarycentricCoords3d(&barycenter, &points[0], &points[1], &points[2], &interpos);
-
 
 					v2f_interpolating(&vf, &vfs[0], &vfs[1], &vfs[2], barycenter.x, barycenter.y, barycenter.z);
 					vf.pos.w = w;
@@ -1081,21 +1083,22 @@ void device_draw_scanline(device_t *device, scanline_t *scanline, point_t *point
 	}
 }
 
-// core render function
+// core render 
 void device_render_trap(device_t *device, trapezoid_t *trap, point_t *points, v2f *v2fs) 
 {
 	scanline_t scanline;
 	int j, top, bottom;
 	top = (int)(trap->top + 0.5f);
 	bottom = (int)(trap->bottom + 0.5f);
-	for (j = top; j < bottom; j++) {
-		if (j >= 0 && j < device->camera->height) {
+	for (j = top; j < bottom; j++) 
+	{
+		if (j >= 0 && j < device->camera->height) 
+		{
 			trapezoid_edge_interp(trap, (float)j + 0.5f);
 			trapezoid_init_scan_line(trap, &scanline, j);
 			device_draw_scanline(device, &scanline, points, v2fs);
 		}
-		if (j >= device->camera->height)
-			break;
+		if (j >= device->camera->height) break;
 	}
 }
 
@@ -1161,11 +1164,12 @@ void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_
 
 	a2v a2vs[3];
 	v2f v2fs[3];
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 3; i++) 
+	{
 		vertex_t *vertex = vertice[i];
 		a2v *av = &a2vs[i];
 
-		av->pos = vertex->pos; // 世界空间的pos
+		av->pos = vertex->pos; // world space pos
 		int a = 0, b = 0;
 		if (i == 0) a = 1, b = 2;
 		if (i == 1) a = 0, b = 2;
@@ -1185,26 +1189,23 @@ void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_
 		av->color = vertex->color;
 		av->texcoord = vertex->tc;
 
-		vert_shader(device, av, &v2fs[i]); // 顶点着色器
-
+		vert_shader(device, av, &v2fs[i]);
 		transform_homogenize(&vertex->pos, &vertex->pos, device->camera->width, device->camera->height);
 	}
 
 	// 背面剔除
 	if (device->cull > 0)
-    {
+	{
 		vector_t t21, t32;
 		vector_sub(&t21, &t2->pos, &t1->pos);
 		vector_sub(&t32, &t3->pos, &t2->pos);
 		if (device->cull == 1)
-        {
-			if (t21.x * t32.y - t32.x * t21.y <= 0)    // 计算叉积
-				return;
+		{
+			if (t21.x * t32.y - t32.x * t21.y <= 0) return;
 		}
 		else if (device->cull == 2)
-        {
-			if (t21.x * t32.y - t32.x * t21.y > 0)     // 计算叉积
-				return;
+		{
+			if (t21.x * t32.y - t32.x * t21.y > 0)	return;
 		}
 	}
 
@@ -1248,20 +1249,10 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 	bool cliped = false;
 	vector_t v;
 	vertex_t p1 = *v1, p2 = *v2, p3 = *v3;
-
-	if (world == false) 
-	{
-		matrix_apply(&p1.pos, &p1.pos, &device->transform.mv);
-		matrix_apply(&p2.pos, &p2.pos, &device->transform.mv);
-		matrix_apply(&p3.pos, &p3.pos, &device->transform.mv);
-	}
-	else 
-	{
-		matrix_apply(&p1.pos, &p1.pos, &device->transform.view);
-		matrix_apply(&p2.pos, &p2.pos, &device->transform.view);
-		matrix_apply(&p3.pos, &p3.pos, &device->transform.view);
-	}
-
+	matrix_t* matrix = world ? &device->transform.view : &device->transform.mv;
+	matrix_apply(&p1.pos, &p1.pos, matrix);
+	matrix_apply(&p2.pos, &p2.pos, matrix);
+	matrix_apply(&p3.pos, &p3.pos, matrix);
 
 	z_factor_y = tan(device->camera->fovy*0.5);
 	z_factor_x = z_factor_y / device->camera->aspect;
@@ -1336,7 +1327,7 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 		vertex_ccodes[0] = CLIP_CODE_GZ;
 	else if (p1.pos.z < device->camera->zn)
 		vertex_ccodes[0] = CLIP_CODE_LZ;
-	else 
+	else
 	{
 		vertex_ccodes[0] = CLIP_CODE_IZ;
 		num_verts_in++;
@@ -1346,7 +1337,7 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 		vertex_ccodes[1] = CLIP_CODE_GZ;
 	else if (p2.pos.z < device->camera->zn)
 		vertex_ccodes[1] = CLIP_CODE_LZ;
-	else 
+	else
 	{
 		vertex_ccodes[1] = CLIP_CODE_IZ;
 		num_verts_in++;
@@ -1357,7 +1348,7 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 		vertex_ccodes[2] = CLIP_CODE_GZ;
 	else if (p3.pos.z < device->camera->zn)
 		vertex_ccodes[2] = CLIP_CODE_LZ;
-	else 
+	else
 	{
 		vertex_ccodes[2] = CLIP_CODE_IZ;
 		num_verts_in++;
@@ -1379,22 +1370,21 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 		if (num_verts_in == 1)
 		{
 			if (vertex_ccodes[0] == CLIP_CODE_IZ) {}
-			else if (vertex_ccodes[1] == CLIP_CODE_IZ) 
+			else if (vertex_ccodes[1] == CLIP_CODE_IZ)
 			{
 				temp = p1;
 				p1 = p2;
 				p2 = p3;
 				p3 = temp;
 			}
-			else 
+			else
 			{
 				temp = p1;
 				p1 = p3;
 				p3 = p2;
 				p2 = temp;
 			}
-			// 对每条边进行裁剪
-			// 创建参数化方程p = v0 + v01 * t
+			// 对每条边进行裁剪，创建参数化方程p = v0 + v01 * t
 			vector_sub(&v, &p2.pos, &p1.pos);
 			t1 = (device->camera->zn - p1.pos.z) / v.z;
 
@@ -1433,20 +1423,18 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 
 			cliped = true;
 		}
-		else if (num_verts_in == 2) 
+		else if (num_verts_in == 2)
 		{
 			// 外侧的点
-			if (vertex_ccodes[0] == CLIP_CODE_LZ) 
-			{
-			}
-			else if (vertex_ccodes[1] == CLIP_CODE_LZ) 
+			if (vertex_ccodes[0] == CLIP_CODE_LZ) {}
+			else if (vertex_ccodes[1] == CLIP_CODE_LZ)
 			{
 				temp = p1;
 				p1 = p2;
 				p2 = p3;
 				p3 = temp;
 			}
-			else 
+			else
 			{
 				temp = p1;
 				p1 = p3;
@@ -1586,8 +1574,7 @@ void frag_shader(device_t *device, v2f *vf, color_t *color)
 				{
 					for (int j = -1; j <= 1; ++j)
 					{
-						if (y + j < 0 || y + j >= camera->height || x + i < 0 || x + i >= camera->width)
-							continue;
+						if (y + j < 0 || y + j >= camera->height || x + i < 0 || x + i >= camera->width) continue;
 						float pcfDepth = pshadowbuffer[(y + j)*camera->width + (x + i)];
 						shadow += tempPos.z - bias > pcfDepth ? 1.0 : 0.0;
 					}
@@ -1601,44 +1588,6 @@ void frag_shader(device_t *device, v2f *vf, color_t *color)
 		}
 	}
 
-
-	int i = 0;
-	for (i = 0; i < pointlight_cnt; i++)
-	{
-		temp = (color_t) { 0.0f, 0.0f, 0.0f, 1.0f };
-		pointlight_t *pointlight = &pointLights[i];
-
-		vector_t lightDir = { 0.0f, 0.0f, 0.0f, 0.0f };
-		vector_sub(&lightDir, &pointlight->pos, &vf->pos);
-		float distance = vector_length(&lightDir);
-		vector_normalize(&lightDir);
-		float diff = fmaxf(vector_dotproduct(&normal, &lightDir), 0.0f);
-		vector_t vec;
-		vector_inverse(&lightDir);
-		vector_reflect(&vec, &lightDir, &normal);
-		float shininess = material->shininess * (material->specular_highlight_tex_id == -1 ? 1 : texture_value_read(&textures[material->specular_highlight_tex_id], tex->u, tex->v));
-		float spec = powf(fmaxf(vector_dotproduct(&viewdir, &vec), 0.0f), shininess);
-		float num = pointlight->constant + pointlight->linear * distance + pointlight->quadratic * (distance * distance);
-		float attenuation = 0;
-		if (num != 0)
-			attenuation = 1.0f / num;
-
-		color_t c = (color_t) { 0.0f, 0.0f, 0.0f, 1.0f };
-		color_t c2 = material->ambient_tex_id == -1 ? material->ambient : texture_read(&textures[material->ambient_tex_id], tex->u, tex->v, vf->pos.w, 15);
-		color_product(&c, &pointlight->ambi, &c2);
-		color_scale(&c, attenuation);
-		color_add(&temp, &temp, &c);
-		c2 = material->diffuse_tex_id == -1 ? material->diffuse : texture_read(&textures[material->diffuse_tex_id], tex->u, tex->v, vf->pos.w, 15);
-		color_product(&c, &pointlight->diff, &c2);
-		color_scale(&c, diff * attenuation);
-		color_add(&temp, &temp, &c);
-		c2 = material->specular_tex_id == -1 ? material->specular : texture_read(&textures[material->specular_tex_id], tex->u, tex->v, vf->pos.w, 15);
-		color_product(&c, &pointlight->spec, &c2);
-		color_scale(&c, spec * attenuation);
-		color_add(&temp, &temp, &c);
-
-		color_add(color, color, &temp);
-	}
 }
 
 
