@@ -38,7 +38,8 @@ libpng depends on zlib, so should be set -lz in "Other linker flags" at xcode pr
 ## Reinferences
 
 
-tutor: [guide](/doc/readme.md)
+tutor:	 [guide1](/doc/readme.md)
+	 [guide2](/doc/triger.md)
 
 resources: [asset format](/resources/readme.md)
 

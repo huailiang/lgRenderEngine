@@ -597,7 +597,7 @@ void camera_update(camera_t *camera)
 }
 
 
-// 注意是除坐标意外颜色和纹理索引除以w
+// 除坐标以外,颜色和纹理索引除以w
 void vertex_rhw_init(vertex_t *v) 
 {
 	float rhw = 1.0f / v->pos.w;
@@ -712,7 +712,6 @@ int trapezoid_init_triangle(trapezoid_t *trap, const vertex_t *p1, const vertex_
 		trap[1].right.v1 = *p2;
 		trap[1].right.v2 = *p3;
 	}
-
 	return 2;
 }
 
