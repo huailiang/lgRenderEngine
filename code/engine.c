@@ -541,7 +541,8 @@ int texture_count = 0;
 material_t materials[NUM_MATERIAL];
 int material_cnt;
 
-void free_material(material_t *material) {
+void free_material(material_t *material) 
+{
 	free(material->name);
 	free(material->bump_texname);
 	free(material->alpha_texname);

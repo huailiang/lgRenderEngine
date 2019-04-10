@@ -69,7 +69,6 @@ int* material_ids_man;
 ulong material_ids_num_man;
 
 
-
 void init_texture()
 {
 	int width = 256, height = 256;
@@ -148,6 +147,14 @@ void free_buffers()
 	free(shadowbuffer);
 }
 
+void update_scene(float delta)
+{
+	g_box->theta -= 0.04f;
+	g_box->dirty = true;
+	g_box1->theta += 0.04f;
+	g_box1->dirty = true;
+}
+
 void render_scene(SDL_Renderer* renderer, device_t *device,float yaw, float pitch)
 {
 	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -211,7 +218,7 @@ void draw_object(device_t *device, object_t *objects, int obj_cnt)
 		device->transform.model = object->matrix;
 		transform_update(&device->transform);
 		vertex_t *mesh = object->mesh;
-		for (int i = 0; i < object->mesh_num; i += 3)
+		for (int i = 0; i < (int)(object->mesh_num); i += 3)
 		{
 			if (object->material_ids == NULL)
 				device->material = materials[0];

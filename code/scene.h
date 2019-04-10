@@ -15,6 +15,7 @@ void init_materials(void);
 void free_materials(void);
 void init_buffers(device_t *device);
 void free_buffers(void);
+void update_scene(float delta);
 void render_scene(SDL_Renderer* renderer, device_t *device, float yaw, float pitch);
 void draw_object(device_t *device, object_t* objects, int obj_cnt);
 void init_light(void);

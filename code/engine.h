@@ -238,7 +238,7 @@ void device_clear(device_t *device);
 typedef struct 
 {
 	vertex_t *mesh;
-	unsigned long mesh_num;
+	ulong mesh_num;
 	int* material_ids;
 	int texture_id;
 	bool shadow;

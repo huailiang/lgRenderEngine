@@ -5,6 +5,9 @@
 #include "common.h"
 #include "scene.h"
 
+int screen_keys[KEY_CNT];
+float deltaTime = 0.0f;
+Uint32 lastFrame = 0;
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
 
@@ -22,7 +25,7 @@ bool sdl_init()
 		{
 			printf("Warning: Linear texture filtering not enabled!");
 		}
-		window = SDL_CreateWindow("Lg Cross-platform SoftwareRender Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		window = SDL_CreateWindow("lg Cross-platform SoftwareRender Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 		if (window == NULL)
 		{
 			printf("windows could not be created!, sdl error: %s\n", SDL_GetError());
@@ -54,10 +57,6 @@ void sdl_close()
 	SDL_Quit();
 }
 
-int screen_keys[KEY_CNT];
-float deltaTime = 0.0f;
-Uint32 lastFrame = 0;
-
 int main(int argc, char * argv[])
 {
 	if (sdl_init())
@@ -87,7 +86,6 @@ int main(int argc, char * argv[])
         
 		object_t *controlObj = g_box1;
 		SDL_Event e;
-
 		while (!quit)
 		{
 			Uint32 currentFrame = SDL_GetTicks();
@@ -218,11 +216,7 @@ int main(int argc, char * argv[])
 			}
 			else kbhit = 0;
 
-			g_box->theta -= 0.04f;
-			g_box->dirty = true;
-			g_box1->theta += 0.04f;
-			g_box1->dirty = true;
-            
+			update_scene(deltaTime);
 			render_scene(renderer, &device, 0, 0);
         }
 		free_scene();
