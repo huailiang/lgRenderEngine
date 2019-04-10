@@ -309,7 +309,7 @@ void init_boxs()
 
 	g_box = &objects[object_count++];
 	g_box->pos = (point_t) { 0, 2, -1, 1 };
-	g_box->scale = (vector_t) { 0.2, 0.2, 0.2, 0 };
+	g_box->scale = (vector_t) { 1, 1, 1, 0 };
 	g_box->axis = (vector_t) { 1, 0, 1, 1 };
 	g_box->theta = 0.0f;
 	g_box->mesh = box_mesh;

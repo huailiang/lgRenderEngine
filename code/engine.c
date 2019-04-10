@@ -369,7 +369,6 @@ void matrix_set_axis(matrix_t *m, const vector_t *xaxis, const vector_t *yaxis, 
 // zaxis = normal(At - Eye)
 // xaxis = normal(cross(Up, zaxis))
 // yaxis = cross(zaxis, xaxis)
-
 // xaxis.x           yaxis.x           zaxis.x          0
 // xaxis.y           yaxis.y           zaxis.y          0
 // xaxis.z           yaxis.z           zaxis.z          0
@@ -398,9 +397,9 @@ void matrix_set_lookat(matrix_t *m, const vector_t *eye, const vector_t *at, con
 	m->m[0][3] = m->m[1][3] = m->m[2][3] = 0.0f;
 	m->m[3][3] = 1.0f;
 }
-//set_perspective m, fovy, aspect, zn, zf
+//set_perspective m, fov, aspect, zn, zf
 // zoom = 1 / tan(fov/2)
-// zoomy = 1 / tan(fovy/2)
+// zoomy = 1 / tan(fov/2)
 // zoomx = zoomy * aspect
 // zoomx    0       0               0
 // 0        zoomy   0               0
@@ -449,6 +448,7 @@ void transform_apply(const transform_t *ts, vector_t *y, const vector_t *x)
 	matrix_apply(y, x, &ts->mvp);
 }
 
+// 检查齐次坐标同 cvv 的边界用于视锥裁剪
 int transform_check_cvv(const vector_t *v) 
 {
 	float w = v->w;
@@ -462,7 +462,7 @@ int transform_check_cvv(const vector_t *v)
 	return check;
 }
 
-//归一化
+//归一化, 得到屏幕坐标
 void transform_homogenize(vector_t *y, const vector_t *x, float width, float height) 
 {
 	float rhw = 1.0f / x->w;
@@ -585,7 +585,7 @@ void camera_init_projection(camera_t *camera)
 void camera_update(camera_t *camera) 
 {
 	vector_t right, at, up, front = camera->front;
-	vector_crossproduct(&right, &camera->worldup, &camera->front);
+	vector_crossproduct(&right, &camera->worldup, &camera->front); //left-hand coord
 	vector_normalize(&right);
 	vector_crossproduct(&up, &camera->front, &right);
 	vector_normalize(&up);
@@ -651,14 +651,14 @@ int trapezoid_init_triangle(trapezoid_t *trap, const vertex_t *p1, const vertex_
 {
 	const vertex_t *p;
 	float k, x;
-
+	//sort p: p1<p2<p3
 	if (p1->pos.y > p2->pos.y) p = p1, p1 = p2, p2 = p;
 	if (p1->pos.y > p3->pos.y) p = p1, p1 = p3, p3 = p;
 	if (p2->pos.y > p3->pos.y) p = p2, p2 = p3, p3 = p;
 	if (p1->pos.y == p2->pos.y && p1->pos.y == p3->pos.y) return 0;
 	if (p1->pos.x == p2->pos.x && p1->pos.x == p3->pos.x) return 0;
 
-	if (p1->pos.y == p2->pos.y) 
+	if (p1->pos.y == p2->pos.y)
 	{	// triangle down
 		if (p1->pos.x > p2->pos.x) p = p1, p1 = p2, p2 = p;
 		trap[0].top = p1->pos.y;
@@ -691,7 +691,7 @@ int trapezoid_init_triangle(trapezoid_t *trap, const vertex_t *p1, const vertex_
 	x = p1->pos.x + (p2->pos.x - p1->pos.x) * k;
 
 	if (x <= p3->pos.x) 
-	{		// triangle left
+	{	// triangle left
 		trap[0].left.v1 = *p1;
 		trap[0].left.v2 = *p2;
 		trap[0].right.v1 = *p1;
@@ -773,7 +773,7 @@ void device_set_shadowbuffer(device_t *device, float *shadowbuffer)
 	device->shadowbuffer = shadowbuffer;
 }
 
-void device_set_camera(device_t *device, camera_t *camera)
+void device_set_camera(device_t *device, const camera_t *camera)
 {
 	device->camera = camera;
 	device->transform.view = camera->view_matrix;
@@ -803,18 +803,16 @@ void device_clear(device_t *device)
 }
 
 
-///*
-//    m = dy / dx
-//    如果(ε + m) < 0.5 (或表示为2*(ε + m) < 1)
+//  m = dy / dx
+//  if(ε + m) < 0.5 (or 2*(ε + m) < 1)
 //        ε = ε + m
-//    其他情况
+//  other
 //        ε = ε + m – 1
-//将上述公式都乘以dx, 并将ε*dx用新符号ξ表示，可得
-//    如果2*(ξ + dy) < dx
+// 将上述公式都乘以dx, 并将ε*dx用新符号ξ表示，可得
+//    if 2*(ξ + dy) < dx
 //        ξ = ξ + dy
-//    其他情况
+//    other
 //        ξ = ξ + dy – dx
-//*/
 void device_draw_line(device_t *device, int x1, int y1, int x2, int y2, uint32 c) 
 {
 	int dx = x2 - x1;
@@ -1115,11 +1113,11 @@ void calculate_tangent_and_binormal(vector_t *tangent, vector_t *binormal, const
 	vector_sub(&side0, position1, position2);
 	vector_t side1 = { 0.0f, 0.0f, 0.0f, 1.0f };
 	vector_sub(&side1, position3, position1);
-	//Calculate face normal
+	// Calculate face normal
 	vector_t normal = { 0.0f, 0.0f, 0.0f, 0.0f };
 	vector_crossproduct(&normal, &side1, &side0);
 	vector_normalize(&normal);
-	//Now we use a formula to calculate the tangent.
+	// Now we use a formula to calculate the tangent.
 	float deltaV0 = v1 - v2;
 	float deltaV1 = v3 - v1;
 	*tangent = side0;
@@ -1128,7 +1126,7 @@ void calculate_tangent_and_binormal(vector_t *tangent, vector_t *binormal, const
 	vector_scale(&temp, deltaV0);
 	vector_sub(tangent, tangent, &temp);
 	vector_normalize(tangent);
-	//Calculate binormal
+	// Calculate binormal
 	float deltaU0 = u1 - u2;
 	float deltaU1 = u3 - u1;
 	*binormal = side0;
@@ -1179,13 +1177,12 @@ void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_
 		matrix_apply(&av->tangent, &av->tangent, &device->transform.model);
 		vector_crossproduct(&av->binormal, &av->normal, &av->tangent);
 		vector_scale(&av->binormal, av->tangent.w);
-		//matrix_apply(&av->binormal, &av->binormal, &device->transform.model);
 		matrix_apply(&vertex->pos, &vertex->pos, &device->transform.vp);
-		points[i] = vertex->pos; // 透视空间的pos
+		points[i] = vertex->pos; // project space pos
 
-		matrix_apply(&vertex->normal, &vertex->normal, &nm); // 法向量乘正规矩阵
+		matrix_apply(&vertex->normal, &vertex->normal, &nm); 
 		vector_normalize(&vertex->normal);
-		av->normal = vertex->normal; // 世界空间的normal
+		av->normal = vertex->normal; // world space normal
 		av->color = vertex->color;
 		av->texcoord = vertex->tc;
 
@@ -1193,7 +1190,7 @@ void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_
 		transform_homogenize(&vertex->pos, &vertex->pos, device->camera->width, device->camera->height);
 	}
 
-	// 背面剔除
+	// call back
 	if (device->cull > 0)
 	{
 		vector_t t21, t32;
@@ -1225,39 +1222,37 @@ void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_
 	}
 }
 
+// camera 视锥体裁剪 Frustum Culling
 void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool world)
 {
 #define CLIP_CODE_GZ    0x0001
 #define CLIP_CODE_LZ    0x0002
 #define CLIP_CODE_IZ    0x0004
-
 #define CLIP_CODE_GX    0x0001
 #define CLIP_CODE_LX    0x0002
 #define CLIP_CODE_IX    0x0004
-
 #define CLIP_CODE_GY    0x0001
 #define CLIP_CODE_LY    0x0002
 #define CLIP_CODE_IY    0x0004
-
 #define CLIP_CODE_NULL  0x0000
 
 	int vertex_ccodes[3];
 	int num_verts_in = 0;
 
-	float z_factor_x, z_factor_y, z_factor, z_test;
 	float xi, yi, x01i, y01i, x02i, y02i, t1, t2, ui, vi, u01i, v01i, u02i, v02i;
 	bool cliped = false;
 	vector_t v;
 	vertex_t p1 = *v1, p2 = *v2, p3 = *v3;
 	matrix_t* matrix = world ? &device->transform.view : &device->transform.mv;
+
 	matrix_apply(&p1.pos, &p1.pos, matrix);
 	matrix_apply(&p2.pos, &p2.pos, matrix);
 	matrix_apply(&p3.pos, &p3.pos, matrix);
 
-	z_factor_y = tan(device->camera->fovy*0.5);
-	z_factor_x = z_factor_y / device->camera->aspect;
-	z_factor = z_factor_x;
-	z_test = z_factor * p1.pos.z;
+	float z_factor_y = tan(device->camera->fovy*0.5);
+	float z_factor_x = z_factor_y / device->camera->aspect;
+	float z_factor = z_factor_x;
+	float z_test = z_factor * p1.pos.z;
 
 	if (p1.pos.x > z_test)
 		vertex_ccodes[0] = CLIP_CODE_GX;
@@ -1267,7 +1262,6 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 		vertex_ccodes[0] = CLIP_CODE_IX;
 
 	z_test = z_factor * p2.pos.z;
-
 	if (p2.pos.x > z_test)
 		vertex_ccodes[1] = CLIP_CODE_GX;
 	else if (p2.pos.x < -z_test)
@@ -1276,7 +1270,6 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 		vertex_ccodes[1] = CLIP_CODE_IX;
 
 	z_test = z_factor * p3.pos.z;
-
 	if (p3.pos.x > z_test)
 		vertex_ccodes[2] = CLIP_CODE_GX;
 	else if (p3.pos.x < -z_test)
@@ -1285,13 +1278,10 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 		vertex_ccodes[2] = CLIP_CODE_IX;
 
 	if (((vertex_ccodes[0] == CLIP_CODE_GX) && (vertex_ccodes[1] == CLIP_CODE_GX) && (vertex_ccodes[2] == CLIP_CODE_GX))
-		|| ((vertex_ccodes[0] == CLIP_CODE_LX) && (vertex_ccodes[1] == CLIP_CODE_LX) && (vertex_ccodes[2] == CLIP_CODE_LX))) {
-		return;
-	}
+		|| ((vertex_ccodes[0] == CLIP_CODE_LX) && (vertex_ccodes[1] == CLIP_CODE_LX) && (vertex_ccodes[2] == CLIP_CODE_LX))) return;
 
 	z_factor = z_factor_y;
 	z_test = z_factor * p1.pos.z;
-
 	if (p1.pos.y > z_test)
 		vertex_ccodes[0] = CLIP_CODE_GY;
 	else if (p1.pos.y < -z_test)
@@ -1300,7 +1290,6 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 		vertex_ccodes[0] = CLIP_CODE_IY;
 
 	z_test = z_factor * p2.pos.z;
-
 	if (p2.pos.y > z_test)
 		vertex_ccodes[1] = CLIP_CODE_GY;
 	else if (p2.pos.y < -z_test)
@@ -1309,7 +1298,6 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 		vertex_ccodes[1] = CLIP_CODE_IY;
 
 	z_test = z_factor * p3.pos.z;
-
 	if (p3.pos.y > z_test)
 		vertex_ccodes[2] = CLIP_CODE_GY;
 	else if (p3.pos.y < -z_test)
@@ -1318,10 +1306,8 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 		vertex_ccodes[2] = CLIP_CODE_IY;
 
 	if (((vertex_ccodes[0] == CLIP_CODE_GY) && (vertex_ccodes[1] == CLIP_CODE_GY) && (vertex_ccodes[2] == CLIP_CODE_GY))
-		|| ((vertex_ccodes[0] == CLIP_CODE_LY) && (vertex_ccodes[1] == CLIP_CODE_LY) && (vertex_ccodes[2] == CLIP_CODE_LY))) {
-		return;
-	}
-
+		|| ((vertex_ccodes[0] == CLIP_CODE_LY) && (vertex_ccodes[1] == CLIP_CODE_LY) && (vertex_ccodes[2] == CLIP_CODE_LY))) return;
+	
 	// 是否完全在远裁剪面或近裁剪面外侧
 	if (p1.pos.z > device->camera->zf)
 		vertex_ccodes[0] = CLIP_CODE_GZ;
@@ -1343,7 +1329,6 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 		num_verts_in++;
 	}
 
-
 	if (p3.pos.z > device->camera->zf)
 		vertex_ccodes[2] = CLIP_CODE_GZ;
 	else if (p3.pos.z < device->camera->zn)
@@ -1354,19 +1339,13 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 		num_verts_in++;
 	}
 
-
 	if (((vertex_ccodes[0] == CLIP_CODE_GZ) && (vertex_ccodes[1] == CLIP_CODE_GZ) && (vertex_ccodes[2] == CLIP_CODE_GZ))
-		|| ((vertex_ccodes[0] == CLIP_CODE_LZ) && (vertex_ccodes[1] == CLIP_CODE_LZ) && (vertex_ccodes[2] == CLIP_CODE_LZ))) {
-		return;
-	}
+		|| ((vertex_ccodes[0] == CLIP_CODE_LZ) && (vertex_ccodes[1] == CLIP_CODE_LZ) && (vertex_ccodes[2] == CLIP_CODE_LZ))) return;
 
 	// 判断是否有顶点在近裁剪面外侧
 	if (((vertex_ccodes[0] | vertex_ccodes[1] | vertex_ccodes[2]) & CLIP_CODE_LZ))
 	{
 		vertex_t temp;
-		//num_verts_in = 0;
-		// 三角形有1个顶点在近裁剪面内侧，2个顶点在外侧
-		// 三角形有2个顶点在近裁剪面内侧，1个顶点在外侧
 		if (num_verts_in == 1)
 		{
 			if (vertex_ccodes[0] == CLIP_CODE_IZ) {}
@@ -1420,8 +1399,6 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 
 			p3.tc.u = ui;
 			p3.tc.v = vi;
-
-			cliped = true;
 		}
 		else if (num_verts_in == 2)
 		{
@@ -1443,8 +1420,7 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 			}
 
 			vertex_t np1 = p1, np2 = p2, np3 = p3;
-			// 对每条边进行裁剪
-			// 创建参数化方程p = v0 + v01 * t
+			// 对每条边进行裁剪, 创建参数化方程p = v0 + v01 * t
 			vector_sub(&v, &p2.pos, &p1.pos);
 			t1 = (device->camera->zn - p1.pos.z) / v.z;
 
@@ -1490,8 +1466,6 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 			matrix_apply(&np2.pos, &np2.pos, &device->transform.view_r);
 			matrix_apply(&np3.pos, &np3.pos, &device->transform.view_r);
 			device_draw_primitive(device, &np1, &np2, &np3);
-
-			cliped = true;
 		}
 	}
 	matrix_apply(&p1.pos, &p1.pos, &device->transform.view_r);
@@ -1510,7 +1484,6 @@ void vert_shader(device_t *device, a2v *av, v2f *vf)
 	vf->storage0 = (vector_t) { av->tangent.x, av->binormal.x, av->normal.x };
 	vf->storage1 = (vector_t) { av->tangent.y, av->binormal.y, av->normal.y };
 	vf->storage2 = (vector_t) { av->tangent.z, av->binormal.z, av->normal.z };
-
 }
 
 void frag_shader(device_t *device, v2f *vf, color_t *color) 

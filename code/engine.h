@@ -63,22 +63,14 @@ void matrix_set_perspective(matrix_t *m, float fovy, float aspect, float zn, flo
 // (l+r)/(l-r)  (t+b)/(b-t)  zn/(zn-zf)  1
 void matrix_set_ortho(matrix_t *m, float l, float r, float b, float t, float zn, float zf);
 
-typedef struct 
-{
-	matrix_t model;
-	matrix_t view;
-	matrix_t view_r;       // view reverse
-	matrix_t projection;
-	matrix_t vp;          
-	matrix_t mv;         
-	matrix_t mvp;         
-} transform_t;
 
+typedef struct { matrix_t model, view, view_r, projection, vp, mv, mvp; } transform_t;
 void transform_update(transform_t *ts);
 void transform_apply(const transform_t *ts, vector_t *y, const vector_t *x);
 int transform_check_cvv(const vector_t *v);
 void transform_homogenize(vector_t *y, const vector_t *x, float width, float height);
 void transform_homogenize_reverse(vector_t *y, const vector_t *x, float w, float width, float height);
+
 typedef struct { float r, g, b, a; } color_t;
 void color_init(color_t *c);
 void color_product(color_t *c, const color_t *a, const color_t *b);
@@ -116,7 +108,7 @@ typedef struct
 	char *alpha_texname;         
 	int alpha_tex_id;
 } material_t;
-#define NUM_MATERIAL 100
+#define NUM_MATERIAL 32
 extern material_t materials[NUM_MATERIAL];
 extern int material_cnt;
 void free_material(material_t *material);
@@ -204,7 +196,7 @@ typedef struct
 	bool blend;                
 	float blend_sfactor;        
 	float blend_dfactor;        
-	int cull;                  
+	int cull;     // 0:不裁剪;1:裁剪反面;2:裁剪正面              
 }device_t;
 
 #define RENDER_STATE_WIREFRAME      1		// 渲染线框
@@ -234,7 +226,7 @@ typedef struct
 	float theta;
 	matrix_t matrix;
 } object_t;
-#define MAX_NUM_OBJECT 100
+#define MAX_NUM_OBJECT 8
 extern object_t objects[MAX_NUM_OBJECT];
 extern int object_count;
 
@@ -247,7 +239,7 @@ typedef struct
     uint32 width;
 	uint32 height;
 } texture_t;
-#define MAX_NUM_TEXTURE 100
+#define MAX_NUM_TEXTURE 64
 extern texture_t textures[MAX_NUM_TEXTURE];
 extern int texture_count;
 

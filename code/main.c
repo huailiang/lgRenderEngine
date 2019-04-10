@@ -176,7 +176,7 @@ int main(int argc, char * argv[])
 			if (screen_keys[SDL_SCANCODE_UP]) 
 			{
 				float velocity = c_movementspeed * deltaTime;
-				vector_t temp = { 0.0f, 1.0f, 0.0f, 0.0f };
+				vector_t temp = { 0.0f, 0.0f, 1.0f, 0.0f };
 				vector_scale(&temp, velocity);
 				vector_add(&controlObj->pos, &controlObj->pos, &temp);
 				controlObj->dirty = true;
@@ -192,7 +192,7 @@ int main(int argc, char * argv[])
 			if (screen_keys[SDL_SCANCODE_DOWN]) 
 			{
 				float velocity = c_movementspeed * deltaTime;
-				vector_t temp = { 0.0f, -1.0f, 0.0f, 0.0f };
+				vector_t temp = { 0.0f, 0.0f, -1.0f, 0.0f };
 				vector_scale(&temp, velocity);
 				vector_add(&controlObj->pos, &controlObj->pos, &temp);
 				controlObj->dirty = true;
