@@ -57,7 +57,7 @@ vertex_t box_mesh[36] = {
 	{{-0.5f,  0.5f, -0.5f, 1.0f}, {0.0f,  1.0f},{ 0.2f, 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f,  0.0f, 0.0f}}
 };
 
-uint* framebuffer;
+uint32* framebuffer;
 float* zbuffer;
 float* shadowbuffer;
 camera_t* main_camera;
@@ -74,7 +74,7 @@ void init_texture()
 {
 	int width = 256, height = 256;
 	texture_t* texture = &textures[texture_count++];
-	uint* bits = (uint*)malloc(sizeof(uint)* width * height);
+	uint32* bits = (uint32*)malloc(sizeof(uint32)* width * height);
 	int i, j;
 	for (j = 0; j < height; j++)
 	{
@@ -85,7 +85,7 @@ void init_texture()
 		}
 	}
 	texture->datas_len = 1;
-	texture->datas = (uint**)malloc(1 * sizeof(uint*));
+	texture->datas = (uint32**)malloc(1 * sizeof(uint32*));
 	texture->datas[0] = bits;
 	texture->width = width;
 	texture->height = height;
@@ -100,9 +100,9 @@ void free_textures()
 	for (int i = 0; i < texture_count; i++)
 	{
 		texture_t *texture = &textures[i];
-		for (uint j = 0; j < texture->datas_len; j++)
+		for (uint32 j = 0; j < texture->datas_len; j++)
 		{
-			uint *data = texture->datas[j];
+			uint32 *data = texture->datas[j];
 			free(data);
 		}
 		free(texture->datas);
@@ -128,7 +128,7 @@ void free_materials()
 
 void init_buffers()
 {
-    framebuffer = (uint*)malloc(SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(uint));
+    framebuffer = (uint32*)malloc(SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(uint32));
     zbuffer = (float*)malloc(SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(float));
     shadowbuffer = (float*)malloc(SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(float));
     pshadowbuffer = shadowbuffer;
@@ -191,7 +191,7 @@ void render_scene(SDL_Renderer* renderer, device_t *device,float yaw, float pitc
 	{
 		for (int x = 0; x < SCREEN_WIDTH; x++)
 		{
-			uint color = framebuffer[y * SCREEN_WIDTH + x];
+			uint32 color = framebuffer[y * SCREEN_WIDTH + x];
 			SDL_SetRenderDrawColor(renderer, (0xff << 16 & color) >> 16, (0xff << 8 & color) >> 8, 0xff & color, (0xff << 24 & color) >> 24);
 			SDL_RenderDrawPoint(renderer, x, y);
 		}
