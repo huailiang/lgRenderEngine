@@ -802,16 +802,7 @@ void device_clear(device_t *device)
 }
 
 
-//  m = dy / dx
-//  if(ε + m) < 0.5 (or 2*(ε + m) < 1)
-//        ε = ε + m
-//  other
-//        ε = ε + m – 1
-// 将上述公式都乘以dx, 并将ε*dx用新符号ξ表示，可得
-//    if 2*(ξ + dy) < dx
-//        ξ = ξ + dy
-//    other
-//        ξ = ξ + dy – dx
+//algorithm: Bresenham (readme reinfrenced)
 void device_draw_line(device_t *device, int x1, int y1, int x2, int y2, uint32 c) 
 {
 	int dx = x2 - x1;
@@ -819,7 +810,6 @@ void device_draw_line(device_t *device, int x1, int y1, int x2, int y2, uint32 c
 	int ux = ((dx > 0) << 1) - 1;
 	int uy = ((dy > 0) << 1) - 1;
 	int x = x1, y = y1, eps;
-
 	eps = 0; dx = abs(dx); dy = abs(dy);
 	if (dx > dy)
 	{
@@ -950,6 +940,7 @@ color_t texture_read(const texture_t *texture, float u, float v, float z, float 
 		dtu_x_one_minus_dtv * textel01_b +
 		dtu_x_dtv * textel11_b +
 		one_minus_dtu_x_dtv * textel10_b;
+
 	color_scale(&color, 1.0f / 255);
 	return color;
 }
@@ -1142,12 +1133,11 @@ void calculate_tangent_and_binormal(vector_t *tangent, vector_t *binormal, const
 	}
 }
 
-void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_t *t3) 
+void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_t *t3)
 {
 	vertex_t *vertice[3] = { t1, t2, t3 };
 	point_t points[3];
-    
-	// 正规矩阵
+
 	matrix_t nm;
 	matrix_clone(&nm, &device->transform.model);
 	matrix_inverse(&nm);
@@ -1183,8 +1173,7 @@ void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_
 		transform_homogenize(&vertex->pos, &vertex->pos, device->camera->width, device->camera->height);
 	}
 
-	// call back
-	if (device->cull > 0)
+	if (device->cull > 0)	// call back
 	{
 		vector_t t21, t32;
 		vector_sub(&t21, &t2->pos, &t1->pos);
@@ -1198,17 +1187,15 @@ void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_
 			if (t21.x * t32.y - t32.x * t21.y > 0)	return;
 		}
 	}
-
 	if (device->render_state & (RENDER_STATE_TEXTURE | RENDER_STATE_COLOR))
-    {
+	{
 		trapezoid_t traps[2];
 		int n = trapezoid_init_triangle(traps, t1, t2, t3);
 		if (n >= 1) device_render_trap(device, &traps[0], points, v2fs);
 		if (n >= 2) device_render_trap(device, &traps[1], points, v2fs);
 	}
-
 	if ((device->render_state & RENDER_STATE_WIREFRAME) && device->framebuffer != NULL)
-    {
+	{
 		device_draw_line(device, (int)t1->pos.x, (int)t1->pos.y, (int)t2->pos.x, (int)t2->pos.y, device->foreground);
 		device_draw_line(device, (int)t1->pos.x, (int)t1->pos.y, (int)t3->pos.x, (int)t3->pos.y, device->foreground);
 		device_draw_line(device, (int)t3->pos.x, (int)t3->pos.y, (int)t2->pos.x, (int)t2->pos.y, device->foreground);
@@ -1244,9 +1231,7 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 
 	float z_factor_y = tan(device->camera->fovy*0.5);
 	float z_factor_x = z_factor_y / device->camera->aspect;
-	float z_factor = z_factor_x;
-	float z_test = z_factor * p1.pos.z;
-
+	float z_test = z_factor_x * p1.pos.z;
 	if (p1.pos.x > z_test)
 		vertex_ccodes[0] = CLIP_CODE_GX;
 	else if (p1.pos.x < -z_test)
@@ -1254,7 +1239,7 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 	else
 		vertex_ccodes[0] = CLIP_CODE_IX;
 
-	z_test = z_factor * p2.pos.z;
+	z_test = z_factor_x * p2.pos.z;
 	if (p2.pos.x > z_test)
 		vertex_ccodes[1] = CLIP_CODE_GX;
 	else if (p2.pos.x < -z_test)
@@ -1262,7 +1247,7 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 	else
 		vertex_ccodes[1] = CLIP_CODE_IX;
 
-	z_test = z_factor * p3.pos.z;
+	z_test = z_factor_x * p3.pos.z;
 	if (p3.pos.x > z_test)
 		vertex_ccodes[2] = CLIP_CODE_GX;
 	else if (p3.pos.x < -z_test)
@@ -1273,8 +1258,7 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 	if (((vertex_ccodes[0] == CLIP_CODE_GX) && (vertex_ccodes[1] == CLIP_CODE_GX) && (vertex_ccodes[2] == CLIP_CODE_GX))
 		|| ((vertex_ccodes[0] == CLIP_CODE_LX) && (vertex_ccodes[1] == CLIP_CODE_LX) && (vertex_ccodes[2] == CLIP_CODE_LX))) return;
 
-	z_factor = z_factor_y;
-	z_test = z_factor * p1.pos.z;
+	z_test = z_factor_y * p1.pos.z;
 	if (p1.pos.y > z_test)
 		vertex_ccodes[0] = CLIP_CODE_GY;
 	else if (p1.pos.y < -z_test)
@@ -1282,7 +1266,7 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 	else
 		vertex_ccodes[0] = CLIP_CODE_IY;
 
-	z_test = z_factor * p2.pos.z;
+	z_test = z_factor_y * p2.pos.z;
 	if (p2.pos.y > z_test)
 		vertex_ccodes[1] = CLIP_CODE_GY;
 	else if (p2.pos.y < -z_test)
@@ -1290,7 +1274,7 @@ void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool
 	else
 		vertex_ccodes[1] = CLIP_CODE_IY;
 
-	z_test = z_factor * p3.pos.z;
+	z_test = z_factor_y * p3.pos.z;
 	if (p3.pos.y > z_test)
 		vertex_ccodes[2] = CLIP_CODE_GY;
 	else if (p3.pos.y < -z_test)

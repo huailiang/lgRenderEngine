@@ -10,8 +10,8 @@ A cross-platform software render engine based on SDL2
 
 ## Environment
 
-- xcode 
-- vs2017
+- xcode on osx
+- vs2017 on windows
 
 
 ## Build
@@ -41,10 +41,12 @@ libpng depends on zlib, so should be set -lz in "Other linker flags" at xcode pr
 tutor:	 
 
 &emsp; 	[guide1](/doc/readme.md)
-	 
-&emsp;  [guide2](/doc/triger.md)
 
 &emsp;  [Frustum Culling](/doc/clip.md)
+
+&emsp;  [Bresenham draw-line](/doc/Bresenham.md)
+
+&emsp;  [triger center calcute](/doc/triger.md)
 
 resources: [asset format](/resources/readme.md)
 
