@@ -24,6 +24,7 @@ void texcoord_add(texcoord_t *c, texcoord_t *a, const texcoord_t *b)
 	c->u = a->u + b->u;
 	c->v = a->v + b->v;
 }
+
 void texcoord_scale(texcoord_t *t, float k) 
 {
 	t->u *= k;
@@ -178,7 +179,6 @@ void vector_normalize(vector_t *v)
 	v->z *= k;
 }
 
-
 void matrix_add(matrix_t *c, const matrix_t *a, const matrix_t *b) 
 {
 	for (int i = 0; i < 4; i++)
@@ -231,7 +231,8 @@ void matrix_inverse(matrix_t *m)
 			t[i][j] /= f;
 		for (j = 0; j < 3; j++) 
 		{
-			if (j != i) {
+			if (j != i) 
+			{
 				f = t[j][i];
 				for (k = 0; k < 6; k++)
 					t[j][k] = t[j][k] - t[i][k] * f;
@@ -435,7 +436,6 @@ void matrix_set_ortho(matrix_t *m, float l, float r, float b, float t, float zn,
 	m->m[2][0] = m->m[2][1] = m->m[2][3] = 0.0f;
 }
 
-
 void transform_update(transform_t *ts) 
 {
 	matrix_mul(&ts->mv, &ts->model, &ts->view);
@@ -448,19 +448,6 @@ void transform_apply(const transform_t *ts, vector_t *y, const vector_t *x)
 	matrix_apply(y, x, &ts->mvp);
 }
 
-// 检查齐次坐标同 cvv 的边界用于视锥裁剪
-int transform_check_cvv(const vector_t *v) 
-{
-	float w = v->w;
-	int check = 0;
-	if (v->z < 0.0f) check |= 1;
-	if (v->z > w) check |= 2;
-	if (v->x < -w) check |= 4;
-	if (v->x > w) check |= 8;
-	if (v->y < -w) check |= 16;
-	if (v->y > w) check |= 32;
-	return check;
-}
 
 //归一化, 得到屏幕坐标
 void transform_homogenize(vector_t *y, const vector_t *x, float width, float height) 
@@ -802,7 +789,7 @@ void device_clear(device_t *device)
 }
 
 
-//algorithm: Bresenham (readme reinfrenced)
+//algorithm: bresenham (readme reinferenced)
 void device_draw_line(device_t *device, int x1, int y1, int x2, int y2, uint32 c) 
 {
 	int dx = x2 - x1;

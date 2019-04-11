@@ -48,6 +48,8 @@ tutor:
 
 &emsp;  [triger center calcute](/doc/triger.md)
 
+&emsp;  [view matrix](/doc/transform.md)
+
 resources: [asset format](/resources/readme.md)
 
 sdl: http://www.libsdl.org

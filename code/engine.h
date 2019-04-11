@@ -67,7 +67,6 @@ void matrix_set_ortho(matrix_t *m, float l, float r, float b, float t, float zn,
 typedef struct { matrix_t model, view, view_r, projection, vp, mv, mvp; } transform_t;
 void transform_update(transform_t *ts);
 void transform_apply(const transform_t *ts, vector_t *y, const vector_t *x);
-int transform_check_cvv(const vector_t *v);
 void transform_homogenize(vector_t *y, const vector_t *x, float width, float height);
 void transform_homogenize_reverse(vector_t *y, const vector_t *x, float w, float width, float height);
 
