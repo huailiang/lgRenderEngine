@@ -48,7 +48,7 @@ tutor:
 
 &emsp;  [triger center calcute](/doc/triger.md)
 
-&emsp;  [view matrix](/doc/transform.md)
+&emsp;  [transform matrix](/doc/transform.md)
 
 resources: [asset format](/resources/readme.md)
 
