@@ -1006,7 +1006,6 @@ bool computeBarycentricCoords3d(point_t *res, const point_t *p0, const point_t *
 	return true;
 }
 
-// now is the core realize for rendering, so just do it.
 void device_draw_scanline(device_t *device, scanline_t *scanline, point_t *points, v2f *vfs) 
 {
 	int y = scanline->y;
@@ -1026,7 +1025,6 @@ void device_draw_scanline(device_t *device, scanline_t *scanline, point_t *point
 					device->shadowbuffer[y*width + x] = z;
 				}
 			}
-
 			float rhw = scanline->v.pos.w;
 			if (device->zbuffer == NULL || rhw >= device->zbuffer[y*width + x]) 
 			{
@@ -1040,7 +1038,6 @@ void device_draw_scanline(device_t *device, scanline_t *scanline, point_t *point
 					point_t interpos = scanline->v.pos;
 					transform_homogenize_reverse(&interpos, &interpos, w, device->camera->width, device->camera->height);
 					computeBarycentricCoords3d(&barycenter, &points[0], &points[1], &points[2], &interpos);
-
 					v2f_interpolating(&vf, &vfs[0], &vfs[1], &vfs[2], barycenter.x, barycenter.y, barycenter.z);
 					vf.pos.w = w;
 					vector_normalize(&vf.normal);
@@ -1051,7 +1048,6 @@ void device_draw_scanline(device_t *device, scanline_t *scanline, point_t *point
 					float r = 0.0f;
 					float g = 0.0f;
 					float b = 0.0f;
-
 					if (render_state & RENDER_STATE_COLOR) 
 					{
 						a = vf.color.a;
@@ -1066,12 +1062,10 @@ void device_draw_scanline(device_t *device, scanline_t *scanline, point_t *point
 						g = color.g;
 						b = color.b;
 					}
-
 					int A = clamp((int)(a * 255.0f), 0, 255);
 					int R = clamp((int)(r * 255.0f), 0, 255);
 					int G = clamp((int)(g * 255.0f), 0, 255);
 					int B = clamp((int)(b * 255.0f), 0, 255);
-
 					device->framebuffer[y*width + x] = (R << 16) | (G << 8) | B;
 				}
 			}
@@ -1161,12 +1155,12 @@ void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_
 
 	a2v a2vs[3];
 	v2f v2fs[3];
-	for (int i = 0; i < 3; i++) 
+	for (int i = 0; i < 3; i++)
 	{
 		vertex_t *vertex = vertice[i];
 		a2v *av = &a2vs[i];
 
-		av->pos = vertex->pos; // world space pos
+		av->pos = vertex->pos; //world space pos
 		int a = 0, b = 0;
 		if (i == 0) a = 1, b = 2;
 		if (i == 1) a = 0, b = 2;
@@ -1177,11 +1171,11 @@ void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_
 		vector_crossproduct(&av->binormal, &av->normal, &av->tangent);
 		vector_scale(&av->binormal, av->tangent.w);
 		matrix_apply(&vertex->pos, &vertex->pos, &device->transform.vp);
-		points[i] = vertex->pos; // project space pos
+		points[i] = vertex->pos; //project space pos
 
-		matrix_apply(&vertex->normal, &vertex->normal, &nm); 
+		matrix_apply(&vertex->normal, &vertex->normal, &nm);
 		vector_normalize(&vertex->normal);
-		av->normal = vertex->normal; // world space normal
+		av->normal = vertex->normal; //world space normal
 		av->color = vertex->color;
 		av->texcoord = vertex->tc;
 
@@ -1552,14 +1546,10 @@ void frag_shader(device_t *device, v2f *vf, color_t *color)
 					}
 				}
 				shadow /= 9.0;
-
 				color_t temp = { 0.3f,0.3f,0.3f,0.3f };
 				color_scale(&temp, shadow);
 				color_sub(color, color, &temp);
 			}
 		}
 	}
-
 }
-
-

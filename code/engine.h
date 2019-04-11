@@ -79,7 +79,6 @@ void color_add(color_t *c, const color_t *a, const color_t *b);
 void color_sub(color_t *c, const color_t *a, const color_t *b);
 void color_interpolating(color_t *dest, const color_t *src1, const color_t *src2, const color_t *src3, float a, float b, float c);
 
-
 typedef struct 
 {
 	char *name;
@@ -165,19 +164,15 @@ void storage_add(storage_t *c, storage_t *a, const storage_t *b);
 void storage_scale(storage_t *t, float k);
 void storage_interpolating(storage_t *dest, const storage_t *src1, const storage_t *src2, const storage_t *src3, float a, float b, float c);
 
-typedef struct { point_t pos; texcoord_t tc; color_t color; vector_t normal; } vertex_t; // 提供4个额外的插值寄存器
-
+typedef struct { point_t pos; texcoord_t tc; color_t color; vector_t normal; } vertex_t;
 typedef struct { vertex_t v, v1, v2; } edge_t;
 typedef struct { float top, bottom; edge_t left, right; } trapezoid_t;
 typedef struct { vertex_t v, step; int x, y, w; } scanline_t;
 
 // 除坐标以外, 颜色和纹理索引除以w
 void vertex_rhw_init(vertex_t *v);
-
 void vertex_lerp(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float k);
-
 void vertex_division(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float w);
-
 void vertex_add(vertex_t *y, const vertex_t *x);
 
 extern float *pshadowbuffer;
@@ -230,7 +225,6 @@ typedef struct
 extern object_t objects[MAX_NUM_OBJECT];
 extern int object_count;
 
-
 typedef struct 
 {
 	uint32 **datas;
@@ -242,8 +236,6 @@ typedef struct
 #define MAX_NUM_TEXTURE 64
 extern texture_t textures[MAX_NUM_TEXTURE];
 extern int texture_count;
-
-void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool world);
 
 typedef struct 
 {
@@ -266,6 +258,7 @@ typedef struct
 	vector_t storage2;
 } v2f;
 
+void clip_polys(device_t *device, vertex_t *v1, vertex_t *v2, vertex_t *v3, bool world);
 void vert_shader(device_t *device, a2v *av, v2f *vf);
 void frag_shader(device_t *device, v2f *vf, color_t *color);
 
