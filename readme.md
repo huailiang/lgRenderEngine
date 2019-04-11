@@ -40,15 +40,15 @@ libpng depends on zlib, so should be set -lz in "Other linker flags" at xcode pr
 
 tutor:	 
 
-&emsp; 	[guide1](/doc/readme.md)
+&emsp; 	1. [guide outline](/doc/readme.md)
 
-&emsp;  [Frustum Culling](/doc/clip.md)
+&emsp;  2. [Frustum Culling](/doc/clip.md)
 
-&emsp;  [Bresenham draw-line](/doc/Bresenham.md)
+&emsp;  3. [Bresenham draw-line](/doc/Bresenham.md)
 
-&emsp;  [triger center calcute](/doc/triger.md)
+&emsp;  4. [triger center calcute](/doc/triger.md)
 
-&emsp;  [transform matrix](/doc/transform.md)
+&emsp;  5. [transform matrix](/doc/transform.md)
 
 resources: [asset format](/resources/readme.md)
 
