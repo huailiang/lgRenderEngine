@@ -320,6 +320,17 @@ void init_boxs()
 	g_box->dirty = true;
 }
 
+void init_scene(device_t* device)
+{
+	init_texture();
+	init_materials();
+	init_light();
+	init_maincamera();
+	init_buffers(device);
+	//init_groud();
+	init_boxs();
+}
+
 void free_scene()
 {
     free_materials();

@@ -76,13 +76,7 @@ int main(int argc, char * argv[])
 		bool firstMouse = true;
 		memset(screen_keys, 0, sizeof(int) * KEY_CNT);
 
-		init_texture();
-        init_materials();
-		init_light();
-		init_maincamera();
-		init_buffers(&device);
-		//init_groud();
-        init_boxs();
+		init_scene(&device);
         
 		object_t *controlObj = g_box;
 		SDL_Event e;

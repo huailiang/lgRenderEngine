@@ -38,31 +38,9 @@ void matrix_set_scale(matrix_t *m, float sx, float sy, float sz);
 void matrix_set_rotate(matrix_t *m, const vector_t *v, float theta);
 void matrix_set_rotate_translate_scale(matrix_t *m, const vector_t *axis, float theta, const point_t *pos, const vector_t *scale);
 void matrix_set_axis(matrix_t *m, const vector_t *xaxis, const vector_t *yaxis, const vector_t *zaxis, const point_t *pos);
-//set_lookat m, eye, at, up
-// zaxis = normal(At - Eye)
-// xaxis = normal(cross(Up, zaxis))
-// yaxis = cross(zaxis, xaxis)
-// xaxis.x           yaxis.x           zaxis.x          0
-// xaxis.y           yaxis.y           zaxis.y          0
-// xaxis.z           yaxis.z           zaxis.z          0
-//-dot(xaxis, eye)  -dot(yaxis, eye)  -dot(zaxis, eye)  1
 void matrix_set_lookat(matrix_t *m, const vector_t *eye, const vector_t *at, const vector_t *up);
-// set_perspective m, fovy, aspect, zn, zf
-// zoom = 1 / tan(fov/2)
-// zoomy = 1 / tan(fovy/2)
-// zoomx = zoomy * aspect
-// zoomx    0       0               0
-// 0        zoomy   0               0
-// 0        0       zf/(zf-zn)      1
-// 0        0       zn*zf/(zn-zf)   0
 void matrix_set_perspective(matrix_t *m, float fovy, float aspect, float zn, float zf);
-// set_ortho m, left, right, bottom, top, near, far
-// 2/(r-l)      0            0           0
-// 0            2/(t-b)      0           0
-// 0            0            1/(zf-zn)   0
-// (l+r)/(l-r)  (t+b)/(b-t)  zn/(zn-zf)  1
 void matrix_set_ortho(matrix_t *m, float l, float r, float b, float t, float zn, float zf);
-
 
 typedef struct { matrix_t model, view, view_r, projection, vp, mv, mvp; } transform_t;
 void transform_update(transform_t *ts);

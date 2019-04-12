@@ -338,6 +338,7 @@ void matrix_set_rotate(matrix_t *m, const vector_t *v, float theta)
 	m->m[3][3] = 1.0f;
 }
 
+//model-matirx
 void matrix_set_rotate_translate_scale(matrix_t *m, const vector_t *axis, float theta, const point_t *pos, const vector_t *scale) 
 {
 	matrix_set_scale(m, scale->x, scale->y, scale->z);
@@ -366,7 +367,8 @@ void matrix_set_axis(matrix_t *m, const vector_t *xaxis, const vector_t *yaxis, 
 	m->m[0][3] = m->m[1][3] = m->m[2][3] = 0.0f;
 	m->m[3][3] = 1.0f;
 }
-//set_lookat m, eye, at, up
+
+//view-matrix m, eye, at, up
 // zaxis = normal(At - Eye)
 // xaxis = normal(cross(Up, zaxis))
 // yaxis = cross(zaxis, xaxis)
@@ -399,6 +401,7 @@ void matrix_set_lookat(matrix_t *m, const vector_t *eye, const vector_t *at, con
 	m->m[3][3] = 1.0f;
 }
 //set_perspective m, fov, aspect, zn, zf
+//transpose D3DXMatrixPerspectiveFovLH 
 // zoom = 1 / tan(fov/2)
 // zoomy = 1 / tan(fov/2)
 // zoomx = zoomy * aspect
@@ -419,6 +422,7 @@ void matrix_set_perspective(matrix_t *m, float fovy, float aspect, float zn, flo
 	m->m[2][0] = m->m[2][1] = m->m[3][0] = m->m[3][1] = m->m[3][3] = 0.0f;
 }
 // set_ortho m, left, right, bottom, top, near, far
+// transpose D3DXMatrixOrthoOffCenterLH 
 // 2/(r-l)      0            0           0
 // 0            2/(t-b)      0           0
 // 0            0            1/(zf-zn)   0
@@ -448,8 +452,7 @@ void transform_apply(const transform_t *ts, vector_t *y, const vector_t *x)
 	matrix_apply(y, x, &ts->mvp);
 }
 
-
-//归一化, 得到屏幕坐标
+//ndc coord->screen coord   such as x: [-1, 1]->[0, width]
 void transform_homogenize(vector_t *y, const vector_t *x, float width, float height) 
 {
 	float rhw = 1.0f / x->w;
@@ -459,6 +462,7 @@ void transform_homogenize(vector_t *y, const vector_t *x, float width, float hei
 	y->w = rhw;
 }
 
+// screen coord-> ndc coord
 void transform_homogenize_reverse(vector_t *y, const vector_t *x, float w, float width, float height) 
 {
 	y->x = (x->x * 2 / width - 1.0f) * w;
@@ -1148,7 +1152,7 @@ void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_
 		vector_crossproduct(&av->binormal, &av->normal, &av->tangent);
 		vector_scale(&av->binormal, av->tangent.w);
 		matrix_apply(&vertex->pos, &vertex->pos, &device->transform.vp);
-		points[i] = vertex->pos; //project space pos
+		points[i] = vertex->pos; //project space pos, ndc-coord
 
 		matrix_apply(&vertex->normal, &vertex->normal, &nm);
 		vector_normalize(&vertex->normal);
@@ -1160,16 +1164,16 @@ void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_
 		transform_homogenize(&vertex->pos, &vertex->pos, device->camera->width, device->camera->height);
 	}
 
-	if (device->cull > 0)	// call back
+	if (device->cull > 0)	
 	{
 		vector_t t21, t32;
 		vector_sub(&t21, &t2->pos, &t1->pos);
 		vector_sub(&t32, &t3->pos, &t2->pos);
-		if (device->cull == 1)
+		if (device->cull == 1) 
 		{
 			if (t21.x * t32.y - t32.x * t21.y <= 0) return;
 		}
-		else if (device->cull == 2)
+		else if (device->cull == 2) 
 		{
 			if (t21.x * t32.y - t32.x * t21.y > 0)	return;
 		}
@@ -1486,7 +1490,7 @@ void frag_shader(device_t *device, v2f *vf, color_t *color)
 
 	if (dirLight.shadow)
 	{
-		// fragPos -> 灯的坐标系 -> 灯的透视矩阵 -> 求得z坐标比较
+		// worldpos -> shadow camera coord(light) -> show camera projection(light) -> compare-z
 		point_t tempPos = vf->pos;
 		tempPos.w = 1.0f;
 		camera_t *camera = &cameras[0];
