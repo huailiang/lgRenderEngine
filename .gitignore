@@ -13,7 +13,9 @@
 **/LgRenderEgngine/Index/
 **/windows/lgEngine/Debug/
 **/windows/lgEngine/x64/
-**/macos/Index/
+**/*.moved-aside
+**/*.xcuserstate
+**/*.pbxuser
 **/macos/Build/
 **/macos/Debug/
 **/macos/LgRenderEgngine.build/

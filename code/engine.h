@@ -146,8 +146,7 @@ typedef struct { vertex_t v, v1, v2; } edge_t;
 typedef struct { float top, bottom; edge_t left, right; } trapezoid_t;
 typedef struct { vertex_t v, step; int x, y, w; } scanline_t;
 
-// 除坐标以外, 颜色和纹理索引除以w
-void vertex_rhw_init(vertex_t *v);
+
 void vertex_lerp(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float k);
 void vertex_division(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float w);
 void vertex_add(vertex_t *y, const vertex_t *x);

@@ -1,5 +1,6 @@
-﻿# View矩阵
+﻿# MVP矩阵
 
+![说明](./mv00.jpg)
 
 
 ## 构建出相机空间的坐标系  View-Matrix
@@ -35,11 +36,13 @@
 
 ![](./mv4.jpg)
 
-3. 最终要求的相机变换矩阵即为：M=R*T， 那么对于物体来讲，物体的变换就是 M的逆， 基矩阵的逆即M的转置:
-![](./mv5.jpg)
+3. 最终要求的相机变换矩阵即为：M=R*T
+![](./mv01.jpg)
+说明一下，这个矩阵是左乘世界坐标系的矩阵得到的，代码里是右乘，所以需要转置下。
 
-投影矩阵推导(翻译)
-原网址：http://www.codeguru.com/cpp/misc/misc/graphics/article.php/c10123/Deriving-Projection-Matrices.htm
+
+## 投影矩阵推导
+> 原网址：http://www.codeguru.com/cpp/misc/misc/graphics/article.php/c10123/Deriving-Projection-Matrices.htm
 
 3D矩阵变换中，投影矩阵是最复杂的。位移和缩放变换一目了然，旋转变换只要基本的三角函数就能想象出来，投影矩阵则很难凭借直觉想象出来。
 

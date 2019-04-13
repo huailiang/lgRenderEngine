@@ -587,18 +587,6 @@ void camera_update(camera_t *camera)
 	matrix_set_axis(&camera->view_matrix_r, &right, &up, &front, &camera->pos);
 }
 
-
-// 除坐标以外,颜色和纹理索引除以w
-void vertex_rhw_init(vertex_t *v) 
-{
-	float rhw = 1.0f / v->pos.w;
-	v->tc.u *= rhw;
-	v->tc.v *= rhw;
-	v->color.r *= rhw;
-	v->color.g *= rhw;
-	v->color.b *= rhw;
-}
-
 void vertex_lerp(vertex_t *y, const vertex_t *x1, const vertex_t *x2, float k)
 {
 	vector_lerp(&y->pos, &x1->pos, &x2->pos, k);
