@@ -32,7 +32,9 @@ sh build_osx.sh
 
 ## Tips
 
-libpng depends on zlib, so should be set -lz in "Other linker flags" at xcode project
+1. libpng depends on zlib, so should be set -lz in "Other linker flags" at xcode project
+
+2. in function transform_homogenize, y is reduced by 1 because SDL_RenderDrawPoint draw point start with left-top pivot.
 
 
 ## Reinferences
