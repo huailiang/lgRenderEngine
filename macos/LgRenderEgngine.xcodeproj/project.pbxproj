@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4C2A6B7C2258AFEE00DBBB93 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C2A6B742258AFED00DBBB93 /* main.c */; };
-		4C2A6B7D2258AFEE00DBBB93 /* scene.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C2A6B762258AFED00DBBB93 /* scene.c */; };
-		4C2A6B7E2258AFEE00DBBB93 /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C2A6B772258AFED00DBBB93 /* utils.c */; };
-		4C2A6B7F2258AFEE00DBBB93 /* engine.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C2A6B792258AFEE00DBBB93 /* engine.c */; };
+		4C3B010C22620E80001C9837 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C3B010322620E80001C9837 /* main.c */; };
+		4C3B010D22620E80001C9837 /* engine.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C3B010422620E80001C9837 /* engine.c */; };
+		4C3B010E22620E80001C9837 /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C3B010822620E80001C9837 /* utils.c */; };
+		4C3B010F22620E80001C9837 /* scene.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C3B010B22620E80001C9837 /* scene.c */; };
 		4C42E1422258AD020042B82E /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C42E1412258AD020042B82E /* libpng.a */; };
 		4C42E1442258AD100042B82E /* libSDL2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C42E1432258AD100042B82E /* libSDL2.a */; };
 /* End PBXBuildFile section */
@@ -28,15 +28,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4C2A6B742258AFED00DBBB93 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = ../../code/main.c; sourceTree = "<group>"; };
-		4C2A6B752258AFED00DBBB93 /* obj_loader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = obj_loader.h; path = ../../code/obj_loader.h; sourceTree = "<group>"; };
-		4C2A6B762258AFED00DBBB93 /* scene.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = scene.c; path = ../../code/scene.c; sourceTree = "<group>"; };
-		4C2A6B772258AFED00DBBB93 /* utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = utils.c; path = ../../code/utils.c; sourceTree = "<group>"; };
-		4C2A6B782258AFEE00DBBB93 /* scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scene.h; path = ../../code/scene.h; sourceTree = "<group>"; };
-		4C2A6B792258AFEE00DBBB93 /* engine.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = engine.c; path = ../../code/engine.c; sourceTree = "<group>"; };
-		4C2A6B7A2258AFEE00DBBB93 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utils.h; path = ../../code/utils.h; sourceTree = "<group>"; };
-		4C2A6B7B2258AFEE00DBBB93 /* engine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = engine.h; path = ../../code/engine.h; sourceTree = "<group>"; };
-		4C2A6B802258B58F00DBBB93 /* common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = common.h; path = ../../code/common.h; sourceTree = "<group>"; };
+		4C3B010322620E80001C9837 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = ../code/main.c; sourceTree = "<group>"; };
+		4C3B010422620E80001C9837 /* engine.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = engine.c; path = ../code/engine.c; sourceTree = "<group>"; };
+		4C3B010522620E80001C9837 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = common.h; path = ../code/common.h; sourceTree = "<group>"; };
+		4C3B010622620E80001C9837 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utils.h; path = ../code/utils.h; sourceTree = "<group>"; };
+		4C3B010722620E80001C9837 /* obj_loader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = obj_loader.h; path = ../code/obj_loader.h; sourceTree = "<group>"; };
+		4C3B010822620E80001C9837 /* utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = utils.c; path = ../code/utils.c; sourceTree = "<group>"; };
+		4C3B010922620E80001C9837 /* engine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = engine.h; path = ../code/engine.h; sourceTree = "<group>"; };
+		4C3B010A22620E80001C9837 /* scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scene.h; path = ../code/scene.h; sourceTree = "<group>"; };
+		4C3B010B22620E80001C9837 /* scene.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = scene.c; path = ../code/scene.c; sourceTree = "<group>"; };
 		4C42E1412258AD020042B82E /* libpng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng.a; path = ../library/libpng/lib/mac/libpng.a; sourceTree = "<group>"; };
 		4C42E1432258AD100042B82E /* libSDL2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2.a; path = ../library/sdl2/lib/mac/libSDL2.a; sourceTree = "<group>"; };
 		4C80F13B225600A000A16E81 /* LgRenderEgngine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LgRenderEgngine; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -55,20 +55,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4C2A6B732258AFD700DBBB93 /* LgRenderEgngine */ = {
+		4C3B010222620E67001C9837 /* LgRenderEgngine */ = {
 			isa = PBXGroup;
 			children = (
-				4C2A6B742258AFED00DBBB93 /* main.c */,
-				4C2A6B7B2258AFEE00DBBB93 /* engine.h */,
-				4C2A6B792258AFEE00DBBB93 /* engine.c */,
-				4C2A6B802258B58F00DBBB93 /* common.h */,
-				4C2A6B752258AFED00DBBB93 /* obj_loader.h */,
-				4C2A6B782258AFEE00DBBB93 /* scene.h */,
-				4C2A6B762258AFED00DBBB93 /* scene.c */,
-				4C2A6B7A2258AFEE00DBBB93 /* utils.h */,
-				4C2A6B772258AFED00DBBB93 /* utils.c */,
+				4C3B010522620E80001C9837 /* common.h */,
+				4C3B010422620E80001C9837 /* engine.c */,
+				4C3B010922620E80001C9837 /* engine.h */,
+				4C3B010322620E80001C9837 /* main.c */,
+				4C3B010722620E80001C9837 /* obj_loader.h */,
+				4C3B010B22620E80001C9837 /* scene.c */,
+				4C3B010A22620E80001C9837 /* scene.h */,
+				4C3B010822620E80001C9837 /* utils.c */,
+				4C3B010622620E80001C9837 /* utils.h */,
 			);
-			path = LgRenderEgngine;
+			name = LgRenderEgngine;
 			sourceTree = "<group>";
 		};
 		4C44976A22562E2900FE75BE /* Frameworks */ = {
@@ -83,7 +83,7 @@
 		4C80F132225600A000A16E81 = {
 			isa = PBXGroup;
 			children = (
-				4C2A6B732258AFD700DBBB93 /* LgRenderEgngine */,
+				4C3B010222620E67001C9837 /* LgRenderEgngine */,
 				4C80F13C225600A000A16E81 /* Products */,
 				4C44976A22562E2900FE75BE /* Frameworks */,
 			);
@@ -153,10 +153,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C2A6B7E2258AFEE00DBBB93 /* utils.c in Sources */,
-				4C2A6B7D2258AFEE00DBBB93 /* scene.c in Sources */,
-				4C2A6B7C2258AFEE00DBBB93 /* main.c in Sources */,
-				4C2A6B7F2258AFEE00DBBB93 /* engine.c in Sources */,
+				4C3B010E22620E80001C9837 /* utils.c in Sources */,
+				4C3B010C22620E80001C9837 /* main.c in Sources */,
+				4C3B010F22620E80001C9837 /* scene.c in Sources */,
+				4C3B010D22620E80001C9837 /* engine.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
