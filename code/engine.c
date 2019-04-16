@@ -1064,9 +1064,6 @@ void device_render_trap(device_t *device, trapezoid_t *trap, point_t *points, v2
 }
 
 
-// http://www.cnblogs.com/ThreeThousandBigWorld/archive/2012/07/16/2593892.html
-// http://blog.chinaunix.net/uid-26651460-id-3083223.html
-// http://stackoverflow.com/questions/5255806/how-to-calculate-tangent-and-binormal
 void calculate_tangent_and_binormal(vector_t *tangent, vector_t *binormal, const vector_t *position1, const vector_t *position2, const vector_t *position3,
 	float u1, float v1, float u2, float v2, float u3, float v3)
 {
@@ -1098,18 +1095,14 @@ void calculate_tangent_and_binormal(vector_t *tangent, vector_t *binormal, const
 	vector_scale(&temp, deltaU0);
 	vector_sub(binormal, binormal, &temp);
 	vector_normalize(binormal);
-	//Now, we take the cross product of the tangents to get a vector which
-	//should point in the same direction as our normal calculated above.
+	//Now, we take the cross product of the tangents to get a vector which should point in the same direction as our normal calculated above.
 	//If it points in the opposite direction (the dot product between the normals is less than zero),
 	//then we need to reverse the s and t tangents.
 	//This is because the triangle has been mirrored when going from tangent space to object space.
 	//reverse tangents if necessary
 	vector_t tangentCross;
 	vector_crossproduct(&tangentCross, tangent, binormal);
-	if (vector_dotproduct(&tangentCross, &normal) < 0.0f)
-	{
-		tangent->w = -1;
-	}
+	if (vector_dotproduct(&tangentCross, &normal) < 0.0f) tangent->w = -1;
 }
 
 void device_draw_primitive(device_t *device, vertex_t *t1, vertex_t *t2, vertex_t *t3)
@@ -1450,6 +1443,20 @@ void frag_shader(device_t *device, v2f *vf, color_t *color)
 	vector_normalize(&viewdir);
 	texcoord_t *tex = &vf->texcoord;
 	vector_t normal = vf->normal;
+
+	if (material->bump_tex_id != -1)
+	{
+		color_t color = texture_read(&textures[material->bump_tex_id], tex->u, tex->v, vf->pos.w, 15);
+		vector_t bump = { color.r, color.g, color.b, color.a };
+		bump.x = bump.x * 2 - 1.0f;
+		bump.y = bump.y * 2 - 1.0f;
+		vector_scale(&bump, 1.0f);
+		float n = bump.x * bump.x + bump.y * bump.y;
+		if (n < 0.0f) n = 0.0f; if (n > 1.0f) n = 1.0f;
+		bump.z = sqrtf(1.0f - n);
+		normal = (vector_t) { vector_dotproduct(&vf->storage0, &bump), vector_dotproduct(&vf->storage1, &bump), vector_dotproduct(&vf->storage2, &bump) };
+		vector_normalize(&normal);
+	}
 
 	vector_t lightDir = dirLight.dir;
 	vector_inverse(&lightDir);

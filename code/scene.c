@@ -149,8 +149,8 @@ void free_buffers()
 
 void update_scene(float delta)
 {
-	//g_man->theta -= 0.04f;
-	//g_man->dirty = true;
+	g_man->theta -= 0.04f;
+	g_man->dirty = true;
 	g_box->theta += 0.04f;
 	g_box->dirty = true;
 }
@@ -295,21 +295,21 @@ void init_groud()
 
 void init_boxs()
 {
-	//g_man = &objects[object_count++];
-	//g_man->pos = (point_t) { -1, 0, 0, 1 };
-	//g_man->scale = (vector_t) { 0.1, 0.1, 0.1, 0 };
-	//g_man->axis = (vector_t) { 0, 1, 0, 1 };
-	//g_man->theta = 0.0f;
-	//g_man->mesh = mesh_man;
-	//g_man->mesh_num = mesh_num_man;
-	//g_man->material_ids = material_ids_man;
-	//g_man->texture_id = 1;
-	//g_man->shadow = true;
-	//g_man->dirty = true;
+	g_man = &objects[object_count++];
+	g_man->pos = (point_t) { -1, 0, 0, 1 };
+	g_man->scale = (vector_t) { 0.1, 0.1, 0.1, 0 };
+	g_man->axis = (vector_t) { 0, 1, 0, 1 };
+	g_man->theta = 0.0f;
+	g_man->mesh = mesh_man;
+	g_man->mesh_num = mesh_num_man;
+	g_man->material_ids = material_ids_man;
+	g_man->texture_id = 1;
+	g_man->shadow = true;
+	g_man->dirty = true;
 
 	g_box = &objects[object_count++];
 	g_box->pos = (point_t) { 0, 2, -1, 1 };
-	g_box->scale = (vector_t) { 1, 1, 1, 0 };
+	g_box->scale = (vector_t) { 0.2, 0.2, 0.2, 0 };
 	g_box->axis = (vector_t) { 1, 0, 1, 1 };
 	g_box->theta = 0.0f;
 	g_box->mesh = box_mesh;
@@ -327,7 +327,7 @@ void init_scene(device_t* device)
 	init_light();
 	init_maincamera();
 	init_buffers(device);
-	//init_groud();
+	init_groud();
 	init_boxs();
 }
 
